@@ -92,7 +92,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         // set cookie to user
-        $cookie = cookie('status', $this->GetLoginStatus($request), 600);
+        $cookie = cookie('login_status', $this->GetLoginStatus($request), 600);
 
         // send cookie to user
         return response([
