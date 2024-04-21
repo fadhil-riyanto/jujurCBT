@@ -58,6 +58,14 @@
     background: #becbff;
 }
 
+#identity::placeholder {
+    font-size: 20px;
+}
+
+#password::placeholder {
+    font-size: 20px;
+}
+
 .login-btn-container {
     margin: 0;
     padding: 10px 10px 10px 10px;
