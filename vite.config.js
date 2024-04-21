@@ -5,7 +5,16 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/login.css'],
+                // essential
+                'resources/css/components/_container.css',
+                'resources/css/components/_navbar.css',
+                'resources/css/components/_modal.css',
+                'resources/css/components/_buttons.css',
+
+                // need 
+                'resources/css/login.css',
+                'resources/css/dashboard.css'
+            ],
             refresh: true,
         }),
     ],
