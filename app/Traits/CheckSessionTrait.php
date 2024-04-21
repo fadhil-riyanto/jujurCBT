@@ -11,7 +11,7 @@ trait CheckSessionTrait {
         $this->req = $req;
     } 
 
-    public function getCookieFromReq(): ?bool
+    private function getCookieFromReq(): ?bool
     {
         return $this->req->cookie("login_status");
     }
