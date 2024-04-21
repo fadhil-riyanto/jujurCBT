@@ -70,12 +70,17 @@ body {
 }
 
 .sidebar_menu:hover{
-    background-color: #f7f1f1;
+    background-color: gray;
 }
 
 .sidebar_menu > a{
     text-decoration: none;
-    color: gray;
+    color: black;
+    font-size: 16px;
+}
+
+.sidebar_menu > a:focus{
+    text-decoration: underline;
 }
 
 .sidebar_profile_name {
@@ -108,7 +113,7 @@ body {
     /* margin: 30px 10px 10px 10px; */
     margin-top: 30px;
     padding: 10px 5px 10px 5px;
-    font-size: 15px;
+    font-size: 16px;
     text-align: left;
     background-color: gray;
     color: white;

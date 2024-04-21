@@ -6,7 +6,7 @@
     @vite("resources/css/components/_modal.css")
     @vite("resources/css/components/_buttons.css")
     @vite("resources/css/components/_alert.css")
-    @vite("resources/css/dashboard.css")
+    @vite("resources/css/admin.css")
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="/js/utils.js"></script>
@@ -21,25 +21,25 @@
         </div>
     </div>
 
-    <div class="sidebar_menu">
+    <div class="sidebar_menu" id="assesment_list">
         <i class="bi bi-people-fill"></i>
         <a href="#">peserta assesmen</a>
     </div>
-    <div class="sidebar_menu">
+    <div class="sidebar_menu" id="assesment_question">
         <i class="bi bi-patch-question"></i>
         <a href="#">soal assesmen</a>
     </div>
-    <div class="sidebar_menu">
+    <div class="sidebar_menu" id="assesment_report">
         <i class="bi bi-info-circle"></i>
         <a href="#">report</a>
     </div>
-    <div class="sidebar_menu">
+    <div class="sidebar_menu" id="assesment_value">
         <i class="bi bi-check2-square"></i>
         <a href="#">nilai</a>
     </div>
 </div>
 <div class="content">
-    <div id="assesment-user-page">
+    <div id="page_0">
         <div class="class-selector">
             <button class="classlist-btn" id="classlist-btn">daftar kelas</button>
 
@@ -80,8 +80,8 @@
     </div>
 
 
-    <div id="soal-list">
-
+    <div id="page_1" style="display: none;">
+        ho im appear
     </div>
     <footer>
         <span class="footer-txt">&copy Fadhil Riyanto</span>
@@ -92,7 +92,7 @@
 
 @section('script')
 <script>
-
+    // jam
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
