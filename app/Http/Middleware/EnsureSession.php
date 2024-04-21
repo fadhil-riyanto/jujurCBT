@@ -19,7 +19,9 @@ class EnsureSession
     {
         $this->CheckSession($request);
 
-        if ($request->path() === "login") {
+        // dd($request->path());
+        
+        if ($request->path() === "login" || explode("/", $request->path())[0] === "api") {
             return $next($request);
         } else {
             // dd($request->path());
