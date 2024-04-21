@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #e0e1e5;
+}
+
+.container {
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 70px;
+    /* background-color: transparent; */
+}
+
+footer {
+    margin: 9px 30% 80px 30%;
+    /* margin-top: 450px; */
+    text-align: center;
+}
+
+@media screen and (max-width: 800px) {
+    footer {
+        margin: 90% 30% 80px 30%;
+        text-align: center;
+    }
+}

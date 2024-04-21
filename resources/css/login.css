@@ -1,0 +1,103 @@
+/* login code start here */
+.login-container {
+    margin: 140px 20% 0px 20%;
+    background-color: white;
+    border-radius: 7px;
+}
+
+.login-container-text {
+    /* display:inline; */
+    font-size: 40px;
+    text-align: center;
+    font-weight: bold;
+    border-bottom: 3px solid silver;
+}
+
+
+.login-container-form {
+    padding: 10px 30px 35px 30px;
+}
+
+.form-field {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px
+}
+
+.form-field > input {
+    width: 90%;
+    height: 40px;
+}
+
+
+/* .form-radio-field-center {
+    
+} */
+
+.form-radio-field {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    border: 2px solid blueviolet;
+    border-radius: 5px;
+    margin: 0px 50% 10px 50%;
+    transform: translate(-50%, 0%);
+    
+}
+
+.form-radio-field > input {
+    display: none;
+}
+
+.form-radio-field > label {
+    padding: 10px 20px 10px 20px;
+    border-right: 1px solid #ccc;
+}
+
+.form-radio-field input:checked + label{
+    background: #becbff;
+}
+
+.login-btn-container {
+    margin: 0;
+    padding: 10px 10px 10px 10px;
+}
+
+.login-btn {
+    align-items:flex-end;
+    padding: 10px 30px 10px 30px;
+    background-color: rgb(39, 123, 115);
+    border-radius: 5px;
+    width: 100%;
+}
+
+.login-btn {
+    text-decoration: none;
+    color: white;
+}
+
+.login-btn:hover {
+    background-color: white;
+    color: #248077;
+    border: 2px solid #40e0d0;
+}
+
+.bi {
+    font-size: 30px;
+    text-align: center;
+}
+
+@media screen and (max-width: 800px){
+    .login-container {
+        margin: 190px 5% 0px 5%;
+    }
+
+    .login-txt::after {
+        content: "(android)";
+        font-size: 14px;
+    }
+    .form-field-icon {
+        display: none;
+    }
+
+}

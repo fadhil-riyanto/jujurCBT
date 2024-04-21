@@ -1,0 +1,26 @@
+
+
+nav {
+    padding: 15px 20px 15px 20px;
+    background-color: #5869c9;
+    color: white;
+    display: flex;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    box-shadow: 0px 0px 10px grey;
+}
+
+.nav-name {
+    font-size: 17px;
+}
+
+.nav-time {
+    margin-left: auto;
+}
+
+@media screen and (max-width: 800px){
+    .nav-name {
+        font-size: 14px;
+    }
+}
