@@ -1,23 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http;
 
 Route::prefix("/api")->group(function() {
-    Route::post("/auth", [LoginController::class, "login"]);
-    Route::get("/token", function() {
-        return csrf_token();
+    Route::post("/auth", [Http\Controllers\LoginController::class, "login"]);
+
+    Route::prefix("/dashboard")->group(function() {
+        Route::get("/get_mata_pelajaran", [Http\Controllers\getMataPelajaran::class, "GetResult"]);
     });
+    
 });
 
-Route::get("/test", function() {
-    return view("test", [
-        "nama" => "fadhil",
-        "kelas" => "12 tkj 1"
-    ]);
+Route::get('/login', function () {
+    return view("views/login");
 });
 
 
-Route::get('/', function () {
-    return view("index");
+Route::get('/dashboard', function () {
+    return view("views/dashboard");
 });
+
+// Route::get('/', [Http\Controllers\IndexController::class, "IndexController"]);
