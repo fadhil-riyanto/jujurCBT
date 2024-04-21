@@ -6,6 +6,9 @@
     @vite("resources/css/components/_modal.css")
     @vite("resources/css/components/_buttons.css")
     @vite("resources/css/login.css")
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script src="/js/utils.js"></script>
 @endsection
 
 @section("login")
@@ -68,7 +71,11 @@
             success: function(data)
             {
                 //alert(data["message"]); // show response from the php script.
-                show_modal("perhatian", data["message"], "modal-container-login-notify")
+                if (data["status"] == false) {
+                    show_modal("perhatian", data["message"], "modal-container-login-notify")
+                } else {
+                    window.location.href = "/dashboard"
+                }
             }
         });
 

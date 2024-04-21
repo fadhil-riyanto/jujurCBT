@@ -96,6 +96,7 @@ class LoginController extends Controller
 
         // send cookie to user
         return response([
+            "status" => $this->GetLoginStatus($request),
             "message" => $this->message
         ])->cookie($cookie);
         
