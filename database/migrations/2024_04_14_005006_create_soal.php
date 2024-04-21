@@ -42,7 +42,7 @@ return new class extends Migration
         });
 
         /*
-        | jawaban
+        | wadah database untuk jawaban
         */
 
         Schema::create('pilihan_ganda', function (Blueprint $table) {
