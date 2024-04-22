@@ -7,7 +7,8 @@ Route::prefix("/api")->group(function() {
     Route::post("/auth", [Http\Controllers\LoginController::class, "login"]);
 
     Route::prefix("/dashboard")->group(function() {
-        Route::get("/get_mata_pelajaran", [Http\Controllers\getMataPelajaranController::class, "GetResult"]);
+        Route::get("/get_mata_pelajaran", [Http\Controllers\GetMataPelajaranController::class, "GetResult"]);
+        Route::get("/get_me", [Http\Controllers\GetMeController::class, "GetResult"]);
     });
     
 });
