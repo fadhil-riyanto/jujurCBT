@@ -20,6 +20,10 @@ Route::get('/login', function () {
     return view("views/login");
 });
 
+
+Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
+
+
 Route::get('/dashboard', function () {
     return view("views/dashboard");
 });
