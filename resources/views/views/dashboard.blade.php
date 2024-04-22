@@ -5,6 +5,7 @@
     @vite("resources/css/components/_navbar.css")
     @vite("resources/css/components/_modal.css")
     @vite("resources/css/components/_buttons.css")
+    @vite("resources/css/components/_alert.css")
     @vite("resources/css/dashboard.css")
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -12,6 +13,10 @@
 @endsection
 
 @section("login")
+<div class="alert alert-primary ">
+    selamat datang Fadhil di jujurCBT
+</div>
+
 <div class="exam-study-container">
     <div class="exam-list">
         <div class="exam-list-name">
