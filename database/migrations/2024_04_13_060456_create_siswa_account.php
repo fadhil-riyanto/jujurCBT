@@ -27,7 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {       
-        Schema::dropIfExists('aiswa_account');
+        Schema::dropIfExists('siswa_account');
         
     }
 };
