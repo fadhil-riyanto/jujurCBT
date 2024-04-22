@@ -14,6 +14,7 @@
         <div class="container">
             @yield("login")
             @yield("dashboard")
+            @yield("admin")
             
             @include("components/_include_footer")
         </div>

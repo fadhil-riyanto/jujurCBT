@@ -81,8 +81,17 @@
 
 
     <div id="page_1" style="display: none;">
-        ho im appear
+        page 1 coming soon
     </div>
+
+    <div id="page_2" style="display: none;">
+        page 2 coming soon
+    </div>
+
+    <div id="page_3" style="display: none;">
+        page 3 coming soon
+    </div>
+
     <footer>
         <span class="footer-txt">&copy Fadhil Riyanto</span>
     </footer>
@@ -96,6 +105,66 @@
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
+    // daftar kelas toggle
+    $("#classlist-btn").click(function(){
+        $("#classlist").toggle();
+    });
+
+    $(".classlist-list").click(function(){
+        $("#classlist").hide();
+    });
+
+    function page_ajax(showed_page) {
+        console.log(showed_page)
+    }
+
+    // page show and hide logic
+    function hide_other_page(showed_page) {
+        page_ajax(showed_page);
+        for(i = 0; i < 4; i++) {
+            if (("#page_" + i) != showed_page) {
+                $("#page_" + i).hide()
+            }
+        }
+    }
+
+    // page num 0
+    $("#assesment_list").click(function(){
+            $("#page_0").show()
+            hide_other_page("#page_0")
+    });
+    // page num 1
+    $("#assesment_question").click(function(){
+            $("#page_1").show()
+            hide_other_page("#page_1")
+    });
+
+    $("#assesment_report").click(function(){
+            $("#page_2").show()
+            hide_other_page("#page_2")
+    });
+
+    $("#assesment_value").click(function(){
+            $("#page_3").show()
+            hide_other_page("#page_3")
+    });
+    
+
+    // register id
+    // for(i = 0; i < sidebarlistmenu_id.length; i++) {
+    //     $("#" + sidebarlistmenu_id[i]).click(function(){
+    //         $("#page_" + i).show()
+
+    //         // hide other page
+    //         for(a = 0; a < sidebarlistmenu_id.length; a++) {
+    //             if (sidebarlistmenu_id[i] != sidebarlistmenu_id[a]) {
+    //                 $("page_" + i).hide()
+    //             }
+    //         }
+    //     });
+    // }
+
+
 
 </script>
 @endsection('script')
