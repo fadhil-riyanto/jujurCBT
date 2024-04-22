@@ -16,6 +16,7 @@ use App\Exceptions\RoleNullException;
 class checkAuth {
     private Request $req;
     private string $message = "none";
+    private string $login_as = "none";
     private bool $status = false;
 
     // terima data dari req
@@ -37,8 +38,10 @@ class checkAuth {
     {
         if ($this->req->has("role")) {
             if ($this->req->get("role") == "student") {
+                $this->login_as = "student";
                 return $this->getDataFromModelsAsStudent($this->req->get("identity"));
             } else if ($this->req->get("role") == "admin") {
+                $this->login_as = "admin";
                 return $this->getDataFromModelsAsAdmin($this->req->get("identity"));
             } else {
                 $this->message = "role tidak ditemukan!";
@@ -89,6 +92,14 @@ class checkAuth {
         }
     }
 
+    public function putCookieData(): array { // used as cookie
+        return [
+            "status" => $this->status,
+            "role" => $this->login_as,
+            "identity" => $this->req->get("identity")
+        ];
+    }
+
     public function GetResult()
     {
         $this->getPasswordFromObj();
@@ -107,7 +118,8 @@ class checkAuth {
 class LoginController extends Controller
 {
 
-    private $message;
+    private $message, $login_as;
+    private checkAuth $auth;
     public function validateRequest($request): bool
     {
         if($request->has('identity') && $request->has('password'))
@@ -125,9 +137,9 @@ class LoginController extends Controller
         if($this->validateRequest($request))
         {
             // valdated, with message filled
-            $auth = new checkAuth($request);
-            $this->message = $auth->GetResult()["message"];
-            return $auth->GetResult()["status"];
+            $this->auth = new checkAuth($request);
+            $this->message = $this->auth->GetResult()["message"];
+            return $this->auth->GetResult()["status"];
         }
         return 0;
     }
@@ -138,12 +150,20 @@ class LoginController extends Controller
         // Cookie::queue(cookie('login_status', "oke", 600));
 
         // send cookie to user
+        // if ($this->getLoginStatus()) {
+        //     $request->session()->put("login_identity", )
+        // }
+        
         return response([
             "status" => $this->GetLoginStatus($request),
             "message" => $this->message
 
-        ])->cookie(cookie('login_status', $this->GetLoginStatus($request), 600))
-            ->cookie(cookie('debugtwo', true, 600));
+        ])
+
+        // ntar jadi array
+        ->cookie(cookie('login_data', serialize(
+            $this->auth->putCookieData()
+        )));
         
     }
 }

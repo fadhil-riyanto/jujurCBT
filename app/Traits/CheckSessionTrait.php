@@ -19,16 +19,19 @@ trait CheckSessionTrait {
     {
         // dd($this->req->cookie("login_status"));
         // dd(Crypt::decrypt(Cookie::get('login_status'), false));
-        return $this->req->cookie("login_status");
+        return unserialize($this->req->cookie("login_data"))["status"];
     }
 
     public function isLogged(bool $need_decrypt_cookie = false): int {
         // dd($this->getCookieFromReq());
         if ($need_decrypt_cookie) {
             try{
-                $decrypted = \Illuminate\Cookie\CookieValuePrefix::remove(
-                        \Crypt::decrypt($this->req->cookie("login_status"), false)
-                );
+
+                $decrypted = unserialize(\Illuminate\Cookie\CookieValuePrefix::remove(
+                    \Crypt::decrypt($this->req->cookie("login_data"), false)
+                ))["status"];
+                
+
             } catch (\Illuminate\Contracts\Encryption\DecryptException) {
                 $decrypted = false;
             }
