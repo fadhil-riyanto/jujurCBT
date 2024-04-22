@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Traits\CheckSessionTrait;
+use Illuminate\Support\Facades\Crypt;
 
 class EnsureSession
 {
@@ -19,13 +20,11 @@ class EnsureSession
     {
         $this->CheckSession($request);
 
-        // dd($request->path());
         
         if ($request->path() === "login" || explode("/", $request->path())[0] === "api") {
             return $next($request);
         } else {
-            // dd($request->path());
-            if ($this->isLogged()) {
+            if ($this->isLogged(true)) {
                 return $next($request);
             } else {
                 return redirect("/login");
