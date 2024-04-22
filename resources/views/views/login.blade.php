@@ -18,26 +18,26 @@
     </div>
     <div class="login-container-form">
         <form method="post" action="/api/auth" id="login-form">
+
+            <div class="form-radio-field">
+                <input type="radio" name="role" id="student" value="student" onclick="changeform_placeholder()">
+                <label for="student">siswa</label>
+
+                <input type="radio" name="role" id="admin" value="admin" onclick="changeform_placeholder()">
+                <label for="admin">admin</label>
+            </div>
+            
             <div class="form-field">
                 <i class="bi bi-person-circle"></i>
-                <input type="text" name="nomor_ujian" placeholder="nomor ujian" required>
+                <input id="identity" type="text" name="identity" placeholder="nomor ujian" required>
             
             </div>  
 
             <div class="form-field">
                 <i class="bi bi-key"></i>
-                <input type="password" name="password" placeholder="password" required>
+                <input id="password" type="password" name="password" placeholder="password" required>
             </div>
 
-            <!-- <div class="form-radio-field-center"> -->
-                <div class="form-radio-field">
-                    <input type="radio" name="role" id="student" value="siswa">
-                    <label for="student">siswa</label>
-
-                    <input type="radio" name="role" id="admin" value="admin">
-                    <label for="admin">admin</label>
-                </div>
-            <!-- </div> -->
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="login-btn-container">
@@ -52,6 +52,13 @@
 
 @section('script')
 <script>
+    function changeform_placeholder() {
+        if ($("#admin").is(":checked")) {
+            $("#identity").prop("placeholder","username")
+        } else {
+            $("#identity").prop("placeholder","nomor ujian")
+        }
+    }
 
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
