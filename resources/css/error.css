@@ -1,0 +1,35 @@
+/* override */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: cyan;
+}
+
+.container {
+    padding: 100px 20% 100px 20%;
+    
+}
+
+@media screen and (max-width: 800px) {
+    .container {
+        padding: 100px 5% 100px 5%;
+        
+    }
+}
+
+.back {
+    background-color: blueviolet;
+    padding: 10px;
+    color: white;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.error-reason {
+    font-size: 40px;
+    color: rgb(132, 31, 31)
+}

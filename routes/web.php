@@ -2,14 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http;
+use App\Http\Middleware;
 
 Route::prefix("/api")->group(function() {
     Route::post("/auth", [Http\Controllers\LoginController::class, "login"]);
 
     Route::prefix("/dashboard")->group(function() {
-        Route::get("/get_mata_pelajaran", [Http\Controllers\GetMataPelajaranController::class, "GetResult"]);
-        Route::get("/get_me", [Http\Controllers\GetMeController::class, "GetResult"]);
-    });
+        Route::get("/get_mata_pelajaran", [Http\Controllers\GetMataPelajaranController::class, "GetData"]);
+        Route::post("/get_me", [Http\Controllers\GetMeController::class, "getData"]);
+    })->middleware(Middleware\EnsureUsersOnStudent::class);
     
 });
 
@@ -27,6 +28,6 @@ Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
 
 Route::get('/dashboard', function () {
     return view("views/dashboard");
-});
+})->middleware(Middleware\EnsureUsersOnStudent::class);
 
 Route::get('/', [Http\Controllers\IndexController::class, "IndexController"]);
