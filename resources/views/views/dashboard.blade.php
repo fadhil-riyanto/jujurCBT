@@ -13,8 +13,8 @@
 @endsection
 
 @section("login")
-<div class="alert alert-primary ">
-    selamat datang Fadhil di jujurCBT
+<div class="alert alert-primary" id="alert-sambutan">
+    null
 </div>
 
 <div class="exam-study-container">
@@ -67,6 +67,18 @@
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
+
+    $.ajax({
+        url: "/api/dashboard/get_me",
+        type: "POST",
+        cache: false,
+        data: {
+            "_token": "{{ csrf_token() }}",
+        },
+        success: function(result) {
+            $("#alert-sambutan").html("Selamat datang " + result.data + " di JujurCBT!")
+        }
+    })
 
 </script>
 @endsection('script')
