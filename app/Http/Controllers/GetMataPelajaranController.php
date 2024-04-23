@@ -3,21 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SoalModel;
+use App\Models;
+use App\Traits;
 
-class GetMataPelajaranController extends Controller
+class GetMataPelajaranController
 {
+    use Traits\CurrentSessionTrait;
+
     protected $req;
     protected $dumped_data;
     protected $mata_pelajaran_filtered = [];
-    public function __construct(Request $req, $nomor_ujian) {
-        $this->req = $req;
-        $this->execute();
-    }
 
-    private function dumpData()
+    private function dumpAllDataFromDatabase()
     {
-        $this->dumped_data = SoalModel::all();
+        $this->dumped_data = Models\SoalModel::all();
     }
 
     private function literate()
@@ -31,13 +30,27 @@ class GetMataPelajaranController extends Controller
         }
     }
 
-    private function execute()
+    private function getMataPelajaranByAssigment()
     {
-        $this->dumpData();
-        $this->literate();
+        $dbs = Model\DaftarAssigmentModel::where("nomor_ujian", $this->cookie_identity);
+        // foreach($dbs as $db) {
+        //     dd
+        // }
+        dd($dbs);
     }
 
-    public function GetResult(): array {
-        return $this->mata_pelajaran_filtered;
+    private function execute()
+    {
+        // GET DATA FROM COOKIE, use session cookie
+        $this->cookie_deserialize();
+        $this->dumpAllDataFromDatabase();
+        $this->literate();
+        $this->getMataPelajaranByAssigment();
+    }
+
+    public function GetData(Request $req): array
+    {
+        $this->req = $req;
+        return $this->execute();
     }
 }
