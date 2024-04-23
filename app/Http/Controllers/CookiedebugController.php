@@ -8,8 +8,11 @@ use App\Traits;
 class CookiedebugController extends Controller
 {
     use Traits\CurrentSessionTrait;
+    protected Request $request;
     //
     public function debug(Request $request) {
+
+        $this->request = $request;
         // return dd($request->cookie("debugtwo") === true);
         // dd(unserialize($request->cookie("login_data")));
         // return response("okok")->cookie(cookie("keys",  serialize([
@@ -18,7 +21,7 @@ class CookiedebugController extends Controller
         // ])));
 
         $this->cookie_deserialize($request);
-        // dd($this);
+        dd($this);
         return view("error.illegalroute");
     }
 }

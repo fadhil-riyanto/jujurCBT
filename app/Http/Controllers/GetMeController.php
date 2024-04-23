@@ -9,6 +9,8 @@ use App\Enum;
 
 class GetMeController extends Controller
 {
+    protected Request $request;
+
     use Traits\CurrentSessionTrait;
     private function returnNameAsRole():string {
         $cb = match($this->cookie_role) {
@@ -19,9 +21,10 @@ class GetMeController extends Controller
         return $cb->nama;
         
     }
-    public function getData(Request $req)
+    public function getData(Request $request)
     {
-        $this->cookie_deserialize($req);
+        $this->request = $request;
+        $this->cookie_deserialize();
         
         return response([
             "data" => $this->returnNameAsRole()
