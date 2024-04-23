@@ -11,16 +11,18 @@ use Illuminate\Support\Facades\Crypt;
 class EnsureSession
 {
     use CheckSessionTrait;
+
+    protected Request $request;
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {
-        $this->CheckSession($request);
+    {   
+        $this->request = $request;
 
-        
+
         if ($request->path() === "login" || $request->path() === "api/auth") {
             return $next($request);
         } else {

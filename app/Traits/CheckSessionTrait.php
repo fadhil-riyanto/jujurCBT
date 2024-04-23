@@ -10,16 +10,11 @@ use Illuminate\Support\Facades\Cookie;
 use App\Enum;
 
 trait CheckSessionTrait {
-    public $req;
-    public function CheckSession(Request $req) {
-        $this->req = $req;
-    } 
-
     private function getCookieFromReq(): ?string
     {
         // dd($this->req->cookie("login_status"));
         // dd(Crypt::decrypt(Cookie::get('login_status'), false));
-        return unserialize($this->req->cookie("login_data"))["status"];
+        return unserialize($this->request->cookie("login_data"))["status"];
     }
 
     public function isLogged(bool $need_decrypt_cookie = false): int {
@@ -28,7 +23,7 @@ trait CheckSessionTrait {
             try{
 
                 $decrypted = unserialize(\Illuminate\Cookie\CookieValuePrefix::remove(
-                    \Crypt::decrypt($this->req->cookie("login_data"), false)
+                    \Crypt::decrypt($this->request->cookie("login_data"), false)
                 ))["status"];
                 
 

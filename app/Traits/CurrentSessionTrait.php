@@ -6,19 +6,18 @@ use Illuminate\Http\Request;
 use App\Enum\RoleSessionEnum;
 
 trait CurrentSessionTrait {
-    protected Request $req;
+    // private Request $req;
     public RoleSessionEnum $cookie_role;
     public bool $cookie_status;
     public string $cookie_identity;
 
-    public function cookie_deserialize(Request $req) {
-        $this->req = $req;
+    public function cookie_deserialize() {
         $this->make_object();
     }
 
     protected function do_unserialize(): array
     {
-        return unserialize($this->req->cookie("login_data"));
+        return unserialize($this->request->cookie("login_data"));
     }
 
     protected function make_object()

@@ -10,6 +10,7 @@ use App\Enum;
 
 class EnsureUsersOnStudent
 {
+    protected Request $request;
     /**
      * Handle an incoming request.
      *
@@ -19,6 +20,8 @@ class EnsureUsersOnStudent
 
     public function handle(Request $request, Closure $next): Response
     {
+        $this->request = $request;
+        
         $this->cookie_deserialize($request);
 
         if ($this->cookie_role == Enum\RoleSessionEnum::Student) {

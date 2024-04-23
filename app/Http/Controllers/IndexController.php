@@ -9,9 +9,12 @@ class IndexController extends Controller
 {
     use CheckSessionTrait;
 
-    public function IndexController(Request $req)
+    protected Request $request;
+
+    public function IndexController(Request $request)
     {
-        $this->CheckSession($req);
+        $this->request = $request;
+
         if ($this->isLogged()) {
             return redirect("/dashboard");
         } else {

@@ -14,14 +14,14 @@ use App\Exceptions\RoleNullException;
 
 
 class checkAuth {
-    private Request $req;
+    private Request $request;
     private string $message = "none";
     private string $login_as = "none";
     private bool $status = false;
 
     // terima data dari req
-    public function __construct(Request $req) {
-        $this->req = $req;
+    public function __construct(Request $request) {
+        $this->request = $request;
     }
 
     // req ke database
@@ -36,13 +36,13 @@ class checkAuth {
 
     private function getDataByRole()
     {
-        if ($this->req->has("role")) {
-            if ($this->req->get("role") == "student") {
+        if ($this->request->has("role")) {
+            if ($this->request->get("role") == "student") {
                 $this->login_as = "student";
-                return $this->getDataFromModelsAsStudent($this->req->get("identity"));
-            } else if ($this->req->get("role") == "admin") {
+                return $this->getDataFromModelsAsStudent($this->request->get("identity"));
+            } else if ($this->request->get("role") == "admin") {
                 $this->login_as = "admin";
-                return $this->getDataFromModelsAsAdmin($this->req->get("identity"));
+                return $this->getDataFromModelsAsAdmin($this->request->get("identity"));
             } else {
                 $this->message = "role tidak ditemukan!";
                 throw new RoleNotFoundException();
@@ -60,7 +60,7 @@ class checkAuth {
         try{
             $result = $this->getDataByRole();
             if ($result != null) {
-                $this->Compare($this->req->get("password"), $result->password);
+                $this->Compare($this->request->get("password"), $result->password);
             } else {
                 $this->message = "identitas tidak ditemukan";
             }
@@ -96,7 +96,7 @@ class checkAuth {
         return [
             "status" => $this->status,
             "role" => $this->login_as,
-            "identity" => $this->req->get("identity")
+            "identity" => $this->request->get("identity")
         ];
     }
 
