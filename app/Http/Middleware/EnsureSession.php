@@ -21,7 +21,7 @@ class EnsureSession
         $this->CheckSession($request);
 
         
-        if ($request->path() === "login" || explode("/", $request->path())[0] === "api") {
+        if ($request->path() === "login" || $request->path() === "api/auth") {
             return $next($request);
         } else {
             if ($this->isLogged(true)) {
