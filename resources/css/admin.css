@@ -2,9 +2,6 @@
 body {
     box-sizing: border-box;
 }
-
-
-
 .container {
     margin-left: 0px;
     margin-right: 0px;
@@ -22,12 +19,10 @@ body {
 .viewport-not-enough {
     display: none;
 }
-
+/* smallest viewport */
 @media screen and (max-width: 600px) {
     .container {
-        
         display: none;
-        
     }
 
     .viewport-not-enough {
@@ -102,14 +97,14 @@ body {
     padding: 10px;
 }
 
-/* assesment user style */
+/* assesment user style AKA page 0 */
 
 #assesment-user-page{
     display: initial;
 }
 
 .classlist-btn {
-    width: 99%;
+    width: 100%;
     /* margin: 30px 10px 10px 10px; */
     margin-top: 30px;
     padding: 10px 5px 10px 5px;
@@ -120,7 +115,7 @@ body {
 }
 
 .classlist {
-    width: 99%;
+    width: 100%;
     background-color: white;
     margin: 0;
     display: none;
@@ -139,20 +134,53 @@ body {
     text-decoration: none;
 }
 
+/* button */
+
+.operation-root {
+    margin: 10px 0px 10px 0px;
+    display: flex;
+}
+
+.searchbox {
+    padding: 10px;
+    border: 1px solid #4b00ff;
+}
+
 /* assesment user table */
 
 .user-table {
     margin-top: 10px;
+    display: none;
+    width: 100%;
 }
 .user-table > table {
     padding: 10px;
-    width: 99%;
+    width: 100%;
 }
 
 .user-table > table, th, td {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    /* border-collapse: collapse; */
+    text-align: left;
     border-collapse: collapse;
-    text-align: center;
+}
+tr > th {
+    /* border: 1px solid black; */
+    border-collapse: collapse;
+    padding: 10px;
+    background-color: #5869c9;
+    color: white;
+}
+
+tr > td {
+    /* border: 1px solid black; */
+
+    padding: 10px;
+    color: #848388;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f8ff;
 }
 
 .user-table-nomor {

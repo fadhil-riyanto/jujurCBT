@@ -27,3 +27,7 @@
     /* margin-left: 100%; */
     /* transform: translateX(-95px); */
 }
+
+.btn-expanded {
+    width: 100%;
+}
