@@ -6,30 +6,25 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Traits;
-use App\Enum;
 
-class EnsureUsersOnAdmin
+class EnsureNotAnonymousUser
 {
-    protected Request $request;
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    use Traits\CurrentSessionTrait;
+    use Traits\CheckSessionTrait;
 
     public function handle(Request $request, Closure $next): Response
     {
         $this->request = $request;
-        $this->cookie_deserialize($request);
 
-        if ($this->cookie_role == Enum\RoleSessionEnum::Admin) {
+        if ($this->isLogged($need_decrypt_cookie = false)) { // because at routing layer, we dont need to decrypt cookie
             return $next($request);
         } else {
-            throw new \App\Exceptions\InvalidRoleRoute();
+            return redirect("/login");
         }
-
-
         
     }
 }
