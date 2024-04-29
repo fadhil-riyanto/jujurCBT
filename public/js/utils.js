@@ -24,10 +24,15 @@ function show_display(selector)
 	document.getElementById(selector).style.display = "initial";
 }
 
-function show_modal(title, text, selector)
+function show_modal(title, text)
 {
 	document.getElementById("modal-text-txt").innerHTML = title;
 	document.getElementById("modal-msg").innerHTML = text;
 
-	show_display(selector);
+	show_display("modal-container-login-notify");
+}
+
+function watch_element(ids, index, callback) {
+	console.log("selected ")
+	callback(index);
 }
