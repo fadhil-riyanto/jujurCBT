@@ -6,10 +6,19 @@
     @vite("resources/css/components/_modal.css")
     @vite("resources/css/components/_buttons.css")
     @vite("resources/css/components/_alert.css")
+    @vite("resources/css/components/_searchbar.css")
     @vite("resources/css/admin.css")
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="/js/utils.js"></script>
+    <script src="/js/admin.js"></script>
+@endsection
+
+@section("inject_before_container")
+<div class="viewport-not-enough">
+    maaf, halaman admin hanya bisa diakses melalui PC / komputer untuk pengalaman yang optimal
+</div>
 @endsection
 
 @section("admin")
@@ -40,45 +49,8 @@
 </div>
 <div class="content">
     <div id="page_0">
-        <div class="class-selector">
-            <button class="classlist-btn" id="classlist-btn">daftar kelas</button>
-
-            <div class="classlist" id="classlist">
-                <div class="classlist-list"><a href="#">TKJ 1</a></div>
-                <div class="classlist-list"><a href="#">TKJ 2</a></div>
-                <div class="classlist-list"><a href="#">TKJ 3</a></div>
-                <div class="classlist-list"><a href="#">TKJ industri</a></div>
-                <div class="classlist-list"><a href="#">TKJ telkom</a></div>
-            </div>
-        </div>
-
-        <div class="user-table">
-            <table>
-                <tr>
-                    <th class="user-table-nomor">No</th>
-                    <th class="user-table-nama">Nama</th>
-                    <th class="user-table-ujian-num">Nomor ujian</th>
-                    <th class="user-table-passwd">password</th>
-                    <th class="user-table-is-block">blokir</th>
-                    <th class="user-table-is-action">aksi</th>
-                </tr>
-
-                <tr>
-                    <td>1</td>
-                    <td>damaris lidia </td>
-                    <td>10823</td>
-                    <td>123fadhi</td>
-                    <td>tidak</td>
-                    <td>
-                        <button type="button" class="btn-danger">blokir</button>
-                        <button type="button" class="btn-primary">hapus</button>
-                        <button type="button" class="btn-danger">ubah</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        @include("views/admin_page_0")
     </div>
-
 
     <div id="page_1" style="display: none;">
         page 1 coming soon
@@ -92,9 +64,7 @@
         page 3 coming soon
     </div>
 
-    <footer>
-        <span class="footer-txt">&copy Fadhil Riyanto</span>
-    </footer>
+
 </div>
 @endsection
 
@@ -105,6 +75,7 @@
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
+    
     // daftar kelas toggle
     $("#classlist-btn").click(function(){
         $("#classlist").toggle();
@@ -113,6 +84,37 @@
     $(".classlist-list").click(function(){
         $("#classlist").hide();
     });
+
+    $(".classlist-list").click(function () {
+        var selected_kelas = $(this).attr("data-kelas");
+        $.ajax({
+            url: "/api/admin/get_siswa_by_kelas",
+            method: "POST",
+            data: jQuery.param({
+                "kelas": selected_kelas,
+                "_token": "{{ csrf_token() }}"
+            }),
+            success: function (response) {
+                if (response["data"].length == 0) {
+                    show_modal("perhatian", "data kosong")
+                    $(".siswa-data-table").remove()
+                    $(".user-table").hide()
+                } else {
+                    $(".siswa-data-table").remove()
+                    for(i = 0; i < response["data"].length; i++) {
+                        populate_data_siswa_list(i + 1, response["data"][i]["nama"], response["data"][i]["nomor_ujian"], (response["data"][i]["nomor_ujian"] == 0 ? "tidak" : "ya"))
+                        console.log("loop")
+                    }
+                    // console.log(response["data"][0])
+                    
+                    $(".user-table").show()
+                }
+                
+            }
+        })
+        // show kelas yg bersangkuta
+    });
+
 
     function page_ajax(showed_page) {
         console.log(showed_page)
@@ -148,23 +150,5 @@
             $("#page_3").show()
             hide_other_page("#page_3")
     });
-    
-
-    // register id
-    // for(i = 0; i < sidebarlistmenu_id.length; i++) {
-    //     $("#" + sidebarlistmenu_id[i]).click(function(){
-    //         $("#page_" + i).show()
-
-    //         // hide other page
-    //         for(a = 0; a < sidebarlistmenu_id.length; a++) {
-    //             if (sidebarlistmenu_id[i] != sidebarlistmenu_id[a]) {
-    //                 $("page_" + i).hide()
-    //             }
-    //         }
-    //     });
-    // }
-
-
-
 </script>
 @endsection('script')
