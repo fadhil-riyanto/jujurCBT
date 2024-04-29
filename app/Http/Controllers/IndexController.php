@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Traits\CheckSessionTrait;
+use App\Traits;
+use App\Enum;
 
 class IndexController extends Controller
 {
-    use CheckSessionTrait;
+    use Traits\CurrentSessionTrait;
 
     protected Request $request;
 
@@ -15,10 +16,10 @@ class IndexController extends Controller
     {
         $this->request = $request;
 
-        if ($this->isLogged()) {
-            return redirect("/dashboard");
-        } else {
-            return redirect("/login");
-        }
+        $this->cookie_deserialize();
+        return redirect(match($this->cookie_role) {
+            Enum\RoleSessionEnum::Admin => "/admin",
+            Enum\RoleSessionEnum::Student => "/dashboard"
+        });
     }
 }

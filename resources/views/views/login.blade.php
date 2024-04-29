@@ -79,9 +79,9 @@
             {
                 //alert(data["message"]); // show response from the php script.
                 if (data["status"] == false) {
-                    show_modal("perhatian", data["message"], "modal-container-login-notify")
+                    show_modal("perhatian", data["message"])
                 } else {
-                    window.location.href = "/dashboard"
+                    window.location.href = data["redirect"]
                 }
             }
         });
