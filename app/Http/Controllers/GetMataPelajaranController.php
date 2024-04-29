@@ -10,7 +10,7 @@ class GetMataPelajaranController
 {
     use Traits\CurrentSessionTrait;
 
-    protected $req;
+    protected $request;
     protected $dumped_data;
     protected $mata_pelajaran_filtered = [];
 
@@ -32,10 +32,7 @@ class GetMataPelajaranController
 
     private function getMataPelajaranByAssigment()
     {
-        $dbs = Model\DaftarAssigmentModel::where("nomor_ujian", $this->cookie_identity);
-        // foreach($dbs as $db) {
-        //     dd
-        // }
+        $dbs = Models\DaftarAssigmentModel::where("nomor_ujian", $this->cookie_identity);
         dd($dbs);
     }
 
@@ -48,9 +45,9 @@ class GetMataPelajaranController
         $this->getMataPelajaranByAssigment();
     }
 
-    public function GetData(Request $req): array
+    public function GetData(Request $request): array
     {
-        $this->req = $req;
+        $this->request = $request;
         return $this->execute();
     }
 }
