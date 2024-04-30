@@ -10,7 +10,7 @@ Route::prefix("/api")->group(function() {
     
     //both
     Route::prefix("/global")->group(function() {
-        Route::get("/get_me", [Http\Controllers\GetMeController::class, "getData"])
+        Route::post("/get_me", [Http\Controllers\GetMeController::class, "getData"])
         ->middleware(Middleware\EnsureNotAnonymousUser::class);
     });
 
@@ -29,7 +29,7 @@ Route::prefix("/api")->group(function() {
         Route::get("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
 
-        Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllKelasController::class, "getData"])
+        Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
     });
     
