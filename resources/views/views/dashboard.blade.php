@@ -69,7 +69,7 @@
     }, 1000)
 
     $.ajax({
-        url: "/api/dashboard/get_me",
+        url: "/api/global/get_me",
         type: "POST",
         cache: false,
         data: {
