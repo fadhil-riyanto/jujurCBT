@@ -71,49 +71,67 @@
 
 @section('script')
 <script>
+
+    // preloaded
+    $.ajax({
+        url: "/api/admin/get_all_available_kelas",
+        method: "GET",
+        success: function (data) {
+            console.log(data)
+            for(i = 0; i < data.length; i++) {
+                populate_kelas_list(data[i]["data"], data[i]["view"])
+            }
+
+            $("#classlist-btn").click(function(){
+                $("#classlist").toggle();
+            });
+
+            $(".classlist-list").click(function(){
+                console.log("run1")
+                $("#classlist").hide();
+            });
+
+            $(".classlist-list").click(function () {
+                var selected_kelas = $(this).attr("data-kelas");
+                $.ajax({
+                    url: "/api/admin/get_siswa_by_kelas",
+                    method: "POST",
+                    data: jQuery.param({
+                        "kelas": selected_kelas,
+                        "_token": "{{ csrf_token() }}"
+                    }),
+                    success: function (response) {
+                        if (response["data"].length == 0) {
+                            show_modal("perhatian", "data kosong")
+                            $(".siswa-data-table").remove()
+                            $(".user-table").hide()
+                        } else {
+                            $(".siswa-data-table").remove()
+                            for(i = 0; i < response["data"].length; i++) {
+                                populate_data_siswa_list(i + 1, response["data"][i]["nama"], response["data"][i]["nomor_ujian"], (response["data"][i]["nomor_ujian"] == 0 ? "tidak" : "ya"))
+                                console.log("loop")
+                            }
+                            // console.log(response["data"][0])
+                            
+                            $(".user-table").show()
+                        }
+                        
+                    }
+                })
+                // show kelas yg bersangkuta
+            });
+        }
+    })
+    console.log("md")
     // jam
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
     
     // daftar kelas toggle
-    $("#classlist-btn").click(function(){
-        $("#classlist").toggle();
-    });
+    
 
-    $(".classlist-list").click(function(){
-        $("#classlist").hide();
-    });
-
-    $(".classlist-list").click(function () {
-        var selected_kelas = $(this).attr("data-kelas");
-        $.ajax({
-            url: "/api/admin/get_siswa_by_kelas",
-            method: "POST",
-            data: jQuery.param({
-                "kelas": selected_kelas,
-                "_token": "{{ csrf_token() }}"
-            }),
-            success: function (response) {
-                if (response["data"].length == 0) {
-                    show_modal("perhatian", "data kosong")
-                    $(".siswa-data-table").remove()
-                    $(".user-table").hide()
-                } else {
-                    $(".siswa-data-table").remove()
-                    for(i = 0; i < response["data"].length; i++) {
-                        populate_data_siswa_list(i + 1, response["data"][i]["nama"], response["data"][i]["nomor_ujian"], (response["data"][i]["nomor_ujian"] == 0 ? "tidak" : "ya"))
-                        console.log("loop")
-                    }
-                    // console.log(response["data"][0])
-                    
-                    $(".user-table").show()
-                }
-                
-            }
-        })
-        // show kelas yg bersangkuta
-    });
+    
 
 
     function page_ajax(showed_page) {
@@ -150,5 +168,7 @@
             $("#page_3").show()
             hide_other_page("#page_3")
     });
+
+    
 </script>
 @endsection('script')

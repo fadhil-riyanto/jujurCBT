@@ -1,14 +1,15 @@
+@inc
 <div class="class-selector">
     <button class="classlist-btn" id="classlist-btn">daftar kelas</button>
 
     <div class="classlist" id="classlist">
 
         <!-- get from backend -->
-        <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="1"><a href="#">TKJ 1</a></div>
+        <!-- <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="1"><a href="#">TKJ 1</a></div>
         <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="2"><a href="#">TKJ 2</a></div>
         <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="3"><a href="#">TKJ 3</a></div>
         <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="industri"><a href="#">TKJ industri</a></div>
-        <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="telkom"><a href="#">TKJ telkom</a></div>
+        <div class="classlist-list" data-kelas="12" data-jurusan="tkj" data-index="telkom"><a href="#">TKJ telkom</a></div> -->
     </div>
 </div>
 
