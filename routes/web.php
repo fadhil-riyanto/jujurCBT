@@ -10,7 +10,7 @@ Route::prefix("/api")->group(function() {
     
     //both
     Route::prefix("/global")->group(function() {
-        Route::post("/get_me", [Http\Controllers\GetMeController::class, "getData"])
+        Route::get("/get_me", [Http\Controllers\GetMeController::class, "getData"])
         ->middleware(Middleware\EnsureNotAnonymousUser::class);
     });
 
@@ -26,7 +26,7 @@ Route::prefix("/api")->group(function() {
         Route::post("/get_siswa_by_kelas", [Http\Controllers\AdminGetSiswaByKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
 
-        Route::get("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
+        Route::post("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
 
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
@@ -41,7 +41,7 @@ Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
 /* route for web */
 
 Route::get('/admin', function () {
-    return view("views/admin");
+    return view("views/admin_welcome");
 })->middleware(Middleware\EnsureUsersOnAdmin::class);
 
 Route::get('/dashboard', function () {
