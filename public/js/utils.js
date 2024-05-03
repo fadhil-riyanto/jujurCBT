@@ -73,3 +73,9 @@ function refresh_siswa_table(selected_kelas, csrf_token) {
 		}
 	})
 }
+
+
+function sidebar_change_state(id) 
+{
+	$(id).addClass("active")
+}

@@ -6,6 +6,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="http://127.0.0.1:4593/bootstrap-icons/font/bootstrap-icons.min.css">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+        <script src="http://127.0.0.1:4593/jquery/dist/jquery.min.js"></script>
         <script src="js/utils.js"></script>
         <title>jujurCBT Admin</title>
     </head>
