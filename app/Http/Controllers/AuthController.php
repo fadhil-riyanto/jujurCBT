@@ -114,7 +114,7 @@ class checkAuth {
             "status" => $this->status,
             "message" => $this->message,
             "redirect" => match ($this->login_as) {
-                "admin" => "/admin",
+                "admin" => "/admin/welcome",
                 "student" => "/dashboard",
                 default => null 
             }
