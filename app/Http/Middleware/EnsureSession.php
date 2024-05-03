@@ -29,7 +29,14 @@ class EnsureSession
             if ($this->isLogged(true)) {
                 return $next($request);
             } else {
-                return redirect("/login");
+                if (explode("/", $request->path())[0] === "api") {
+                    return response([
+                        "log2user_session_state" => "expired"
+                    ]);
+                } else {
+                    return redirect("/login");
+                }
+                
             }
         }
         
