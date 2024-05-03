@@ -23,7 +23,7 @@ Route::prefix("/api")->group(function() {
 
     // only for admin endpoint
     Route::prefix("/admin")->group(function() {
-        Route::post("/get_siswa_by_kelas", [Http\Controllers\AdminGetSiswaByKelasController::class, "getData"])
+        Route::get("/get_siswa_by_kelas", [Http\Controllers\AdminGetSiswaByKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
 
         Route::post("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
@@ -45,8 +45,20 @@ Route::prefix("/admin")->group(function() {
         return view("views/admin_welcome");
     })->middleware(Middleware\EnsureUsersOnAdmin::class);
 
-    Route::get('/welcome', function () {
-        return view("views/admin_welcome");
+    Route::get('/peserta_assesmen', function () {
+        return view("views/admin_peserta_assesmen");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+    Route::get('/soal_assesmen', function () {
+        return view("views/admin_soal_assesmen");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+    Route::get('/penugasan', function () {
+        return view("views/admin_penugasan");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+    Route::get('/nilai', function () {
+        return view("views/admin_nilai");
     })->middleware(Middleware\EnsureUsersOnAdmin::class);
 });
 
