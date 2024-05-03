@@ -67,4 +67,12 @@ class SiswaAccountRepository implements Interfaces\IAccount {
     public function RetrieveAllOfTheAvailableClass() {
         return $this->modelname->select("kelas")->distinct()->get();
     }
+
+    public function isNomorUjianDuplication($search): bool {
+        if(count($this->modelname->select("nomor_ujian")->where("nomor_ujian", $search)->get()) >= 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
