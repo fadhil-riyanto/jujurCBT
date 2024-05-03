@@ -75,7 +75,23 @@ function refresh_siswa_table(selected_kelas, csrf_token) {
 }
 
 
+// bs5
 function sidebar_change_state(id) 
 {
 	$(id).addClass("active")
+}
+
+function inspect_api_session(data) 
+{
+	if (data["log2user_session_state"] == "expired") (
+		$('#modal-session-expired').modal('show')
+	)
+}
+
+function bs5_show_modal_alert(title, content) 
+{
+	// fill content
+	$("#modal-alert-title").html(title)
+	$("#modal-alert-content").html(content)
+	$('#modal-alert').modal('show')
 }
