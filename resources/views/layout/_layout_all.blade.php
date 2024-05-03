@@ -22,5 +22,7 @@
         @include("components/_include_footer")
         
         @yield("script")
+
+       
     </body>
 </html>

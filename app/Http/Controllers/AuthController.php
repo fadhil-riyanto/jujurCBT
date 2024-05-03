@@ -152,23 +152,13 @@ class AuthController extends Controller
         return 0;
     }
     public function login(Request $request)
-    {
-        // set cookie to user
-        // $cookie = 
-        // Cookie::queue(cookie('login_status', "oke", 600));
-
-        // send cookie to user
-        // if ($this->getLoginStatus()) {
-        //     $request->session()->put("login_identity", )
-        // }
-        
+    {    
         return response([
             "status" => $this->GetLoginStatus($request),
             "message" => $this->message,
             "redirect" => $this->redirect
         ])
 
-        // ntar jadi array
         ->cookie(cookie('login_data', serialize(
             $this->auth->putCookieData()
         ), 200));
