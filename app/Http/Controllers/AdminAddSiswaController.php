@@ -19,22 +19,38 @@ class AdminAddSiswaController extends Controller
     private function validate() {
         $validator = Validator::make($this->request->all(), [
             "nama" => ["required", "max:255"],
-            "kelas" => ["required"],
-            "nomor_ujian" => ["required"],
+            // "kelas" => ["required"],
+            // "nomor_ujian" => ["required"],
             "password" => ["required"]
         ]);
 
         return $validator;
     }
+    
+    private function gen_random_ids() {
+        $microtime = explode(".", explode(" ", microtime())[0])[1];
+        $unix = time();
+        return substr($microtime * $unix, 0, 7);
+    }
+
+    private function genRandomNomorUjian() {
+        do {
+            $randomids = $this->gen_random_ids();
+            $result = $this->siswa_account_db->isNomorUjianDuplication($this->gen_random_ids());
+        } while ($result == true);
+
+        return $randomids;
+    }
 
     private function IsvalidateFail() {
+        // $this->genRandomNomorUjian();
         if ($this->validate()->fails()) {
             return ["status" => "false"];
         } else {
             $this->siswa_account_db->store(
                 $this->request->get("nama"), 
-                $this->request->get("kelas"), 
-                $this->request->get("nomor_ujian"), 
+                "12_tkj_1", 
+                $this->genRandomNomorUjian(),
                 $this->request->get("password")
             );
             return ["status" => "true"];
