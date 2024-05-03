@@ -18,6 +18,6 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         
         $exceptions->render(function (App\Exceptions\InvalidRoleRoute $e, Request $request) {
-            return response()->view('error.illegalroute', [], 500);
+            return response()->view('errors.illegalroute', [], 500);
         });
     })->create();
