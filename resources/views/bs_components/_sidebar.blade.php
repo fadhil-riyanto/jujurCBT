@@ -5,15 +5,15 @@
 <hr>
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
-        <a class="nav-link" id="sidebar-peserta-assesmen">peserta assesmen</a>
+        <a href="peserta_assesmen" class="nav-link" id="sidebar-peserta-assesmen">peserta assesmen</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="sidebar-soal-assesmen">soal assesmen</a>
+        <a href="soal_assesmen" class="nav-link" id="sidebar-soal-assesmen">soal assesmen</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="sidebar-report">report</a>
+        <a href="penugasan" class="nav-link" id="sidebar-penugasan">Penugasan</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="sidebar-nilai">Nilai</a>
+        <a href="nilai" class="nav-link" id="sidebar-nilai">Nilai</a>
     </li>
 </ul>
