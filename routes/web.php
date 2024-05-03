@@ -40,9 +40,17 @@ Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
 
 /* route for web */
 
-Route::get('/admin', function () {
-    return view("views/admin_welcome");
-})->middleware(Middleware\EnsureUsersOnAdmin::class);
+Route::prefix("/admin")->group(function() {
+    Route::get('/welcome', function () {
+        return view("views/admin_welcome");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+    Route::get('/welcome', function () {
+        return view("views/admin_welcome");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+});
+
+
 
 Route::get('/dashboard', function () {
     return view("views/dashboard");

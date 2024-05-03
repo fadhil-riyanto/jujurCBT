@@ -18,7 +18,7 @@ class IndexController extends Controller
 
         $this->cookie_deserialize();
         return redirect(match($this->cookie_role) {
-            Enum\RoleSessionEnum::Admin => "/admin",
+            Enum\RoleSessionEnum::Admin => "/admin/welcome",
             Enum\RoleSessionEnum::Student => "/dashboard"
         });
     }
