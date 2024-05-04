@@ -2,14 +2,18 @@
 
 @section("content") 
 
-<div class="dropdown">
-    <a class="btn btn-secondary dropdown-toggle mt-3" id="dropdown-pilih-kelas" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Pilih kelas
-    </a>
-  
-    <ul class="dropdown-menu" id="pilih-kelas"> 
+<div class="d-flex mt-3">
+    <div class="dropdown me-2">
+        <a class="btn btn-secondary dropdown-toggle " id="dropdown-pilih-kelas" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Pilih kelas
+        </a>
+      
+        <ul class="dropdown-menu" id="pilih-kelas"> 
+    
+        </ul>
+    </div>
+    <button type="button" class="btn btn-primary" id="tambah-siswa-button">Tambah siswa</button>
 
-    </ul>
 </div>
 
 <table id="datatable-kelas" class="table table-striped" style="width:100%;">
@@ -43,12 +47,13 @@
     }
 
     function populate_class_table(data) {
+        console.log(data)
         $('#data-siswa-body').empty();
         for(i = 0; i < data["data"].length; i++) {
             let html = "<tr>" +
                             "<td>" + (i + 1) + "</td>" +
                             "<td>" + data["data"][i]["nama"] + "</td>" +
-                            "<td>" + data["data"][i]["kelas"] + "</td>" +
+                            "<td>" + snake_case_tonormal(data["data"][i]["kelas"]) + "</td>" +
                             "<td>" + data["data"][i]["nomor_ujian"] + "</td>" +
                             "<td>" + ((data["data"][i]["blokir"] == 1) ? "Ya" : "Tidak") + "</td>" +
                         "</tr>";

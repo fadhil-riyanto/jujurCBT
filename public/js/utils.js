@@ -95,3 +95,8 @@ function bs5_show_modal_alert(title, content)
 	$("#modal-alert-content").html(content)
 	$('#modal-alert').modal('show')
 }
+
+function snake_case_tonormal(text) 
+{
+	return text.toUpperCase().replaceAll("_", " ")
+}
