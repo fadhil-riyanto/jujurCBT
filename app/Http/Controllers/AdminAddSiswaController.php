@@ -48,10 +48,10 @@ class AdminAddSiswaController extends Controller
             return ["status" => "false"];
         } else {
             $this->siswa_account_db->store(
-                $this->request->get("nama"), 
-                "12_tkj_1", 
+                $this->request->get("nama"),  // supplied from user
+                $this->request->get("kelas"), 
                 $this->genRandomNomorUjian(),
-                $this->request->get("password")
+                $this->request->get("password")  // supplied from user
             );
             return ["status" => "true"];
         }
