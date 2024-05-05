@@ -20,7 +20,7 @@ class AdminGetAllAvailableKelasController extends Controller
     }
 
     private function serialize() {
-        // $arr = [];
+        $arr = [];
         foreach($this->retrieve_data() as $data) {
             $arr[] = [
                 "data" => $data->kelas,
