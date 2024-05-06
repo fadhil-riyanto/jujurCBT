@@ -15,6 +15,7 @@ class IndexController extends Controller
     public function IndexController(Request $request)
     {
         $this->request = $request;
+        $request->session()->put('key', 'valuefromfirstuser');
 
         $this->cookie_deserialize();
         return redirect(match($this->cookie_role) {

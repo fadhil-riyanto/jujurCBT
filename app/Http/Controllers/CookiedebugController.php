@@ -19,9 +19,10 @@ class CookiedebugController extends Controller
         //     "key1" => "val1",
         //     "key2" => "val2"
         // ])));
+        
 
-        $this->cookie_deserialize($request);
-        dd($this);
-        return view("error.illegalroute");
+        // $this->cookie_deserialize($request);
+        // dd($this);
+        return $request->session()->get("key");
     }
 }
