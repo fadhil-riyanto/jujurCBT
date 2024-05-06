@@ -29,6 +29,12 @@ Route::prefix("/api")->group(function() {
         Route::post("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
 
+        Route::post("/add_kelas", [Http\Controllers\AdminAddKelasController::class, "Add"])
+        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+        Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
+        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnAdmin::class);
     });
@@ -47,6 +53,10 @@ Route::prefix("/admin")->group(function() {
 
     Route::get('/peserta_assesmen', function () {
         return view("views/admin_peserta_assesmen");
+    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+
+    Route::get('/manajemen_kelas', function () {
+        return view("views/admin_manajemen_kelas");
     })->middleware(Middleware\EnsureUsersOnAdmin::class);
 
     Route::get('/soal_assesmen', function () {
