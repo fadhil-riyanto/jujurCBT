@@ -5,20 +5,21 @@
         @vite("resources/css/bs5_custom.css")
 
         <!-- bootstrap -->
-        <link href="http://127.0.0.1:4593/bootstrap.min.css" rel="stylesheet">
-        <script src="http://127.0.0.1:4593/bootstrap.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 
         <!-- bootstrap icon -->
-        <link rel="stylesheet" href="http://127.0.0.1:4593/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         
         <!-- jquery -->
-        <script src="http://127.0.0.1:4593/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
         <!-- datatables -->
-        <link rel="stylesheet" href="http://127.0.0.1:4593/dataTables.dataTables.css" />
-        <script src="http://127.0.0.1:4593/dataTables.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/2.0.6/css/dataTables.dataTables.css" />
+        <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
 
         <script src="/js/utils.js"></script>
+        <script src="/js/datatableautoajax.js"></script>
         <title>jujurCBT Admin</title>
     </head>
     <style>
