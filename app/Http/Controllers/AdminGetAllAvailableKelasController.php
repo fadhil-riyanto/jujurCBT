@@ -8,7 +8,7 @@ use App\Repositories;
 class AdminGetAllAvailableKelasController extends Controller
 {
     public function __construct(
-        private Repositories\SiswaAccountRepository $siswa_account_db
+        private Repositories\KelasRepository $KelasRepository
     ){}
 
     private function class_db_unpack($string): string {
@@ -16,7 +16,7 @@ class AdminGetAllAvailableKelasController extends Controller
     }
 
     private function retrieve_data() {
-        return $this->siswa_account_db->RetrieveAllOfTheAvailableClass();
+        return $this->KelasRepository->RetrieveAllOfTheAvailableClass();
     }
 
     private function serialize() {
@@ -24,7 +24,7 @@ class AdminGetAllAvailableKelasController extends Controller
         foreach($this->retrieve_data() as $data) {
             $arr[] = [
                 "data" => $data->kelas,
-                "view" => $this->class_db_unpack($data->kelas)
+                "view" => normal2snake_case_invers($data->kelas)
             ];
         }
         return $arr;
@@ -32,7 +32,7 @@ class AdminGetAllAvailableKelasController extends Controller
     }
 
     public function getData(Request $request) {
-        // $this->siswa_account_db->
+        // $this->KelasRepository->
         // return response(dd());
         // dd($this->retrieve_data());
         return response($this->serialize());
