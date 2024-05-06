@@ -22,11 +22,11 @@ class AdminAddKelasController extends Controller
                 ));
 
                 return [
-                    "messange" => true
+                    "message" => true
                 ];
             } catch (Exceptions\ClassAlreadyAdded) {
                 return [
-                    "messange" => "kelas sudah ada"
+                    "message" => "kelas sudah ada"
                 ];
             }
             
