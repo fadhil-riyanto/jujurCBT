@@ -106,7 +106,12 @@
                 url: actionUrl,
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
-                    adatatableajax.update()
+                    if (data["message"] != true) {
+                        bs5_show_modal_alert("perhatian!", "kelas tersebut telah ada")
+                    } else {
+                        adatatableajax.update()
+                    }
+                    
                 }
             });
         })
