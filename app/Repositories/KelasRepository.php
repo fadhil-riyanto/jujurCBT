@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models;
+use App\Exceptions;
 
 class KelasRepository {
     public function __construct() {
@@ -16,7 +17,7 @@ class KelasRepository {
         if ($this->isFound($classname)) {
             // send class is already added
             // throw exception
-            throw new ClassAlreadyAdded();
+            throw new Exceptions\ClassAlreadyAdded();
         } else {
             $this->model->kelas = $classname;
             $this->model->save();
