@@ -34,18 +34,18 @@ class checkAuth {
 
     private function getDataFromModelsAsStudent($nomor_ujian): credential_return|null {
         $ret = SiswaAccountModel::where('nomor_ujian', $nomor_ujian)->first();
-        return new credential_return(
+        return ($ret != null) ? new credential_return(
             $ret->nomor_ujian,
             $ret->password
-        );
+        ) : null;
     }
 
     private function getDataFromModelsAsAdmin($username): credential_return|null {
         $ret = AdminAccountModel::where('username', $username)->first();
-        return new credential_return(
+        return ($ret != null) ? new credential_return(
             $ret->username,
             $ret->password
-        );
+        ) : null;
     }
 
     private function getDataFromModelsAsSuperAdmin($username): credential_return|null {
