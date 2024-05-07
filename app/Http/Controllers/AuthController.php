@@ -6,12 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\SiswaAccountModel;
 use App\Models\AdminAccountModel;
+use App\Models\SuperadminModel;
 
 use Illuminate\Support\Facades\Cookie;
 
 use App\Enum as Enumlist;
 use App\Exceptions\RoleNullException;
 
+class credential_return {
+    public function __construct(public string $user, public string $password) {}
+}
 
 class checkAuth {
     private Request $request;
@@ -28,13 +32,46 @@ class checkAuth {
 
     // req ke database
 
-    private function getDataFromModelsAsStudent($nomor_ujian): SiswaAccountModel|null {
-        return SiswaAccountModel::where('nomor_ujian', $nomor_ujian)->first();
+    private function getDataFromModelsAsStudent($nomor_ujian): credential_return|null {
+        $ret = SiswaAccountModel::where('nomor_ujian', $nomor_ujian)->first();
+        return new credential_return(
+            $ret->nomor_ujian,
+            $ret->password
+        );
     }
 
-    private function getDataFromModelsAsAdmin($username): AdminAccountModel|null {
-        return AdminAccountModel::where('username', $username)->first();
+    private function getDataFromModelsAsAdmin($username): credential_return|null {
+        $ret = AdminAccountModel::where('username', $username)->first();
+        return new credential_return(
+            $ret->username,
+            $ret->password
+        );
     }
+
+    private function getDataFromModelsAsSuperAdmin($username): credential_return|null {
+        $first_search_db = SuperadminModel::all();
+        // dd($first_search_db[0]);
+        if (count($first_search_db) != 0) {
+            if ($first_search_db[0]->username == $username && strtolower($first_search_db[0]->username) != "admin") {
+                // first scenario, user already change default password, but not as 'admin'
+                return new credential_return(
+                    $first_search_db[0]->username,
+                    $first_search_db[0]->password
+                );
+            }
+        } else { // username and password is not set yet
+            if ($username == env("SUPERADMIN_DEFAULT_USER", null)) {
+                return new credential_return(
+                    env("SUPERADMIN_DEFAULT_USER", null),
+                    env("SUPERADMIN_DEFAULT_PASS", null)
+                );
+            }
+        }
+
+        
+    }
+
+    
 
     private function getDataByRole()
     {
@@ -42,8 +79,11 @@ class checkAuth {
             if ($this->request->get("role") == "student") {
                 $this->login_as = "student";
                 return $this->getDataFromModelsAsStudent($this->request->get("identity"));
-            } else if ($this->request->get("role") == "admin") {
-                $this->login_as = "admin";
+            }else if ($this->request->get("role") == "superadmin") {
+                $this->login_as = "superadmin";
+                return $this->getDataFromModelsAsSuperAdmin($this->request->get("identity"));
+            } else if ($this->request->get("role") == "pengajar") {
+                $this->login_as = "pengajar";
                 return $this->getDataFromModelsAsAdmin($this->request->get("identity"));
             } else {
                 $this->message = "role tidak ditemukan!";
@@ -114,8 +154,9 @@ class checkAuth {
             "status" => $this->status,
             "message" => $this->message,
             "redirect" => match ($this->login_as) {
-                "admin" => "/admin/welcome",
+                "superadmin" => "/admin/welcome",
                 "student" => "/dashboard",
+                "pengajar" => "/pengajar",
                 default => null 
             }
         ];
@@ -153,6 +194,8 @@ class AuthController extends Controller
     }
     public function login(Request $request)
     {    
+        // $this->GetLoginStatus($request);
+        // dd($this->auth->putCookieData());
         return response([
             "status" => $this->GetLoginStatus($request),
             "message" => $this->message,

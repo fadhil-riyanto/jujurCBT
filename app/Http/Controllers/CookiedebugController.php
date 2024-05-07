@@ -21,8 +21,8 @@ class CookiedebugController extends Controller
         // ])));
         
 
-        // $this->cookie_deserialize($request);
-        // dd($this);
+        $this->cookie_deserialize($request);
+        dd($this);
         return $request->session()->get("key");
     }
 }

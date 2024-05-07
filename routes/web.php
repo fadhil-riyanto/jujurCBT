@@ -24,19 +24,19 @@ Route::prefix("/api")->group(function() {
     // only for admin endpoint
     Route::prefix("/admin")->group(function() {
         Route::get("/get_siswa_by_kelas", [Http\Controllers\AdminGetSiswaByKelasController::class, "getData"])
-        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
         Route::post("/add_siswa", [Http\Controllers\AdminAddSiswaController::class, "Add"])
-        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
         Route::post("/add_kelas", [Http\Controllers\AdminAddKelasController::class, "Add"])
-        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
         Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
-        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
-        ->middleware(Middleware\EnsureUsersOnAdmin::class);
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
     });
     
 });
@@ -49,30 +49,33 @@ Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
 Route::prefix("/admin")->group(function() {
     Route::get('/welcome', function () {
         return view("views/admin_welcome");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
     Route::get('/peserta_assesmen', function () {
         return view("views/admin_peserta_assesmen");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
     Route::get('/manajemen_kelas', function () {
         return view("views/admin_manajemen_kelas");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
     Route::get('/soal_assesmen', function () {
         return view("views/admin_soal_assesmen");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
     Route::get('/penugasan', function () {
         return view("views/admin_penugasan");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
     Route::get('/nilai', function () {
         return view("views/admin_nilai");
-    })->middleware(Middleware\EnsureUsersOnAdmin::class);
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 });
 
 
+Route::get('/pengajar', function () {
+    return view("views/pengajar");
+})->middleware(Middleware\EnsureUsersOnPengajar::class);
 
 Route::get('/dashboard', function () {
     return view("views/dashboard");

@@ -5,6 +5,7 @@ namespace App\Enum;
 enum RoleSessionEnum
 {
     case Student;
-    case Admin;
+    case SuperAdmin;
+    case Pengajar;
 }
 

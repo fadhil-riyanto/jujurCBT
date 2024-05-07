@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Traits;
 use App\Enum;
 
-class EnsureUsersOnAdmin
+class EnsureUsersOnSuperAdmin
 {
     protected Request $request;
     /**
@@ -23,7 +23,7 @@ class EnsureUsersOnAdmin
         $this->request = $request;
         $this->cookie_deserialize($request);
 
-        if ($this->cookie_role == Enum\RoleSessionEnum::Admin) {
+        if ($this->cookie_role == Enum\RoleSessionEnum::SuperAdmin) {
             return $next($request);
         } else {
             throw new \App\Exceptions\InvalidRoleRoute();

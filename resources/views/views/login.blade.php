@@ -23,14 +23,16 @@
                 <input type="radio" name="role" id="student" value="student" onclick="changeform_placeholder()">
                 <label for="student">siswa</label>
 
-                <input type="radio" name="role" id="admin" value="admin" onclick="changeform_placeholder()">
-                <label for="admin">admin</label>
+                <input type="radio" name="role" id="pengajar" value="pengajar" onclick="changeform_placeholder()">
+                <label for="pengajar">pengajar</label>
+
+                <input type="radio" name="role" id="superadmin" value="superadmin" onclick="changeform_placeholder()">
+                <label for="superadmin">admin</label>
             </div>
             
             <div class="form-field">
                 <i class="bi bi-person-circle"></i>
                 <input id="identity" type="text" name="identity" placeholder="nomor ujian" required>
-            
             </div>  
 
             <div class="form-field">
@@ -53,9 +55,11 @@
 @section('script')
 <script>
     function changeform_placeholder() {
-        if ($("#admin").is(":checked")) {
+        if ($("#superadmin").is(":checked")) {
             $("#identity").prop("placeholder","username")
-        } else {
+        } else if ($("#pengajar").is(":checked")) {
+            $("#identity").prop("placeholder","username")
+        } else {1
             $("#identity").prop("placeholder","nomor ujian")
         }
     }

@@ -24,10 +24,11 @@ trait CurrentSessionTrait {
     {
         $deserialized = $this->do_unserialize();
 
-        $this->cookie_status = (($deserialized["status"] === "true" ? true : false));
+        $this->cookie_status = (($deserialized["status"] == "true" ? true : false));
         $this->cookie_role = match($deserialized["role"]) {
             "student" => RoleSessionEnum::Student,
-            "admin" => RoleSessionEnum::Admin
+            "superadmin" => RoleSessionEnum::SuperAdmin,
+            "pengajar" => RoleSessionEnum::Pengajar
         };
         $this->cookie_identity = $deserialized["identity"];
     }
