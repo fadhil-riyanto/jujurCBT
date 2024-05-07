@@ -67,6 +67,7 @@ class checkAuth {
                 );
             }
         }
+        return null;
 
         
     }
