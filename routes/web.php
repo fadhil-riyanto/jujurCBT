@@ -32,6 +32,12 @@ Route::prefix("/api")->group(function() {
         Route::post("/add_kelas", [Http\Controllers\AdminAddKelasController::class, "Add"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+        Route::get("/block_siswa", [Http\Controllers\AdminSiswaBlock::class, "doBlock"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::get("/unblock_siswa", [Http\Controllers\AdminSiswaUnblock::class, "doUnblock"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
         Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
@@ -59,6 +65,10 @@ Route::prefix("/admin")->group(function() {
         return view("views/admin_manajemen_kelas");
     })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+    Route::get('/atur_pengajar', function () {
+        return view("views/admin_atur_pengajar");
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
     Route::get('/soal_assesmen', function () {
         return view("views/admin_soal_assesmen");
     })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
@@ -75,7 +85,8 @@ Route::prefix("/admin")->group(function() {
 
 Route::get('/pengajar', function () {
     return view("views/pengajar");
-})->middleware(Middleware\EnsureUsersOnPengajar::class);
+});
+// ->middleware(Middleware\EnsureUsersOnPengajar::class)
 
 Route::get('/dashboard', function () {
     return view("views/dashboard");
@@ -86,3 +97,9 @@ Route::get('/login', function () {
 });
 
 Route::get('/', [Http\Controllers\IndexController::class, "IndexController"]);
+
+// all can access
+Route::get('/blokir', function () {
+    return view("errors/blokir");
+});
+

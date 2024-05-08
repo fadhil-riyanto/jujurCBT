@@ -75,4 +75,21 @@ class SiswaAccountRepository implements Interfaces\IAccount {
             return false;
         }
     }
+
+    public function unblockSiswa($nomor_ujian) {
+        $this->modelname::where('nomor_ujian', $nomor_ujian)
+            ->update(["blokir" => 0]);
+    }
+
+    public function blockSiswa($nomor_ujian) {
+        $this->modelname::where('nomor_ujian', $nomor_ujian)
+            ->update(["blokir" => 1]);
+    }
+
+    public function showBlockStatus($nomor_ujian) {
+        return $this->modelname->select("blokir")
+            ->where('nomor_ujian', $nomor_ujian)
+            ->first()
+            ->blokir;
+    }
 }

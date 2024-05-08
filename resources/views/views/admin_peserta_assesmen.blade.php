@@ -6,7 +6,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addSiswaModalLabel">Tambahkan siswa</h1>
+          <h1 class="modal-title fs-5" id="addSiswaModalLabel">Edit</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -54,6 +54,7 @@
             <th>Kelas</th>
             <th>Nomor Ujian</th>
             <th>Blokir</th>
+            <th>Opsi</th>
         </tr>
     </thead>
 
@@ -77,6 +78,20 @@
         // console.log(data)
     }
 
+
+    function block_student(nomor_ujian) {
+        fetch("/api/admin/block_siswa?" + new URLSearchParams({
+            nomor_ujian: nomor_ujian
+        })).then(() => exec_ajax_table_siswa(global_selected_class))
+
+    }
+
+    function unblock_student(nomor_ujian) {
+        fetch("/api/admin/unblock_siswa?" + new URLSearchParams({
+            nomor_ujian: nomor_ujian
+        })).then(() => exec_ajax_table_siswa(global_selected_class))
+    }
+
     function populate_class_table(data) {
         console.log(data)
         $('#data-siswa-body').empty();
@@ -87,6 +102,9 @@
                             "<td>" + snake_case_tonormal(data["data"][i]["kelas"]) + "</td>" +
                             "<td>" + data["data"][i]["nomor_ujian"] + "</td>" +
                             "<td>" + ((data["data"][i]["blokir"] == 1) ? "Ya" : "Tidak") + "</td>" +
+                            "<td>" + 
+                                ((data["data"][i]["blokir"] == 1) ? "<button type='button' class='btn btn-secondary' onclick='unblock_student(" + data["data"][i]["nomor_ujian"] + ")'>Buka blokir</button>" : "<button type='button' class='btn btn-secondary' onclick='block_student(" + data["data"][i]["nomor_ujian"] + ")'>Blokir sekarang</button>") +
+                        "</td>" +
                         "</tr>";
             console.log(html)
             $("#data-siswa-body").append(html)

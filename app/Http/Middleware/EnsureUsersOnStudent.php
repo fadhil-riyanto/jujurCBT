@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Traits\CurrentSessionTrait;
 use App\Enum;
 
+use App\Repositories;
+
 class EnsureUsersOnStudent
 {
     protected Request $request;
@@ -20,12 +22,18 @@ class EnsureUsersOnStudent
 
     public function handle(Request $request, Closure $next): Response
     {
+        $siswa_account_db = new Repositories\SiswaAccountRepository();
         $this->request = $request;
         
         $this->cookie_deserialize($request);
 
         if ($this->cookie_role == Enum\RoleSessionEnum::Student) {
-            return $next($request);
+            if (!$siswa_account_db->showBlockStatus($this->cookie_identity)) {
+                return $next($request);
+            } else {
+                return redirect("/blokir");
+            }
+            
         } else {
             throw new \App\Exceptions\InvalidRoleRoute();
         }
