@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories;
-use DataTables;
 
 class AdminSiswaDelete extends Controller
 {
@@ -16,7 +15,6 @@ class AdminSiswaDelete extends Controller
 
     public function Delete(Request $request) {
         $this->request = $request;
-        Datatables::of();
 
         $request->validate([
             'nomor_ujian' => 'required'
