@@ -38,6 +38,15 @@ Route::prefix("/api")->group(function() {
         Route::get("/unblock_siswa", [Http\Controllers\AdminSiswaUnblock::class, "doUnblock"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+        Route::post("/change_password_siswa", [Http\Controllers\AdminSiswaChangePassword::class, "Change"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::post("/change_nama_siswa", [Http\Controllers\AdminSiswaChangeNama::class, "Change"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::get("/delete_siswa", [Http\Controllers\AdminSiswaDelete::class, "Delete"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
         Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
