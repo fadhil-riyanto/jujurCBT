@@ -50,6 +50,10 @@ Route::prefix("/api")->group(function() {
         Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+        Route::resource("pengajar", Http\Controllers\PengajarController::class)->only([
+            'create', 'index', 'store', 'update', 'destroy', 'edit'
+        ])->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
     });

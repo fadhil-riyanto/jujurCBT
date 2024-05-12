@@ -11,6 +11,9 @@
         <a href="manajemen_kelas" class="nav-link" id="sidebar-manajemen-kelas">Manajemen kelas</a>
     </li>
     <li class="nav-item">
+        <a href="atur_pengajar" class="nav-link" id="sidebar-atur-pengajar">Atur pengajar</a>
+    </li>
+    <li class="nav-item">
         <a href="soal_assesmen" class="nav-link" id="sidebar-soal-assesmen">soal assesmen</a>
     </li>
     <li class="nav-item">
