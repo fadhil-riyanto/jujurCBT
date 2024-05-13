@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string("kode_mata_pelajaran");
             $table->string("nama_mata_pelajaran");
             $table->json("pengampu")->nullable();
+            $table->integer("total_soal")->default(1); // initial 1
+            $table->boolean("allow_copy")->default(true);
+            $table->boolean("enable_right_click")->default(true);
             $table->timestamps();
         });
     }
