@@ -110,7 +110,8 @@
                 {
                     data: "kode_mata_pelajaran",
                     render: function(data, type, row, meta) {
-                        return "<button class='btn btn-primary btnremoveclick' data-kode-matapelajaran=" + data + ">hapus</button>"
+                        return "<button class='btn btn-danger me-2 btnremoveclick' data-kode-matapelajaran=" + data + ">hapus</button>" +
+                            "<button class='btn btn-primary btnedit' data-kode-matapelajaran=" + data + ">edit soal</button>";
                         // return data
                     }
                 }
@@ -137,6 +138,12 @@
             // console.log()
             global_selected_mapel = $(this).data("kode-matapelajaran")
             $("#modaldeleteconfirm").modal("show")
+        })
+
+        $("table tbody").on("click", ".btnedit", function(obj) {
+            // console.log()
+            global_selected_mapel = $(this).data("kode-matapelajaran")
+            window.location.href = "/admin/edit_soal?selected=" + global_selected_mapel
         })
 
         $("#confirm_delete_mapel").submit(function(obj) {
