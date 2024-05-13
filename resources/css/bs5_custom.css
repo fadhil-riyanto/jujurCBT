@@ -1,0 +1,12 @@
+.custom-link-active {
+    border-bottom: 3px solid #4c2b87;
+}
+
+.custom-soal-on-edit {
+    background-color: #e3dded;
+}
+
+#input-title[type=text] {
+    background-color: #3CBC8D;
+    color: white;
+}
