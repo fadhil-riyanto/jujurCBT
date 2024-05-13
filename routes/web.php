@@ -54,6 +54,15 @@ Route::prefix("/api")->group(function() {
             'create', 'index', 'store', 'update', 'destroy', 'edit'
         ])->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+        Route::post("/create_mapel", [Http\Controllers\DaftarMataPelajaranController::class, "Create"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::get("/getall_mapel", [Http\Controllers\DaftarMataPelajaranController::class, "Index"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::post("/remove_mapel", [Http\Controllers\DaftarMataPelajaranController::class, "Delete"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
     });
