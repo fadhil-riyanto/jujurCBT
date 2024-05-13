@@ -20,10 +20,10 @@ return new class extends Migration
             | karna soal punya 2 sisi, sisi text dan sisi gambar(matematika)
             |
             */
-            $table->string("image_soal");
-            $table->string("text_soal");
+            $table->string("image_soal")->nullable();
+            $table->string("text_soal")->nullable();
 
-            $table->integer("index_kunci_jawaban"); // i.e 2 (B)
+            $table->integer("index_kunci_jawaban")->nullable(); // i.e 2 (B)
             $table->timestamps();
         });
 
