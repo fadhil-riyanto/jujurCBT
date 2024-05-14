@@ -6,6 +6,7 @@ use App\Models;
 
 class DaftarMataPelajaranRepository {
     public function __construct(
+        protected Models\SoalModel $soal_model,
         protected Models\DaftarMataPelajaranModel $daftar_mapel_model
     ){}
 
@@ -34,5 +35,6 @@ class DaftarMataPelajaranRepository {
     public function deleteHardMataPelajaran($kodemapel) {
         // do in daftar_mapel_model, then delete all data in soal, essay. etc
         $this->daftar_mapel_model->where("kode_mata_pelajaran", $kodemapel)->delete();
+        $this->soal_model->where("mata_pelajaran", $kodemapel)->delete();
     }
 }
