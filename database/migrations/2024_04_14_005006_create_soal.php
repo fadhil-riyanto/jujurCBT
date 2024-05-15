@@ -23,6 +23,9 @@ return new class extends Migration
             $table->string("image_soal")->nullable();
             $table->string("text_soal")->nullable();
 
+            // tipe soal
+            $table->string("tipe_soal")->default("pilihan_ganda");
+
             $table->integer("index_kunci_jawaban")->nullable(); // i.e 2 (B)
             $table->timestamps();
         });
