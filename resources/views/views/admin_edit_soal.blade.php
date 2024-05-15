@@ -18,30 +18,54 @@
 
             </form>
         </div> -->
-        <div class="card" id="soal1">
-            <h5 class="card-header">Soal nomor 1</h5>
+        <div class="card" id="soal_input_block">
             <div class="card-body">
+                <h5 class="card-header" id="soal_index"></h5>
                 <div class="input-group">
-                    <textarea class="form-control" placeholder="tulis text soal disini" id="floatingTextarea"></textarea>
-                    <label class="input-group-text" for="inputGroupFile02">Upload gambar</label>
+                    <textarea class="form-control" placeholder="tulis text soal disini" id="soal_value"></textarea>
+
                     <button type="button" class="btn btn-outline-secondary">Tipe soal</button>
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="visually-hidden">Toggle Dropdown</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Soal pilihan ganda</a></li>
-                        <li><a class="dropdown-item" href="#">Soal essay</a></li>
+                        <li><a class="dropdown-item soal_type_selector" href="#" data-tipe-soal="pilihan_ganda">Soal pilihan ganda</a></li>
+                        <li><a class="dropdown-item soal_type_selector" href="#" data-tipe-soal="essay">Soal essay</a></li>
                     </ul>
                 </div>
 
-                <div class="input-group my-3">
-                    <span class="input-group-text" id="inputGroup-sizing-default">Default</span>
-                    <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                <h5 class="card-header mt-2">Tambah gambar</h5>
+                <div class="mb-3">
+                    <input class="form-control" type="file" id="formFile">
+                </div>
+
+                <div id="pilihan_ganda_option">
+                    <h5 class="card-header mt-2">Pilihan</h5>
+                    <div id="input_option_list">
+
+                    </div>
+                    <div class="dropdown me-2">
+                        <a class="btn btn-secondary dropdown-toggle mt-2" id="dropdown-pilih-kelas" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          kunci jawaban
+                        </a>
+                    
+                        <ul class="dropdown-menu" > 
+                            <li id="kunci_jawaban">
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="essay_option">
+                    <div class="alert alert-primary" role="alert">
+                        Soal ini dikerjakan sebagai isian / essay
+                    </div>
+                      
                 </div>
 
                 <div class="d-flex">
-                    <button type="button" class="ms-auto btn btn-secondary">Tambah opsi</button>
-                    <button type="button" class="ms-1 btn btn-secondary">Simpan</button>
+                    <button type="button" id="add_more_options" class="ms-auto btn btn-secondary">Tambah opsi</button>
+                    <button type="button" id="save_soal" class="ms-1 btn btn-secondary">Simpan</button>
                     <button type="button" class="ms-1 btn btn-danger">hapus soal ini</button>
                 </div>
             </div>
@@ -49,7 +73,6 @@
     </div>
     <div class="col-2">
         <div class="d-flex flex-column" id="soal-selector">
-            <button type="button" class="btn btn-primary mb-1 change_edit_soal_num" data-nomor-soal="1">1</button>
         </div>
     </div>
 </div>
@@ -58,16 +81,75 @@
 <script>
     global_selected_mapel = null
     global_highest_soal_reached_index = 0
+    global_list_stack_literal_inc = 0;
+    global_selected_id = 0;
+    global_is_saved = 0;
+
+    char_literals = [
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", 
+        "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+    ]
 
     var struct_data2sent = {
         soal: null,
         imglink: null,
-        soal_type: null, // 2 value, essay or selection
+        soal_type: "pilihan_ganda", // 2 value, essay or selection
         selection_options: [
             // represents a,b,c etc
         ],
+        kunci_jawaban: null
+    }
 
+    // run this operation only everything is saved
+    function reset_everything() {
 
+        struct_data2sent.selection_options = []
+        struct_data2sent.soal = null
+        struct_data2sent.kunci_jawaban = null
+        global_list_stack_literal_inc = 0
+        $("#input_option_list").empty()
+        $("#kunci_jawaban").empty()
+        $("#soal_value").val("")
+
+    }
+
+    function generate_new_options(literals) {
+        var html =  "<div class='input-group my-3'>" +
+                        "<span class='input-group-text opsi_pilihan_select'>" + literals + "</span>" +
+                        "<input type='text' class='form-control' id=" + "option_" +literals + ">" +
+                    "</div>";
+
+        var kunci_jawaban = "<a href='#' class='dropdown-item select-kunci-jawaban' data-kunci-literal=" + literals + ">" + literals + "</a>"
+
+        $("#input_option_list").append(html)
+        $("#kunci_jawaban").append(kunci_jawaban)
+    }
+
+    function generate_button_list_changer() { // return newest view id
+        $("#soal-selector").empty()
+        var data2return = {
+            "view_id": 0,
+            "server_id": 0
+        }
+        var htmlstr = (literate_int_view, id) => {
+            data = "<button type='button' class='btn btn-primary mb-1 change_edit_soal_num' data-id-cureent-soal=" + id + " data-literate-id=" + literate_int_view + ">" + literate_int_view +
+                "</button>"
+            return data;
+
+        }
+        $.ajax({
+            url: "/api/admin/soal/get_total_soal_with_ids/" + global_selected_mapel,
+            success: function(data) {
+                for (var i = 0; i < data.length; i++) {
+                    $("#soal-selector").append(htmlstr((i + 1), data[i]["id"]))
+                    global_highest_soal_reached_index = i;
+                }
+            }
+        })
+    }
+
+    function populate_option(data) {
+        
     }
 
     $.ajaxSetup({
@@ -78,10 +160,16 @@
 
     $(document).ready(function() {
         sidebar_change_state("#sidebar-soal-assesmen")
+        $("#soal_input_block").hide()
         let selected_mapel = new URLSearchParams(window.location.search)
         global_selected_mapel = selected_mapel.get("selected")
+        generate_button_list_changer()
+
 
         $("#addsoal").click(function(opt) {
+            $("#soal_input_block").show()
+            $("#pilihan_ganda_option").show() // pilihan ganda as default
+            $("#essay_option").hide()
             // global_highest_soal_reached_index = global_highest_soal_reached_index + 1;
             // $("#soal-selector").append("<button type='button' class='btn btn-primary mb-1 change_edit_soal_num' data-nomor-soal=" + (global_highest_soal_reached_index + 1) + ">" +
             //     (global_highest_soal_reached_index + 1) + "</button>")
@@ -89,13 +177,80 @@
                 url: "/api/admin/soal/create/" + global_selected_mapel,
                 method: "POST",
                 success: function(data) {
-                    console.log(data)
+                    // console.log(data)
+                    reset_everything()
+                    generate_button_list_changer()
+                    $("#soal_index").html("Soal " + data["total_soal_len"])
+                    global_selected_id = data["new_id"]
                 }
             })
         })
 
-        $(".change_edit_soal_num").click(function(opt) {
-            alert($(this).data("nomor-soal"))
+        $("#add_more_options").click(function(obj) {
+            generate_new_options(char_literals[global_list_stack_literal_inc])
+            global_list_stack_literal_inc = global_list_stack_literal_inc + 1 // add +1
+        })
+
+        $("#save_soal").click(function(obj) {
+            struct_data2sent.soal = $("#soal_value").val()                    // reset soal_value
+            if (global_list_stack_literal_inc > 0) {                          // stack >= than 0
+                struct_data2sent.selection_options = []                       // reset 0
+                for(var x = 0; x < global_list_stack_literal_inc; x++) {      // literate from x to stack
+                    struct_data2sent.selection_options.push(                  // selection_options(x + 1) = val
+                            $("#option_" + char_literals[x]).val()
+                    )
+                }
+            }
+            $.ajax({
+                url: "/api/admin/soal/store_soal_jawaban/" + global_selected_mapel + "/" + global_selected_id,
+                data: struct_data2sent,
+                success: function() {
+                    global_is_saved = 1;
+                }
+            })
+        })
+
+        $("#soal-selector").on("click", ".change_edit_soal_num", function(opt) {
+            select_id = $(this).data("id-cureent-soal");
+            view_id = $(this).data("literate-id");
+
+            global_selected_id = select_id;
+
+            // get data from ajax
+            $("#soal_index").html("Soal " + view_id)
+            $.ajax({
+                url: "/api/admin/soal/get_soal_details/" + global_selected_mapel + "/" + select_id,
+                success: function(data) {
+                    reset_everything()
+                    $("#soal_value").val(data["text_soal"])
+                    
+                    if (data["tipe_soal"] == "pilihan_ganda") {
+                        $("#pilihan_ganda_option").show()
+                        $("#essay_option").hide()
+                    } else {
+                        $("#pilihan_ganda_option").hide()
+                        $("#essay_option").show()
+                    }
+                }
+            })
+
+            $("#soal_input_block").show()
+        })
+
+        $(".soal_type_selector").click(function(obj) {
+            struct_data2sent.soal_type = $(this).data("tipe-soal")
+            console.log(struct_data2sent.soal_type)
+            if ($(this).data("tipe-soal") == "pilihan_ganda") {
+                $("#pilihan_ganda_option").show()
+                $("#essay_option").hide()
+            } else {
+                $("#pilihan_ganda_option").hide()
+                $("#essay_option").show()
+            }
+        })
+
+        $("#kunci_jawaban").on("click", ".select-kunci-jawaban", function() {
+            struct_data2sent.kunci_jawaban = $(this).data("kunci-literal")
         })
 
     })
