@@ -65,6 +65,20 @@ Route::prefix("/api")->group(function() {
 
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::prefix("soal")->group(function() {
+            Route::get("store_soal_jawaban/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "store_soal_jawaban"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::get("get_soal_details/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "get_soal_details"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::get("get_total_soal_with_ids/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "get_total_soal_with_ids"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::post("create/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "create_new_soal"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+        });
     });
     
 });
@@ -101,6 +115,11 @@ Route::prefix("/admin")->group(function() {
 
     Route::get('/nilai', function () {
         return view("views/admin_nilai");
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+    // additional page, not showed in sidebar
+    Route::get('/edit_soal', function () {
+        return view("views/admin_edit_soal");
     })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 });
 
