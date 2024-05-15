@@ -11,6 +11,7 @@ class DaftarMataPelajaranModel extends Model
 
     protected $primaryKey = "id";
     protected $table = "daftar_mata_pelajaran";
-    protected $fillable = ["kode_mata_pelajaran", "nama_mata_pelajaran", "pengampu"];
+    protected $fillable = ["kode_mata_pelajaran", "nama_mata_pelajaran", "pengampu",
+                        "allow_copy", "enable_right_click"];
 
 }
