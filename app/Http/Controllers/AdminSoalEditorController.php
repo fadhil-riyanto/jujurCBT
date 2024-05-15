@@ -13,7 +13,7 @@ class AdminSoalEditorController extends Controller
     ){}
 
     public function create_new_soal($kode_mapel) {
-        
+
         return response()->json(
             [
                 "new_id" => $this->admin_soal_editor_repo->setkodeSoal($kode_mapel)->create_new_soal(),
@@ -43,6 +43,16 @@ class AdminSoalEditorController extends Controller
                         $request->get("soal"), 
                         literal2charindex($request->get("kunci_jawaban"))
                     );
+
+                // store options
+                $i = 0;
+                for( ;$i < count($request->get("selection_options")); $i++) {
+                    $this->admin_soal_editor_repo->setkodeSoal($kode_mapel)
+                    ->store_opsi_pilihan_ganda($id_soal, $i, $request->get("selection_options")[$i]);
+                    // echo $i;
+                }
+                $this->admin_soal_editor_repo->clean_unneed_opsi_pilihan_ganda($id_soal, count($request->get("selection_options")));
+                
             },
             "essay" => function($kode_mapel, $id_soal, $request) {
                 return "handle essay";
@@ -50,5 +60,10 @@ class AdminSoalEditorController extends Controller
             default => null,
         };
         return $data($kode_mapel, $id_soal, $request);
+    }
+    
+    public function get_soal_options($kode_mapel, $id_soal, Request $request) {
+        return response()->json($this->admin_soal_editor_repo->setkodeSoal($kode_mapel)
+        ->get_all_options_by_soal_id($id_soal));
     }
 }

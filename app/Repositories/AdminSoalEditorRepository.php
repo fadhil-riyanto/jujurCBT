@@ -61,6 +61,49 @@ class AdminSoalEditorRepository {
             ->get()[0]["total_soal"];
     }
 
+    public function clean_unneed_opsi_pilihan_ganda($id_soal, $len_from_actual_request) {
+        // math expression
+        /* 
+            result = count(data) - len_from_actual_request        // cek jarak antara data ma req
+            if ( !result < 0 ) {                                  // check jika invers(result) itu negatif
+                sigma ( n = (result) --> n < count(data)) {       // loop dari result menuju ke jumlah data
+                    delete(n)                                       // contoh: n = 2, loop nya adalah
+                    n = n + 1;                                      // {2, 3, 4} dimana n < count(data) = 3
+                }                                                   // hapus soal dgn id {2, 3, 4} menyisakan
+            } else {                                                // {0, 1}
+                sigma ( n = count(data) --> n < result) {
+                    n = n + 1; 
+                    add(n) 
+                }
+            }
+         */
+
+        $length_data_db = $this->store_db_pilihan_ganda
+            ->select(DB::raw("count(*) as total"))
+            ->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("nomor_soal", "=", $id_soal)->first()["total"];
+
+        $distance_length = $length_data_db - $len_from_actual_request;
+
+        if ($distance_length > 0) { // desc operation
+            for($i = $len_from_actual_request; $i < $length_data_db; $i++) {
+                // delete($i);
+                $this->store_db_pilihan_ganda->where("mata_pelajaran", "=", $this->kode_mapel)
+                    ->where("nomor_soal", "=", $id_soal)
+                    ->where("index_jawaban", "=", $i)
+                    ->delete();
+            }
+        } else { // distance_length < 0
+            // do nothing
+        }
+
+        // $this->store_db_pilihan_ganda->updateOrInsert([
+        //     "mata_pelajaran" => $this->kode_mapel, "nomor_soal" => $id_soal, "index_jawaban" => $index
+        // ], [
+        //     "pilihan_text" => $single_index_data
+        // ]);
+    }
+
     public function store_opsi_pilihan_ganda($id_soal, $index, $single_index_data) {
         $this->store_db_pilihan_ganda->updateOrInsert([
             "mata_pelajaran" => $this->kode_mapel, "nomor_soal" => $id_soal, "index_jawaban" => $index
@@ -77,5 +120,12 @@ class AdminSoalEditorRepository {
                 "tipe_soal" => "pilihan_ganda",
                 "index_kunci_jawaban" => $index_kunci_jawaban
             ]);
+    }
+
+    public function get_all_options_by_soal_id($id_soal) {
+        return $this->store_db_pilihan_ganda->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("nomor_soal", "=", $id_soal)
+            ->orderBy("nomor_soal", "asc")
+            ->get();
     }
 }

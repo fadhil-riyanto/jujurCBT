@@ -1,6 +1,42 @@
 @extends("layout._layout_admin")
 
 @section("content")
+
+<!-- Modal validation notice  -->
+<div class="modal fade" id="validation_failure" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Perhatian</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            mohon pastikan bagian berikut terisi
+            <ul>
+                <li id="form_validation_soal">
+                    Kotak soal
+                </li>
+                <li id="form_validation_soal_type">
+                    Tipe soal
+                </li>
+                <li id="form_validation_pilihan_ganda_unfilled">
+                    Opsi pilihan ganda (jika soal pilihan ganda, bukan essay)
+                </li>
+                <li id="form_validation_kunci_jawaban">
+                    Kunci jawaban
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
 <div class="d-flex mb-3">
     <a href="#" class="text-decoration-none px-3 m-1 me-3 custom-link-active">Soal</a>
     <a href="#" class="text-decoration-none px-3 m-1">Pengaturan</a>
@@ -54,6 +90,7 @@
                                 
                             </li>
                         </ul>
+                        <b id="literal_kunci_jawaban"></b>
                     </div>
                 </div>
                 <div id="essay_option">
@@ -65,6 +102,7 @@
 
                 <div class="d-flex">
                     <button type="button" id="add_more_options" class="ms-auto btn btn-secondary">Tambah opsi</button>
+                    <button type="button" id="dec_more_options" class="ms-1 btn btn-secondary">Kurangi opsi</button>
                     <button type="button" id="save_soal" class="ms-1 btn btn-secondary">Simpan</button>
                     <button type="button" class="ms-1 btn btn-danger">hapus soal ini</button>
                 </div>
@@ -100,10 +138,50 @@
         kunci_jawaban: null
     }
 
+    function setJawabanFE(literal) {
+        $("#literal_kunci_jawaban").html()
+        $("#literal_kunci_jawaban").html("Jawaban nya adalah " + literal)
+    }
+
+    function reset_validation_error() {
+        $("#form_validation_soal").hide()
+        $("#form_validation_soal_type").hide()
+        $("#form_validation_pilihan_ganda_unfilled").hide()
+        $("#form_validation_kunci_jawaban").hide()
+    }
+
+    function validate_form() {
+        reset_validation_error()
+        error_count = 0
+        // make sure everything is filled
+        if (struct_data2sent.soal == null || struct_data2sent.soal == "") {
+            $("#form_validation_soal").show()
+            error_count = error_count + 1
+        }
+        // if (struct_data2sent.soal_type == null) {
+        //     $("#form_validation_soal_type").show()
+        //     error_count = error_count + 1
+        // }
+        if (struct_data2sent.soal_type == "essay") {
+            // do nothing
+        } else {
+            if (struct_data2sent.selection_options.length == 0) {
+                $("#form_validation_pilihan_ganda_unfilled").show()
+                error_count = error_count + 1
+            }
+            if (struct_data2sent.kunci_jawaban == null || struct_data2sent.kunci_jawaban == 0) {
+                $("#form_validation_kunci_jawaban").show()
+                error_count = error_count + 1
+            }
+        }
+        return error_count
+    }
+
     // run this operation only everything is saved
     function reset_everything() {
 
         struct_data2sent.selection_options = []
+        struct_data2sent.imglink = null;
         struct_data2sent.soal = null
         struct_data2sent.kunci_jawaban = null
         global_list_stack_literal_inc = 0
@@ -114,7 +192,7 @@
     }
 
     function generate_new_options(literals) {
-        var html =  "<div class='input-group my-3'>" +
+        var html =  "<div class='input-group my-3' id=" + "d_option_" + literals + ">" +
                         "<span class='input-group-text opsi_pilihan_select'>" + literals + "</span>" +
                         "<input type='text' class='form-control' id=" + "option_" +literals + ">" +
                     "</div>";
@@ -148,8 +226,18 @@
         })
     }
 
-    function populate_option(data) {
-        
+    function populate_option() {
+        $("#input_option_list").empty()
+        $.ajax({
+            url: "/api/admin/soal/get_soal_options/" + global_selected_mapel + "/" + global_selected_id,
+            success: function(data) {
+                for(i = 0; i < data.length; i++) {
+                    generate_new_options(char_literals[global_list_stack_literal_inc])
+                    $("#option_" + char_literals[global_list_stack_literal_inc]).val(data[i]["pilihan_text"])
+                    global_list_stack_literal_inc = global_list_stack_literal_inc + 1 // add +1
+                }
+            }
+        })
     }
 
     $.ajaxSetup({
@@ -187,11 +275,23 @@
         })
 
         $("#add_more_options").click(function(obj) {
-            generate_new_options(char_literals[global_list_stack_literal_inc])
+            if ($("#d_option_" + char_literals[global_list_stack_literal_inc]).length != 0) {
+                $("#d_option_" + char_literals[global_list_stack_literal_inc]).show()
+                
+            } else {
+                generate_new_options(char_literals[global_list_stack_literal_inc])
+            }
+            
             global_list_stack_literal_inc = global_list_stack_literal_inc + 1 // add +1
         })
 
+        $("#dec_more_options").click(function() {
+            $("#d_option_" + char_literals[global_list_stack_literal_inc - 1]).hide()
+            global_list_stack_literal_inc = global_list_stack_literal_inc - 1 // dec stack by 1
+        })
+
         $("#save_soal").click(function(obj) {
+            // calculate data offset to insert
             struct_data2sent.soal = $("#soal_value").val()                    // reset soal_value
             if (global_list_stack_literal_inc > 0) {                          // stack >= than 0
                 struct_data2sent.selection_options = []                       // reset 0
@@ -201,13 +301,20 @@
                     )
                 }
             }
-            $.ajax({
-                url: "/api/admin/soal/store_soal_jawaban/" + global_selected_mapel + "/" + global_selected_id,
-                data: struct_data2sent,
-                success: function() {
-                    global_is_saved = 1;
-                }
-            })
+
+            if (validate_form() == 0) {
+                $.ajax({
+                    url: "/api/admin/soal/store_soal_jawaban/" + global_selected_mapel + "/" + global_selected_id,
+                    data: struct_data2sent,
+                    success: function() {
+                        global_is_saved = 1;
+                    }
+                })
+            } else {
+                $("#validation_failure").modal("show")
+            }
+ 
+            
         })
 
         $("#soal-selector").on("click", ".change_edit_soal_num", function(opt) {
@@ -222,9 +329,17 @@
                 url: "/api/admin/soal/get_soal_details/" + global_selected_mapel + "/" + select_id,
                 success: function(data) {
                     reset_everything()
+
+                    // load s
                     $("#soal_value").val(data["text_soal"])
+                    struct_data2sent.soal_type = data["tipe_soal"]
+                    struct_data2sent.kunci_jawaban = char_literals[data["index_kunci_jawaban"]]
+                    global_selected_id = data["id"]
+
                     
                     if (data["tipe_soal"] == "pilihan_ganda") {
+                        setJawabanFE(char_literals[data["index_kunci_jawaban"]])
+                        populate_option()
                         $("#pilihan_ganda_option").show()
                         $("#essay_option").hide()
                     } else {
@@ -251,6 +366,7 @@
 
         $("#kunci_jawaban").on("click", ".select-kunci-jawaban", function() {
             struct_data2sent.kunci_jawaban = $(this).data("kunci-literal")
+            setJawabanFE($(this).data("kunci-literal"))
         })
 
     })
