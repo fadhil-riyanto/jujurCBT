@@ -25,4 +25,5 @@ class DaftarMataPelajaranController extends Controller
     public function Delete(Request $request) {
         $this->daftar_mapel_repo->deleteHardMataPelajaran($request->get("kode_mata_pelajaran"));
     }
+    // operasi tambah soal, settings, dll dilakukan di soal controller
 }
