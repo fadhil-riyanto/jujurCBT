@@ -73,8 +73,13 @@ Route::prefix("/api")->group(function() {
             Route::get("get_soal_details/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "get_soal_details"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+            Route::get("get_soal_options/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "get_soal_options"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
             Route::get("get_total_soal_with_ids/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "get_total_soal_with_ids"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            
 
             Route::post("create/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "create_new_soal"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
