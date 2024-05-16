@@ -60,7 +60,13 @@ Route::prefix("/api")->group(function() {
         Route::get("/getall_mapel", [Http\Controllers\DaftarMataPelajaranController::class, "Index"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+        Route::get("/get_mapel_info/{kode_soal}", [Http\Controllers\DaftarMataPelajaranController::class, "get_mapel_info"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
         Route::post("/remove_mapel", [Http\Controllers\DaftarMataPelajaranController::class, "Delete"])
+        ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+        Route::post("/set_mapel_config/{kode_mapel}", [Http\Controllers\DaftarMataPelajaranController::class, "set_mapel_config"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
         Route::get("/get_all_available_kelas", [Http\Controllers\AdminGetAllAvailableKelasController::class, "getData"])
@@ -71,6 +77,9 @@ Route::prefix("/api")->group(function() {
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
             Route::post("store_upload_image/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "store_upload_image"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::post("hapus_upload_image/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "hapus_upload_image"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
             Route::get("get_upload_image/{str}", [Http\Controllers\AdminSoalEditorController::class, "get_upload_image"])
@@ -132,6 +141,10 @@ Route::prefix("/admin")->group(function() {
     // additional page, not showed in sidebar
     Route::get('/edit_soal', function () {
         return view("views/admin_edit_soal");
+    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+    Route::get('/edit_soal_setting', function () {
+        return view("views/admin_edit_soal_setting");
     })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 });
 
