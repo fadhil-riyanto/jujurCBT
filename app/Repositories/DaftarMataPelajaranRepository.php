@@ -12,6 +12,21 @@ class DaftarMataPelajaranRepository {
         protected Models\EssayModel $store_db_essay
     ){}
 
+    public function set_mapel_config($kode_mapel, $enable_right_click, $allow_copy, $pengampu) {
+        $this->daftar_mapel_model->where("kode_mata_pelajaran", "=", $kode_mapel)
+            ->update([
+                "enable_right_click" => $enable_right_click,
+                "allow_copy" => $allow_copy,
+                "pengampu" => $pengampu
+            ]);
+    }
+
+    public function get_mapel_info($kode_mapel) {
+        return $this->daftar_mapel_model
+            ->where("kode_mata_pelajaran", "=", $kode_mapel)
+            ->first();
+    }
+
     protected function gen_kode_mapel($str_mapelname) {
         return str_replace(" ", "_", strtolower($str_mapelname)) . "_" . time();
     }

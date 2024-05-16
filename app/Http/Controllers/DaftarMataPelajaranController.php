@@ -26,4 +26,19 @@ class DaftarMataPelajaranController extends Controller
         $this->daftar_mapel_repo->deleteHardMataPelajaran($request->get("kode_mata_pelajaran"));
     }
     // operasi tambah soal, settings, dll dilakukan di soal controller
+
+    public function set_mapel_config($kode_mapel, Request $request) {
+        // dd(json_encode($request->pengampu));
+        // dd($request->pengampu);
+        $this->daftar_mapel_repo->set_mapel_config(
+            $kode_mapel,
+            $request->enable_right_click == "true" ? 1 : 0,
+            $request->allow_copy == "true" ? 1 : 0,
+            $request->pengampu != null ? json_encode($request->pengampu) : json_encode([])
+        );
+    }
+
+    public function get_mapel_info($kode_mapel, Request $request) {
+        return response()->json($this->daftar_mapel_repo->get_mapel_info($kode_mapel));
+    }
 }
