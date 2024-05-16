@@ -107,7 +107,26 @@ class AdminSoalEditorController extends Controller
     }
 
     public function delete_soal($kode_mapel, $id_soal, Request $request) {
-        return response()->json($this->admin_soal_editor_repo->setkodeSoal($kode_mapel)
-        ->hapus_soal($id_soal));
+        $this->hapus_upload_image($kode_mapel, $id_soal, $request);
+
+        $query = $this->admin_soal_editor_repo->setkodeSoal($kode_mapel)
+            ->hapus_soal($id_soal);
+
+        
+        return response()->json($query);
+    }
+
+    public function hapus_upload_image($kode_mapel, $id_soal, Request $request) {
+        $query = $this->admin_soal_editor_repo->setkodeSoal($kode_mapel)->getSoalDetails($id_soal);
+        if ($query->image_soal != null) {
+            Storage::delete("images/" . $query->image_soal);
+
+            $this->admin_soal_editor_repo->setkodeSoal($kode_mapel)
+                ->set_soal_image($id_soal, null);
+        }
+
+        
+
+
     }
 }
