@@ -38,7 +38,7 @@ class DaftarMataPelajaranRepository {
         // do in daftar_mapel_model, then delete all data in soal, essay. etc
         $this->daftar_mapel_model->where("kode_mata_pelajaran", $kodemapel)->delete();
         $this->soal_model->where("mata_pelajaran", $kodemapel)->delete();
-        $this->store_db_pilihan_ganda->where("mata_pelajaran", $kode_mapel)->delete();
-        $this->store_db_essay->where("mata_pelajaran", $kode_mapel)->delete();
+        $this->store_db_pilihan_ganda->where("mata_pelajaran", $kodemapel)->delete();
+        $this->store_db_essay->where("mata_pelajaran", $kodemapel)->delete();
     }
 }
