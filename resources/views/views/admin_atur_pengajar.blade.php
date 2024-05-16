@@ -1,8 +1,12 @@
 @extends("layout._layout_admin")
 
 @section("content")
+<div class="alert alert-primary mt-2" role="alert">
+    Daftar pengajar yang ditambahkan dapat login menggunakan username dan password mereka untuk melihat hasil ujian terhadap kelas yang diampu 
+</div>
+  
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mt-2" id="addbtnevent">
+<button type="button" class="btn btn-primary mt-1" id="addbtnevent">
     Tambah pengajar
 </button>
 
