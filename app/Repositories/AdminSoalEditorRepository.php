@@ -2,6 +2,7 @@
 namespace App\Repositories;
 use App\Models;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdminSoalEditorRepository {
     protected $kode_mapel;
@@ -147,6 +148,11 @@ class AdminSoalEditorRepository {
     }
  
     public function hapus_soal($id_soal) {
+        $query = $this->getSoalDetails($id_soal);
+        if ($query->image_soal != null) {
+            Storage::delete("images/" . $query->image_soal);
+        }
+
         $this->soal_model->where("mata_pelajaran", "=", $this->kode_mapel)
             ->where("id", "=", $id_soal)
             ->delete();
