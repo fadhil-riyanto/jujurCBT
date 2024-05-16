@@ -70,6 +70,12 @@ Route::prefix("/api")->group(function() {
             Route::get("store_soal_jawaban/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "store_soal_jawaban"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
+            Route::post("store_upload_image/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "store_upload_image"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::get("get_upload_image/{str}", [Http\Controllers\AdminSoalEditorController::class, "get_upload_image"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
             Route::get("get_soal_details/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "get_soal_details"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
@@ -79,7 +85,8 @@ Route::prefix("/api")->group(function() {
             Route::get("get_total_soal_with_ids/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "get_total_soal_with_ids"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
-            
+            Route::get("delete_soal/{kode_mapel}/{id_soal}", [Http\Controllers\AdminSoalEditorController::class, "delete_soal"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
             Route::post("create/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "create_new_soal"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);

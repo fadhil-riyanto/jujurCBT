@@ -43,6 +43,14 @@ class AdminSoalEditorRepository {
         ]);
     }
 
+    public function set_soal_image($id_soal, $file) {
+        $this->soal_model->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("id", "=", $id_soal)
+            ->update([
+                "image_soal" => $file
+            ]);
+    } 
+
     public function getAllSoalByKodeMapel() {
         return $this->soal_model->where("mata_pelajaran", "=", $this->kode_mapel)
             ->orderBy('id', 'asc')
@@ -59,6 +67,13 @@ class AdminSoalEditorRepository {
         return $this->soal_model->select(DB::raw("count(*) as total_soal"))
             ->where("mata_pelajaran", "=", $this->kode_mapel)
             ->get()[0]["total_soal"];
+    }
+
+    public function get_all_options_by_soal_id($id_soal) {
+        return $this->store_db_pilihan_ganda->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("nomor_soal", "=", $id_soal)
+            ->orderBy("nomor_soal", "asc")
+            ->get();
     }
 
     public function clean_unneed_opsi_pilihan_ganda($id_soal, $len_from_actual_request) {
@@ -122,10 +137,27 @@ class AdminSoalEditorRepository {
             ]);
     }
 
-    public function get_all_options_by_soal_id($id_soal) {
-        return $this->store_db_pilihan_ganda->where("mata_pelajaran", "=", $this->kode_mapel)
-            ->where("nomor_soal", "=", $id_soal)
-            ->orderBy("nomor_soal", "asc")
-            ->get();
+    public function store_essay($id_soal, $text_soal) {
+        $this->soal_model->where("id", "=", $id_soal)
+            ->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->update([
+                "text_soal" => $text_soal,
+                "tipe_soal" => "essay"
+            ]);
     }
+ 
+    public function hapus_soal($id_soal) {
+        $this->soal_model->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("id", "=", $id_soal)
+            ->delete();
+
+        $this->store_db_pilihan_ganda->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("nomor_soal", "=", $id_soal)
+            ->delete();
+
+        $this->store_db_essay->where("mata_pelajaran", "=", $this->kode_mapel)
+            ->where("nomor_soal", "=", $id_soal)
+            ->delete();
+    }
+    
 }

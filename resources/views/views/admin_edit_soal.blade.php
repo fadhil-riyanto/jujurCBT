@@ -35,7 +35,25 @@
     </div>
   </div>
   
-
+<!-- Modal -->
+<div class="modal fade" id="modal_delete_soal_confirmation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Perhatian</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Apakah anda yakin ingin menghapus soal ini?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-danger" id="soal_delete_confirmed">YA!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
 <div class="d-flex mb-3">
     <a href="#" class="text-decoration-none px-3 m-1 me-3 custom-link-active">Soal</a>
@@ -72,7 +90,10 @@
 
                 <h5 class="card-header mt-2">Tambah gambar</h5>
                 <div class="mb-3">
-                    <input class="form-control" type="file" id="formFile">
+                    <input class="form-control" type="file" id="upload_file" name="form_file">
+                </div>
+                <div class="my-2">
+                    <img src="" alt="" srcset="">
                 </div>
 
                 <div id="pilihan_ganda_option">
@@ -104,7 +125,7 @@
                     <button type="button" id="add_more_options" class="ms-auto btn btn-secondary">Tambah opsi</button>
                     <button type="button" id="dec_more_options" class="ms-1 btn btn-secondary">Kurangi opsi</button>
                     <button type="button" id="save_soal" class="ms-1 btn btn-secondary">Simpan</button>
-                    <button type="button" class="ms-1 btn btn-danger">hapus soal ini</button>
+                    <button type="button" id="hapus_soal" class="ms-1 btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_delete_soal_confirmation">hapus soal ini</button>
                 </div>
             </div>
         </div>
@@ -138,9 +159,38 @@
         kunci_jawaban: null
     }
 
+    function do_upload() {
+        if ($("#upload_file")[0].files.length == 1) {
+            var file_data = $('#upload_file').prop('files')[0];
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
+            $.ajax({
+                url: "/api/admin/soal/store_upload_image/" + global_selected_mapel + "/" + global_selected_id,
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: form_data,                         
+                type: 'post',
+                success: function(php_script_response){
+                    // console.log(php_script_response["errors"])
+                    // if (php_script_response["errors"] != undefined) {
+                    //     swal("Opps!", "data gagal diupload, pastikan format benar. ulangi dengan memilih gambar lagi");
+                    // }
+                },
+                error: function() {
+                    swal("Opps!", "data gagal diupload, pastikan format benar. ulangi dengan memilih gambar lagi");
+                }
+            });
+
+        }
+        
+
+    }
+
     function setJawabanFE(literal) {
         $("#literal_kunci_jawaban").html()
-        $("#literal_kunci_jawaban").html("Jawaban nya adalah " + literal)
+        if (literal != undefined)
+            $("#literal_kunci_jawaban").html("Jawaban nya adalah " + literal)
     }
 
     function reset_validation_error() {
@@ -188,6 +238,7 @@
         $("#input_option_list").empty()
         $("#kunci_jawaban").empty()
         $("#soal_value").val("")
+        $("#literal_kunci_jawaban").html("")
 
     }
 
@@ -274,6 +325,17 @@
             })
         })
 
+        $("#soal_delete_confirmed").click(function() {
+            $.ajax({
+                url: "/api/admin/soal/delete_soal/" + global_selected_mapel + "/" + global_selected_id,
+                success: function() {
+                    console.log("berhasil dihapus")
+                    $("#soal_input_block").hide()
+                    generate_button_list_changer()
+                }
+            })
+        })
+
         $("#add_more_options").click(function(obj) {
             if ($("#d_option_" + char_literals[global_list_stack_literal_inc]).length != 0) {
                 $("#d_option_" + char_literals[global_list_stack_literal_inc]).show()
@@ -308,6 +370,8 @@
                     data: struct_data2sent,
                     success: function() {
                         global_is_saved = 1;
+                        do_upload();
+                        swal("Sukses!", "data berhasil disimpan");
                     }
                 })
             } else {
@@ -318,6 +382,7 @@
         })
 
         $("#soal-selector").on("click", ".change_edit_soal_num", function(opt) {
+            
             select_id = $(this).data("id-cureent-soal");
             view_id = $(this).data("literate-id");
 
@@ -337,6 +402,7 @@
                     global_selected_id = data["id"]
 
                     
+                    $("#soal_input_block").show()
                     if (data["tipe_soal"] == "pilihan_ganda") {
                         setJawabanFE(char_literals[data["index_kunci_jawaban"]])
                         populate_option()
@@ -356,6 +422,7 @@
             struct_data2sent.soal_type = $(this).data("tipe-soal")
             console.log(struct_data2sent.soal_type)
             if ($(this).data("tipe-soal") == "pilihan_ganda") {
+                populate_option()
                 $("#pilihan_ganda_option").show()
                 $("#essay_option").hide()
             } else {
