@@ -48,7 +48,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="button" class="btn btn-danger" id="soal_delete_confirmed">YA!</button>
+          <button type="button" class="btn btn-danger" id="soal_delete_confirmed" data-bs-dismiss="modal">YA!</button>
         </div>
       </div>
     </div>
@@ -56,12 +56,16 @@
   
 
 <div class="d-flex mb-3">
-    <a href="#" class="text-decoration-none px-3 m-1 me-3 custom-link-active">Soal</a>
-    <a href="#" class="text-decoration-none px-3 m-1">Pengaturan</a>
+    <a href="#" id="going2soal" class="text-decoration-none px-3 m-1 me-3 custom-link-active">Soal</a>
+    <a href="#" id="going2config" class="text-decoration-none px-3 m-1">Pengaturan</a>
     <button class="ms-auto btn btn-secondary m-1" id="addsoal">
         tambah soal
     </button>
 </div>
+<div class="alert alert-primary mt-2" role="alert">
+    untuk melihat preview gambar dan juga memastikan soal tersimpan setelah menambah opsi, pastikan menekan tombol "simpan"
+  </div>
+  
 <div class="row">
     <div class="col-10">
         <!-- <div id="input-soal" class="custom-soal-on-edit p-3 rounded">
@@ -92,8 +96,13 @@
                 <div class="mb-3">
                     <input class="form-control" type="file" id="upload_file" name="form_file">
                 </div>
-                <div class="my-2">
-                    <img src="" alt="" srcset="">
+                <div class="my-2" id="preview_picture">
+                    <img src="" alt="preview gambar" class="img-fluid">
+                        <div class="d-flex">
+                            <button type="button" id="delete_attach" class="ms-auto mt-1 btn btn-secondary">hapus</button>
+                        </div>
+                    </img>
+                    
                 </div>
 
                 <div id="pilihan_ganda_option">
@@ -159,6 +168,16 @@
         kunci_jawaban: null
     }
 
+    function show_an_image(url) {
+        $("#preview_picture img").prop("src", url)
+        $("#preview_picture").show()
+    }
+
+    function link_header_setup() {
+        $("#going2soal").prop("href", "/admin/edit_soal?selected=" + global_selected_mapel)
+        $("#going2config").prop("href", "/admin/edit_soal_setting?selected=" + global_selected_mapel)
+    }
+
     function do_upload() {
         if ($("#upload_file")[0].files.length == 1) {
             var file_data = $('#upload_file').prop('files')[0];
@@ -176,6 +195,8 @@
                     // if (php_script_response["errors"] != undefined) {
                     //     swal("Opps!", "data gagal diupload, pastikan format benar. ulangi dengan memilih gambar lagi");
                     // }
+                    
+                    show_an_image(php_script_response["image"])
                 },
                 error: function() {
                     swal("Opps!", "data gagal diupload, pastikan format benar. ulangi dengan memilih gambar lagi");
@@ -239,6 +260,9 @@
         $("#kunci_jawaban").empty()
         $("#soal_value").val("")
         $("#literal_kunci_jawaban").html("")
+        $("#preview_picture img").prop("src", "")
+        $("#preview_picture").hide()
+        $("#upload_file").val("")
 
     }
 
@@ -300,10 +324,11 @@
     $(document).ready(function() {
         sidebar_change_state("#sidebar-soal-assesmen")
         $("#soal_input_block").hide()
+        $("#preview_picture").hide()
         let selected_mapel = new URLSearchParams(window.location.search)
         global_selected_mapel = selected_mapel.get("selected")
         generate_button_list_changer()
-
+        link_header_setup()
 
         $("#addsoal").click(function(opt) {
             $("#soal_input_block").show()
@@ -321,6 +346,17 @@
                     generate_button_list_changer()
                     $("#soal_index").html("Soal " + data["total_soal_len"])
                     global_selected_id = data["new_id"]
+                }
+            })
+        })
+
+        $("#delete_attach").click(function() {
+            $("#preview_picture").hide()
+            $.ajax({
+                url: "/api/admin/soal/hapus_upload_image/" + global_selected_mapel + "/" + global_selected_id,
+                method: "POST",
+                success: function() {
+                    swal("sukses", "gambar dihapus")
                 }
             })
         })
@@ -403,6 +439,10 @@
 
                     
                     $("#soal_input_block").show()
+                    
+                    if (data["image_soal"] != null) {
+                        show_an_image("/api/admin/soal/get_upload_image/" + data["image_soal"])
+                    }
                     if (data["tipe_soal"] == "pilihan_ganda") {
                         setJawabanFE(char_literals[data["index_kunci_jawaban"]])
                         populate_option()
