@@ -16,6 +16,7 @@ export default defineConfig({
                 'resources/css/login.css',
                 'resources/css/dashboard.css',
                 'resources/css/admin.css',
+                'resources/css/error.css',
 
                 // admin new
                 'resources/css/bs5_custom.css'
