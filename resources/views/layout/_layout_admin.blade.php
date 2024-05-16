@@ -25,7 +25,7 @@
     <script src="/js/utils.js"></script>
     <script src="/js/datatableautoajax.js"></script>
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
     <title>jujurCBT Admin</title>
 </head>
 <style>
