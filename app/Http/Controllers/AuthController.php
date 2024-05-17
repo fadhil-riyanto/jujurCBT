@@ -205,7 +205,7 @@ class AuthController extends Controller
 
         ->cookie(cookie('login_data', serialize(
             $this->auth->putCookieData()
-        ), 200));
+        ), 720));
         
     }
 }
