@@ -100,6 +100,17 @@ Route::prefix("/api")->group(function() {
             Route::post("create/{kode_mapel}", [Http\Controllers\AdminSoalEditorController::class, "create_new_soal"])
                 ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
         });
+
+        Route::prefix("penugasan")->group(function() {
+            Route::get("store", [Http\Controllers\AdminPenugasan::class, "store"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+            
+            Route::get("getall", [Http\Controllers\AdminPenugasan::class, "getAll"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+
+            Route::get("delete/{id}", [Http\Controllers\AdminPenugasan::class, "delete"])
+                ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+        });
     });
     
 });
