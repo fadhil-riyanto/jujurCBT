@@ -11,12 +11,12 @@
     Penugasan adalah halaman dimana anda dapat melakukan penjadwalan tes terhadap kelas tertentu, klik tombol dibawah ini untuk menugaskan suatu tes kepada suatu kelas.
 </div>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_form_add">
     Tambah penugasan
 </button>
   
   <!-- Modal -->
-  <div class="modal fade modal-lg" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade modal-lg" id="modal_form_add" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -95,7 +95,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" id="savebutton" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+          <button type="button" id="savebutton" class="btn btn-primary">Save changes</button>
         </div>
       </div>
     </div>
@@ -260,6 +260,7 @@
                     success: function(data) {
                         console.log(data)
                         table.draw()
+                        $('#modal_form_add').modal('hide');
                     }
                 })
             }
