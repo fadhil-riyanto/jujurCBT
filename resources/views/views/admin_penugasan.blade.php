@@ -106,6 +106,7 @@
         <tr>
             <th>Kelas</th>
             <th>kode mata pelajaran</th>
+            <th>nama mata pelajaran</th>
             <th>tanggal mulai</th>
             <th>waktu mulai</th>
             <th>Lamanya ujian (menit)</th>
@@ -225,6 +226,8 @@
                     "data": "kelas_id"
                 }, {
                     "data": "kode_mapel"
+                }, {
+                    "data": "nama_mata_pelajaran"
                 }, {
                     "data": "start_date"
                 }, {
