@@ -146,7 +146,13 @@ class AdminSoalEditorRepository {
                 "tipe_soal" => "essay"
             ]);
     }
- 
+    
+    /**
+     * func hapus_soal
+     * 
+     * delete the file (if exist), delete its option and essay
+     * and decrement `daftar_mata_pelajaran` table by -1
+     */
     public function hapus_soal($id_soal) {
         $query = $this->getSoalDetails($id_soal);
         if ($query->image_soal != null) {
