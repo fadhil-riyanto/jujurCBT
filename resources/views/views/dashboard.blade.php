@@ -18,45 +18,26 @@
 </div>
 
 <div class="exam-study-container">
+    @foreach($mapels_data as $mapel_data)
     <div class="exam-list">
         <div class="exam-list-name">
-            <span class="exam-name">PKN</span>
-            <span class="exam-status">belum dikerjakan</span>
+            <span class="exam-name">{{ $mapel_data["nama_mapel"] }}</span>
+            <span class="exam-status">{{ $mapel_data["status_dikerjakan"] }}</span>
         </div>
         <div class="exam-list-time">
             <div class="exam-start">
-                10.00
+                {{ $mapel_data["start"] }}
             </div>
             <div class="exam-end">
-                12.00
+                {{ $mapel_data["end"] }}
             </div>
         </div>
     
         <div class="exam-list-go">
             <a href="#" class="exam-list-go-confirmation" onclick="show_modal('konfirmasi', 'apakah anda ingin mengerjakan soal ini?', 'modal-container-confirmation');"">kerjakan</a>
         </div>
-
     </div>
-    
-    <div class="exam-list">
-        <div class="exam-list-name">
-            <span class="exam-name">PKN</span>
-            <span class="exam-status">belum dikerjakan</span>
-        </div>
-        <div class="exam-list-time">
-            <div class="exam-start">
-                10.00
-            </div>
-            <div class="exam-end">
-                12.00
-            </div>
-        </div>
-    
-        <div class="exam-list-go">
-            <a href="#" class="exam-list-go-confirmation" onclick="show_modal('konfirmasi', 'apakah anda ingin mengerjakan soal ini?', 'modal-container-confirmation');"">kerjakan</a>
-        </div>
-
-    </div>
+    @endforeach
 </div>
 @endsection
 
@@ -70,7 +51,7 @@
 
     $.ajax({
         url: "/api/global/get_me",
-        type: "POST",
+        type: "GET",
         cache: false,
         data: {
             "_token": "{{ csrf_token() }}",
