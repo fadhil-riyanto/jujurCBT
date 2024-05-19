@@ -165,9 +165,8 @@ Route::get('/pengajar', function () {
 });
 // ->middleware(Middleware\EnsureUsersOnPengajar::class)
 
-Route::get('/dashboard', function () {
-    return view("views/dashboard");
-})->middleware(Middleware\EnsureUsersOnStudent::class);
+Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
+    ->middleware(Middleware\EnsureUsersOnStudent::class);
 
 Route::get('/login', function () {
     return view("views/login");
