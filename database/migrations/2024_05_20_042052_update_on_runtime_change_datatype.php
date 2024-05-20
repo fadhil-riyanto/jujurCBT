@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('soal', function (Blueprint $table) {
             //
-            $table->text("text_soal");
+            $table->text("text_soal")->change();
         });
     }
 
