@@ -100,16 +100,16 @@ class DashboardController extends Controller
 
         $true_exam = $this->get_matched_penugasan_by_kelas($this->get_current_class());
         for($i = 0; $i < count($true_exam); $i++) {
-            if (time() > $true_exam[$i]["unix"]) {
-                $mapel_struct->nama_mapel = $this->get_real_mapel_name($true_exam[$i]["kode_mapel"]);
-                $mapel_struct->kode_mapel = $true_exam[$i]["kode_mapel"];
-                $mapel_struct->status_dikerjakan = $this->status_dikerjakan($true_exam[$i]["kode_mapel"]);
-                [$mapel_struct->start, $mapel_struct->end] = $this->get_start_end($true_exam[$i]["unix"], $true_exam[$i]["duration_time"]);
-                array_push($pack, (array)$mapel_struct);
+            if ($this->daftar_mapel_repo->mapel_exist($true_exam[$i]["kode_mapel"])) {
+                if (time() > $true_exam[$i]["unix"]) {
+                    $mapel_struct->nama_mapel = $this->get_real_mapel_name($true_exam[$i]["kode_mapel"]);
+                    $mapel_struct->kode_mapel = $true_exam[$i]["kode_mapel"];
+                    $mapel_struct->status_dikerjakan = $this->status_dikerjakan($true_exam[$i]["kode_mapel"]);
+                    [$mapel_struct->start, $mapel_struct->end] = $this->get_start_end($true_exam[$i]["unix"], $true_exam[$i]["duration_time"]);
+                    $mapel_struct->kerjakan_link = $true_exam[$i]["kode_mapel"];
+                    array_push($pack, (array)$mapel_struct);
+                }
             }
-            
-
-            
         }
 
         // dd($pack);

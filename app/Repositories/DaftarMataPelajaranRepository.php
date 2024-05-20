@@ -27,6 +27,12 @@ class DaftarMataPelajaranRepository {
             ->first();
     }
 
+    public function mapel_exist($kode_mapel) : bool {
+        return $this->daftar_mapel_model
+            ->where("kode_mata_pelajaran", "=", $kode_mapel)
+            ->first() == null ? false : true;
+    }
+
     protected function gen_kode_mapel($str_mapelname) {
         return str_replace(" ", "_", strtolower($str_mapelname)) . "_" . time();
     }
