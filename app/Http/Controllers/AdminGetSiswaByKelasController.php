@@ -8,8 +8,7 @@ use App\Repositories;
 class AdminGetSiswaByKelasController extends Controller
 {
     public function __construct(
-        protected Repositories\SiswaAccountRepository $siswa_account_db, 
-        protected Repositories\AdminAccountRepository $admin_account_db
+        protected Repositories\SiswaAccountRepository $siswa_account_db
     ) {}
 
     protected Request $request;
