@@ -26,11 +26,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('on_runtime_pilihan_ganda', function (Blueprint $table) {
-            $table->dropColumn("is_correct")
+            $table->dropColumn("is_correct");
         });
 
         Schema::table('on_runtime_essay', function (Blueprint $table) {
-            $table->dropColumn("is_correct")
+            $table->dropColumn("is_correct");
         });
     }
     }
