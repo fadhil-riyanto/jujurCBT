@@ -30,7 +30,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('on_runtime_pilihan_ganda');
-        Schema::dropIfExists("on_runtime_essay");
+        Schema::table('on_runtime_pilihan_ganda', function (Blueprint $table) {
+
+            $table->string("pilihan_text")->nullable(0)->change(); 
+            $table->integer("index_jawaban")->nullable(0)->change();
+            $table->boolean("state")->nullable(0)->change(); // betul atau salah
+        });
+
+        Schema::table('on_runtime_essay', function (Blueprint $table) {
+            $table->string("jawaban_txt")->nullable(0)->change();
+            $table->integer("index_jawaban")->nullable(0)->change();
+            $table->boolean("state")->nullable(0)->change(); // betul atau salah
+        });
+            
     }
 };

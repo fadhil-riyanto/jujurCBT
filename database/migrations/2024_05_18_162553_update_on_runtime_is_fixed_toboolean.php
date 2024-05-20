@@ -25,7 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('on_runtime_pilihan_ganda');
-        Schema::dropIfExists("on_runtime_essay");
+        Schema::table('on_runtime_pilihan_ganda', function (Blueprint $table) {
+            $table->string("is_fixed")->default(false)->change();
+        });
+
+        Schema::table('on_runtime_essay', function (Blueprint $table) {
+            $table->string("is_fixed")->default(false)->change();
+        });
     }
 };
