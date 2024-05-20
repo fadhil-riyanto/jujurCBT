@@ -3,7 +3,7 @@
 @section("content") 
 
 <div class="alert alert-primary mt-1" role="alert" id="welcome-name">
-    
+    selamat datang
 </div>
     
 <div class="d-flex my-3 row">
@@ -11,7 +11,7 @@
         <div class="card bg-info border-0">
             <div class="card-body">
                 <h6 class="card-title text-uppercase text-muted">Jumlah siswa</h6>
-                <h1 class="card-text">183 siswa</h1>
+                <h1 class="card-text">{{ $total }} siswa</h1>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
         <div class="card bg-warning border-0">
             <div class="card-body">
                 <h6 class="card-title text-uppercase text-muted">Siswa Terblokir</h6>
-                <h1 class="card-text">100 siswa</h1>
+                <h1 class="card-text">{{ $siswa_blocked }} siswa</h1>
             </div>
         </div>
 
@@ -29,7 +29,7 @@
         <div class="card bg-success border-0">
             <div class="card-body">
                 <h6 class="card-title text-uppercase text-muted ">Siswa Aktif</h6>
-                <h1 class="card-text">83 siswa</h1>
+                <h1 class="card-text">{{ $siswa_unblocked }} siswa</h1>
             </div>
         </div>
 
