@@ -1,0 +1,114 @@
+.main-layout {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(5, 25%);
+    height: fit-content;
+    width: 100%;
+    gap: 10px;
+}
+
+.canvas-num {
+    grid-column: 1 / 7;
+    grid-row: 1 / 2;
+    background-color: white;
+    box-shadow: 0 0 10px grey;
+    padding: 10px 20px 10px 20px;
+}
+
+.canvas-num-inc {
+    font-weight: bold;
+}
+
+.canvas-questions {
+    grid-column: 1 / 7;
+    grid-row: 2 / 3;
+    background-color: white;
+    box-shadow: 0 0 10px grey;
+    padding: 20px;
+}
+.canvas-answer {
+    grid-column: 1 / 7;
+    grid-row: 3 / 4;
+    background-color: white;
+    box-shadow: 0 0 10px grey;
+    padding: 20px;
+}
+
+.form-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-wrap-class {
+    margin: 10px 0px 10px 0px;
+}
+
+.canvas-button {
+    grid-column: 1 / 7;
+    grid-row: 4 / 5;
+    background-color: white;
+    box-shadow: 0 0 10px grey;
+    height: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+}
+
+#btn-primary-next {
+    margin-left: auto;
+}
+
+#btn-primary-previous {
+    margin-left: none;
+}
+
+.canvas-numlist {
+    grid-column: 7 / 9;
+    grid-row: 1 / 5;
+    background-color: white;
+    box-shadow: 0 0 10px grey;
+    height: auto;
+    padding: 20px;
+}
+
+@media screen and (max-width: 800px) {
+    .canvas-num {
+        grid-column: 1 / 9;
+        grid-row: 1 / 2;
+    }
+
+    .canvas-questions {
+        grid-column: 1 / 9;
+        grid-row: 2 / 3;
+    }
+
+    .canvas-answer {
+        grid-column: 1 / 9;
+        grid-row: 3 / 4;
+    }
+
+    .canvas-button {
+        grid-column: 1 / 9;
+        grid-row: 4 / 5;
+    }
+    
+    .canvas-numlist {
+        grid-column: 1 / 9;
+        grid-row: 5 / 6;
+    }
+}
+
+.nulist-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.numlist-num {
+    padding: 10px;
+    background-color: white;
+    color: black;
+    /* border: 3px solid gray; */
+    border-radius: 10px;
+    box-shadow: 0 0 10px grey;
+}

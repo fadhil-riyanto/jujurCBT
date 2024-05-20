@@ -32,6 +32,14 @@ function show_modal(title, text)
 	show_display("modal-container-login-notify");
 }
 
+function show_modal_w_target(title, text, link)
+{
+	document.getElementById("modal-text-txt").innerHTML = title;
+	document.getElementById("modal-msg").innerHTML = text;
+
+	show_display("modal-container-login-notify");
+}
+
 function show_modal_indenpendent(title, id)
 {
 	document.getElementById("modal-text-txt-idn").innerHTML = title;

@@ -12,7 +12,7 @@
     <script src="/js/utils.js"></script>
 @endsection
 
-@section("login")
+@section("content")
 <div class="alert alert-primary" id="alert-sambutan">
     null
 </div>
@@ -34,7 +34,7 @@
         </div>
     
         <div class="exam-list-go">
-            <a href="#" class="exam-list-go-confirmation" onclick="show_modal('konfirmasi', 'apakah anda ingin mengerjakan soal ini?', 'modal-container-confirmation');"">kerjakan</a>
+            <a href="{{ $mapel_data['kerjakan_link'] }}" class="exam-list-go-confirmation">lihat soal</a>
         </div>
     </div>
     @endforeach

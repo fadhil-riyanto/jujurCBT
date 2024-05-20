@@ -15,9 +15,8 @@
 
         @yield("inject_before_container")
         <div class="container">
+            @yield("content")
             @yield("login")
-            @yield("dashboard")
-            @yield("admin")
         </div>
         @include("components/_include_footer")
         
