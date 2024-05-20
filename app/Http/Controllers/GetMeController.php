@@ -15,18 +15,27 @@ class GetMeController extends Controller
     
     public function __construct(
         protected Repositories\SiswaAccountRepository $siswa_account_db, 
-        protected Repositories\AdminAccountRepository $admin_account_db, 
+        protected Repositories\SuperAdminCredentialRepository $superadmin_credential_db,  // warning, deprecated
+        
     ) {}
 
     private function returnNameAsRole(): string {
         try {
-            $cb = match($this->cookie_role) {
-                Enum\RoleSessionEnum::Student => 
-                    $this->siswa_account_db->getByTable("nomor_ujian", $this->cookie_identity),
-                Enum\RoleSessionEnum::Admin => 
-                    $this->admin_account_db->getByTable("username", $this->cookie_identity)
-            };
-            return $cb->getFirst()->nama;
+            if ($this->cookie_role == Enum\RoleSessionEnum::Student) {
+                // dd($this->siswa_account_db->getByTable("nomor_ujian", $this->cookie_identity));
+                return $this->siswa_account_db->getByTable("nomor_ujian", $this->cookie_identity)
+                    ->getFirst()->nama;
+            } else if ($this->cookie_role == Enum\RoleSessionEnum::SuperAdmin) {
+                return $this->superadmin_credential_db->getByTable("username", $this->cookie_identity)
+                    ->getFirst()->username;
+            }
+            // $cb = match($this->cookie_role) {
+            //     Enum\RoleSessionEnum::Student => 
+            //         $this->siswa_account_db->getByTable("nomor_ujian", $this->cookie_identity),
+            //     Enum\RoleSessionEnum::SuperAdmin => 
+            //         $this->superadmin_credential_db->getByTable("username", $this->cookie_identity)
+            // };
+            // return $cb->getFirst()->username;
         } catch (Exceptions\DataNotFoundByModel) {
             return "error";
         }

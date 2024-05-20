@@ -6,12 +6,12 @@ use App\Models;
 use App\Exceptions;
 use App\Repositories\Interfaces;
 
-class AdminAccountRepository implements Interfaces\IAccount{
+class SuperAdminCredentialRepository implements Interfaces\IAccount{
     protected $ctx;
     protected $modelname;
 
     public function __construct() {
-        $this->modelname = new MOdels\AdminAccountModel;
+        $this->modelname = new Models\SuperadminModel;
     }
 
     public function getByID(int $id) {
