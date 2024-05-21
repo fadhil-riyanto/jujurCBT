@@ -10,7 +10,8 @@ class DaftarMataPelajaranController extends Controller
 {
     //
     public function __construct(
-        protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo
+        protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo,
+        protected Repositories\PengajarRepository $pengajar_repo
     ){}
 
     public function Create(Request $request) {
@@ -18,8 +19,30 @@ class DaftarMataPelajaranController extends Controller
         $this->daftar_mapel_repo->generate_mata_pelajaran($request->get("mata_pelajaran"));
     }
 
+    protected function pengampu_list2name($data) {
+        $packed = [];
+        foreach($data as $data_s) {
+            $packed[] = $this->pengajar_repo->GetByID($data_s)["username"];
+        }
+        
+        return $packed;
+        // dd($packed);
+    }
+
     public function Index() {
-        return DataTables::of($this->daftar_mapel_repo->getAllAvailableMataPelajaran())->make();
+        $query = $this->daftar_mapel_repo->getAllAvailableMataPelajaran();
+        // dd($query);
+        // $query["pengampu"] = "saya";
+        // dd($query["pengampu"]);
+        for($i = 0; $i < count($query); $i++) {
+            $query[$i]["pengampu"] = $this->pengampu_list2name(json_decode($query[$i]["pengampu"]));
+        }
+
+        // dd($query);
+
+        return DataTables::of($query)
+            ->rawColumns(["pengampu"])
+            ->make();
     }
 
     public function Delete(Request $request) {

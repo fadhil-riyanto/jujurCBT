@@ -104,7 +104,8 @@
                         // } else {
                         //     return pengampujoined
                         // }
-                        return Array.isArray(data) ? data.join(',') : "kosong";
+                        console.log(data)
+                        return Array.isArray(data) ? data.join(", ") : "kosong";
                     },
                 },
                 {
