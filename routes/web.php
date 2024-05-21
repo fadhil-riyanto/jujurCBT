@@ -121,9 +121,10 @@ Route::get('/debug', [Http\Controllers\CookiedebugController::class, "debug"]);
 /* route for web */
 
 Route::prefix("/admin")->group(function() {
-    Route::get('/welcome', function () {
-        return view("views/admin_welcome");
-    })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+    // Route::get('/welcome', function () {
+    //     return view("views/admin_welcome");
+    // })->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
+    Route::get('/welcome', [Http\Controllers\AdminWelcomeController::class, "index"]);
 
     Route::get('/peserta_assesmen', function () {
         return view("views/admin_peserta_assesmen");
