@@ -136,7 +136,8 @@
                 data: structdata2sent,
                 method: "post", 
                 success: function(data) {
-                    console.log(data)
+                    // console.log(data)
+                    swal("sukses", "pengaturan disimpan!")
                 }
 
             })

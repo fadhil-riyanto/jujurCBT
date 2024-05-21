@@ -49,7 +49,7 @@
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">tutup</button>
-                <button type="submit" class="btn btn-primary">Ubah!</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Ubah!</button>
               </div>
           </form>
         </div>
@@ -67,16 +67,17 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form id="edit-nama-form-input" action="/api/admin/change_password_siswa" method="post" >
+          <form id="edit-password-form-input" action="/api/admin/change_password_siswa" method="post" >
             <div class="mb-3">
               <label for="password-siswa" class="col-form-label">password:</label>
               <input type="text" name="password" class="form-control" id="password-siswa">
+              <div id="" class="form-text">penting, ingat password sebelum menutup halaman ini, jika lupa silahkan ubah password. password dienkripsi dengan algoritma yang sangat kuat bernama Argon2I</div>
             </div>
             
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">tutup</button>
-                <button type="submit" class="btn btn-primary">Ubah!</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Ubah!</button>
               </div>
           </form>
         </div>
@@ -258,26 +259,30 @@
     $("#edit-password-form-input").submit(function(e) {
         e.preventDefault();
         var form = $(this);
+        console.log("password gets")
         $.ajax({
             type: "POST", 
             url: form.attr('action'),
             data: form.serialize() + "&nomor_ujian=" + global_table_selected_nomor_ujian,
             success: (data) => {
                 exec_ajax_table_siswa(global_selected_class)
+                swal("sukses", "password diubah!")
             }
         })
     })
 
     $("#edit-nama-form-input").submit(function(e) {
         e.preventDefault();
+        console.log("gets")
         var form = $(this);
-        form.reset()
+        // $("#edit-nama-form-input").trigger("reset");
         $.ajax({
             type: "POST", 
             url: form.attr('action'),
             data: form.serialize() + "&nomor_ujian=" + global_table_selected_nomor_ujian,
             success: (data) => {
                 exec_ajax_table_siswa(global_selected_class)
+                swal("sukses", "nama diubah!")
             }
         })
     })
