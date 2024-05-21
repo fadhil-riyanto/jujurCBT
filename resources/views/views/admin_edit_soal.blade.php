@@ -255,6 +255,7 @@
         struct_data2sent.imglink = null;
         struct_data2sent.soal = null
         struct_data2sent.kunci_jawaban = null
+        struct_data2sent.soal_type = "pilihan_ganda"
         global_list_stack_literal_inc = 0
         $("#input_option_list").empty()
         $("#kunci_jawaban").empty()
