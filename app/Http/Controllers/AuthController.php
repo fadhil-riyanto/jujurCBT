@@ -140,9 +140,8 @@ class checkAuth {
         return [
             "status" => $this->status,
             "role" => $this->login_as,
-            "identity" => $this->request->get("identity")
-            // ,
-            // "kelas" => SiswaAccountModel::where("nomor_ujian", "=", $this->request->get("identity"))->first()["kelas"]
+            "identity" => $this->request->get("identity"),
+            "kelas" => SiswaAccountModel::where("nomor_ujian", "=", $this->request->get("identity"))->first()["kelas"]
         ];
     }
 
