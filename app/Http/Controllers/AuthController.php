@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\Enum as Enumlist;
 use App\Exceptions\RoleNullException;
 
+
 class credential_return {
     public function __construct(public string $user, public string $password) {}
 }
@@ -140,6 +141,8 @@ class checkAuth {
             "status" => $this->status,
             "role" => $this->login_as,
             "identity" => $this->request->get("identity")
+            // ,
+            // "kelas" => SiswaAccountModel::where("nomor_ujian", "=", $this->request->get("identity"))->first()["kelas"]
         ];
     }
 
@@ -197,6 +200,10 @@ class AuthController extends Controller
     {    
         // $this->GetLoginStatus($request);
         // dd($this->auth->putCookieData());
+        $request->validate([
+            'identity' => 'required|numeric',
+        ]);
+
         return response([
             "status" => $this->GetLoginStatus($request),
             "message" => $this->message,

@@ -87,6 +87,9 @@
                 } else {
                     window.location.href = data["redirect"]
                 }
+            },
+            error: function(data) {
+                show_modal("perhatian", data.responseJSON["message"])
             }
         });
 
