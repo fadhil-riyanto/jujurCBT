@@ -20,4 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(function (App\Exceptions\InvalidRoleRoute $e, Request $request) {
             return response()->view('errors.illegalroute', [], 500);
         });
+
+        $exceptions->render(function (App\Exceptions\InvalidRequest $e, Request $request) {
+            return response()->view('errors.invalidrequest', [], 500);
+        });
     })->create();
