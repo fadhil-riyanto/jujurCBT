@@ -10,6 +10,7 @@ trait CurrentSessionTrait {
     public RoleSessionEnum $cookie_role;
     public bool $cookie_status;
     public string $cookie_identity;
+    public ?string $cookie_kelas;
 
     public function cookie_deserialize() {
         $this->make_object();
@@ -31,5 +32,6 @@ trait CurrentSessionTrait {
             "pengajar" => RoleSessionEnum::Pengajar
         };
         $this->cookie_identity = $deserialized["identity"];
+        $this->cookie_kelas = $deserialized["kelas"];
     }
 }

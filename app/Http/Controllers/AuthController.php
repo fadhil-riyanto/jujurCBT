@@ -137,11 +137,13 @@ class checkAuth {
     }
 
     public function putCookieData(): array { // used as cookie
+        $kelas = SiswaAccountModel::where("nomor_ujian", "=", $this->request->get("identity"))->first();
+
         return [
             "status" => $this->status,
             "role" => $this->login_as,
             "identity" => $this->request->get("identity"),
-            "kelas" => SiswaAccountModel::where("nomor_ujian", "=", $this->request->get("identity"))->first()["kelas"]
+            "kelas" => $kelas != null ? $kelas["kelas"] : null
         ];
     }
 
@@ -199,9 +201,17 @@ class AuthController extends Controller
     {    
         // $this->GetLoginStatus($request);
         // dd($this->auth->putCookieData());
-        $request->validate([
-            'identity' => 'required|numeric',
-        ]);
+        if ($request->has("role")) {
+            match($request->get("role")) {
+                "pengajar" => $request->validate([
+                    'identity' => 'required|alpha:ascii',
+                ]),
+                "student" => $request->validate([
+                    'identity' => 'required|numeric',
+                ]),
+                default => null
+            };
+        }
 
         return response([
             "status" => $this->GetLoginStatus($request),
