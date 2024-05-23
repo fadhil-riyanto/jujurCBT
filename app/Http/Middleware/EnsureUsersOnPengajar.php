@@ -29,8 +29,5 @@ class EnsureUsersOnPengajar
         } else {
             throw new \App\Exceptions\InvalidRoleRoute();
         }
-
-
-        
     }
 }

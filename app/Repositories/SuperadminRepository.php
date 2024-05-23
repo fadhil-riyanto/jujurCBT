@@ -20,6 +20,4 @@ class SuperadminRepository {
     public function get() {
         return $this->model::all()->first();
     }
-
-    public function 
 }

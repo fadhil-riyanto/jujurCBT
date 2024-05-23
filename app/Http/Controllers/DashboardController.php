@@ -17,7 +17,6 @@ class DashboardController extends Controller
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
         protected Repositories\SoalRepository $soal_repo
     ) {}
-
     // only r/ here
 
     private function get_current_class() :string {
