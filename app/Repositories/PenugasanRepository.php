@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 use App\Models;
+use Illuminate\Support\Facades\DB;
 
 class PenugasanRepository {
 
@@ -23,6 +24,17 @@ class PenugasanRepository {
             "duration_time" => $arr->duration_time,
             "unix" => $arr->unix
         ]);
+    }
+
+    public function get_penugasan_by_kelas($kelas_id) {
+        return $this->penugasan_model->where("kelas_id", "=", $kelas_id)->get();
+    }
+
+    public function is_exist_penugasan_by_kelas_and_mapel($kelas_id, $kode_mapel) {
+        return $this->penugasan_model->select(DB::raw("count(1) AS result"))
+            ->where("kelas_id", "=", $kelas_id)
+            ->where("kode_mapel", "=", $kode_mapel)
+            ->first()["result"] ? true : false;
     }
     
     public function getAll() {

@@ -9,6 +9,24 @@ class onRunTimePilihanGandaRepository {
         protected Models\onRunTimePilihanGandaModel $on_runtime_pg_repo
     ){}
 
+    /**
+     * 0 for unanswered
+     * 1 for answered
+     */
+    public function get_answer_status($nomor_ujian, $kode_mapel, $id_soal): bool {
+        $query = $this->on_runtime_pg_repo
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("id_soal", "=", $id_soal)
+            ->first();
+        if ($query != null) {
+            return ($query["state"] == null || $query["state"] == 0) ? false : true;
+        } else {
+            return false;
+        }
+    }
+
+    // under testing
     public function get_all_answer_by_siswa($nomor_ujian, $kode_mapel) {
         return $this->on_runtime_pg_repo
             ->where("nomor_ujian", "=", $nomor_ujian)
