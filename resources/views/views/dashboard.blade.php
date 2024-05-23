@@ -18,6 +18,7 @@
 </div>
 
 <div class="exam-study-container">
+    
     @foreach($mapels_data as $mapel_data)
     <div class="exam-list">
         <div class="exam-list-name">
@@ -34,11 +35,18 @@
         </div>
     
         <div class="exam-list-go">
-            <a href="{{ $mapel_data['kerjakan_link'] }}" class="exam-list-go-confirmation">lihat soal</a>
+            <a href="/kerjakan/{{ $mapel_data['kerjakan_link'] }}" class="exam-list-go-confirmation">lihat soal</a>
         </div>
     </div>
     @endforeach
+    
+
 </div>
+    @if (count($mapels_data) == 0)
+    <div class="alert alert-normal">
+        oops, belum ada ujian disini
+    </div>
+    @endif
 @endsection
 
 

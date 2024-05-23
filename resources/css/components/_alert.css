@@ -9,3 +9,9 @@
     color: #ede9f3;
 }
 
+.alert-normal {
+    background-color: white;
+    border: 1px solid white;
+    color: black;
+}
+
