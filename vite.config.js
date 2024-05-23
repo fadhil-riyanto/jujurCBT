@@ -11,6 +11,10 @@ export default defineConfig({
                 'resources/css/components/_modal.css',
                 'resources/css/components/_buttons.css',
                 'resources/css/components/_alert.css',
+                'resources/css/dashboard.css',
+                'resources/css/dashboard_css/index.css',
+                'resources/css/dashboard_css/soal_interface.css',
+                'resources/css/dashboard_css/util.css',
 
                 // need 
                 'resources/css/login.css',
