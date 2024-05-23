@@ -169,9 +169,10 @@ Route::get('/pengajar', function () {
 Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
     ->middleware(Middleware\EnsureUsersOnStudent::class);
 
-Route::get('/kerjakan', function () {
-    return view("views/kerjakan");
-});
+Route::get('/kerjakan/{kode_mapel}/{id?}', [Http\Controllers\KerjakanController::class, "Index"]);
+// function () {
+//     return view("views/kerjakan");
+// });
 
 Route::get('/login', function () {
     return view("views/login");
