@@ -33,3 +33,8 @@ body {
     font-size: 40px;
     color: rgb(132, 31, 31)
 }
+
+.error-additional-info {
+    font-size: 18px;
+    color: rgb(132, 31, 31)
+}
