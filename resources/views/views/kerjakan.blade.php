@@ -35,12 +35,22 @@
                 @endforeach
             @else
                 <textarea name="essay_value" id="essay_value" rows="10"></textarea>
+                <button href="{{ $button_control['next'] }}"  class="btn-secondary" id="save_answer">simpan</button>
             @endif
         </div>
     </div>
     <div class="canvas-button">
-        <button type="button" class="btn-secondary" id="btn-primary-previous" onclick="close_display('modal-container-login-notify');">sebelumnya</button>
-        <button type="button" class="btn-secondary" id="btn-primary-next" onclick="close_display('modal-container-login-notify');">selanjutnya</button>
+        @if ($button_control["before"] != null)
+        <a href="{{ $button_control['before'] }}" class="btn-secondary" id="btn-primary-previous">sebelumnya</a>
+
+            @if ($button_control["next"] == null)
+            <a href="{{ $button_control['next'] }}" class="btn-secondary" style="background-color: yellow; color: black;" id="btn-primary-next">kirim</a>
+            @endif
+        @endif
+        
+        @if ($button_control["next"] != null)
+        <a href="{{ $button_control['next'] }}" class="btn-secondary" id="btn-primary-next">selanjutnya</a>
+        @endif
     </div>
     <div class="canvas-numlist">
         <div class="nulist-container">
@@ -61,16 +71,23 @@
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
 
-    $.ajax({
-        url: "/api/global/get_me",
-        type: "GET",
-        cache: false,
-        data: {
-            "_token": "{{ csrf_token() }}",
-        },
-        success: function(result) {
-            $("#alert-sambutan").html("Selamat datang " + result.data + " di JujurCBT!")
-        }
+    $(document).ready(function() {
+        // listen for callback
+
+        $(".answer_select").click(function() {
+            console.log("sel " + $(this).data("option"))
+            swal("jawaban disimpan!", {
+                buttons: false,
+                timer: 500,
+            });
+        })
+
+        $("#save_answer").click(function() {
+            swal("essay disimpan!", {
+                buttons: false,
+                timer: 500,
+            });
+        })
     })
 
 </script>

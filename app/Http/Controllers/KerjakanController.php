@@ -10,6 +10,8 @@ use App\Exceptions;
 class KerjakanController extends Controller
 {
     use Traits\CurrentSessionTrait;
+    protected $sequence_array_index;
+    protected $first_id;
 
     public function __construct(
         protected Repositories\PenugasanRepository $penugasan_repo,
@@ -67,15 +69,19 @@ class KerjakanController extends Controller
         }
     }
 
+    private function get_array_sequence($kode_mapel) {
+        return $this->soal_repo->get_ordered_list_id($kode_mapel)->toArray();
+    }
+
     private function soal_first($kode_mapel) {
         $data = $this->soal_repo->get_ordered_list_id($kode_mapel);
         if ($data != null) {
-            $firstid = $data[0]["id"];
-            $first_soal = $this->soal_data_get($kode_mapel, $firstid);
+            $this->first_id = $data[0]["id"];
+            $first_soal = $this->soal_data_get($kode_mapel, $this->first_id);
 
             // dd($first_option);
             if ($first_soal["tipe_soal"] == "pilihan_ganda") {
-                $first_option = $this->pilihan_ganda_soal_get($kode_mapel, $firstid);
+                $first_option = $this->pilihan_ganda_soal_get($kode_mapel, $this->first_id);
                 $data2return = [
                     "soal" => $first_soal["text_soal"],
                     "option" => $first_option,
@@ -88,8 +94,7 @@ class KerjakanController extends Controller
                 ];
             }
 
-            $data2return["seq"] = $this->get_current_sequence($kode_mapel, $firstid);
-            $data2return["next"] = $this->get_current_sequence($kode_mapel, $firstid);
+            $data2return["seq"] = $this->get_current_sequence($kode_mapel, $this->first_id);
             return $data2return;
             
         }
@@ -116,8 +121,46 @@ class KerjakanController extends Controller
         return $data2return;
     }
 
+    private function seq_index_position($id) {
+        $this->sequence_array_index = ($id == null) ? 0 : $id;                      // null ids == indexOf 0
+    }
+    private function seq_index2arr_index($seq_all) {
+        for($i = 0; $i < count($seq_all); $i++) {                                   // sigma (n --> count(seq)) { n = n + 1 }
+            if ($seq_all[$i]["id"] == $this->sequence_array_index) {
+                return $i;
+            }
+        }
+    }
+
+    private function seq_next($kode_mapel) {
+        $id_x_sequence = $this->get_array_sequence($kode_mapel);
+        
+        $current_array_index = $this->seq_index2arr_index($id_x_sequence);
+        if ($this->sequence_array_index == $id_x_sequence[count($id_x_sequence) - 1]["id"]) {  // last = count - 1
+            return null;
+        } else {
+            return $id_x_sequence[$current_array_index + 1]["id"];                             // next =  current + 1
+        }
+    }
+
+    private function seq_before($kode_mapel) {
+        $id_x_sequence = $this->get_array_sequence($kode_mapel);
+        
+        $current_array_index = $this->seq_index2arr_index($id_x_sequence);
+        if ($this->sequence_array_index == $id_x_sequence[0]["id"]) {
+            return null;
+        } else {
+            // dd($current_array_index);
+            if ($this->first_id != null) {
+                return  null;
+            }
+            return $id_x_sequence[$current_array_index - 1]["id"];
+        }
+    }
+
     public function Index(Request $request, $kode_mapel, $id = null) {
         $this->request = $request;
+        $this->seq_index_position($id);
         $this->cookie_deserialize();
 
         if ($this->validate_request($request, $kode_mapel)) {
@@ -131,9 +174,12 @@ class KerjakanController extends Controller
 
             $data2view = [
                 "base" => $data_from_soal,
-                "selector" => $this->get_soal_selector_status($kode_mapel)
+                "selector" => $this->get_soal_selector_status($kode_mapel),
+                "button_control" => [
+                    "next" => $this->seq_next($kode_mapel),
+                    "before" => $this->seq_before($kode_mapel)
+                ]
             ];
-            // dd($data2view);
 
             return view("views/kerjakan", $data2view);
         } else {

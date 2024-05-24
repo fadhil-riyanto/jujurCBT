@@ -35,7 +35,7 @@
         </div>
     
         <div class="exam-list-go">
-            <a href="/kerjakan/{{ $mapel_data['kerjakan_link'] }}" class="exam-list-go-confirmation">lihat soal</a>
+            <a href="/kerjakan/{{ $mapel_data['kerjakan_link'] }}/" class="exam-list-go-confirmation">lihat soal</a>
         </div>
     </div>
     @endforeach
