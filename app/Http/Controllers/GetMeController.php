@@ -37,6 +37,9 @@ class GetMeController extends Controller
             // };
             // return $cb->getFirst()->username;
         } catch (Exceptions\DataNotFoundByModel) {
+            if ($this->cookie_role == Enum\RoleSessionEnum::SuperAdmin) {
+                return "Admin";
+            }
             return "error";
         }
         
