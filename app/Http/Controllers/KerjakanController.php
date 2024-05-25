@@ -11,13 +11,15 @@ class KerjakanController extends Controller
 {
     use Traits\CurrentSessionTrait;
     protected $sequence_array_index;
-    protected $first_id;
+    protected $first_id = null;
+    protected $kode_mapel = null;
 
     public function __construct(
         protected Repositories\PenugasanRepository $penugasan_repo,
         protected Repositories\SoalRepository $soal_repo,
         protected Repositories\PgRepo $pg_repo,
-        protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo
+        protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo
     ) {}
 
     private function validate_request(Request $request, $kode_mapel) {
@@ -49,9 +51,20 @@ class KerjakanController extends Controller
         for($i = 0; $i < count($total); $i++) {
             $total[$i]["id_view"] = $i + 1;
             $total[$i]["actual_id"] = $total[$i]["id"];
-            $total[$i]["status"] = $this->on_runtime_pg_repo->get_answer_status(
-                $this->cookie_identity, $kode_mapel, $total[$i]["id"]
-            );
+
+            $total[$i]["status"] = match ($this->soal_repo->soal_typeof($kode_mapel, $total[$i]["id"])) {
+                "pilihan_ganda" =>  $this->on_runtime_pg_repo->get_answer_detail(
+                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"]) 
+                                    == false ? false : true,
+                "essay" =>  $this->on_runtime_essay_repo->get_answer_detail(
+                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"]) 
+                                    == false ? false : true,
+                default => false
+            };
+            // $total[$i]["status"] = $this->on_runtime_pg_repo->get_answer_detail(
+            //     $this->cookie_identity, $kode_mapel, $total[$i]["id"]
+            // ) == false ? false : true;
+            // if ($)
         }
         
         return $total;
@@ -95,6 +108,7 @@ class KerjakanController extends Controller
             }
 
             $data2return["seq"] = $this->get_current_sequence($kode_mapel, $this->first_id);
+            $data2return["image"] = $first_soal["image_soal"];
             return $data2return;
             
         }
@@ -118,6 +132,7 @@ class KerjakanController extends Controller
         }
 
         $data2return["seq"] = $this->get_current_sequence($kode_mapel, $id);
+        $data2return["image"] = $first_soal["image_soal"];
         return $data2return;
     }
 
@@ -158,12 +173,39 @@ class KerjakanController extends Controller
         }
     }
 
+    private function get_soal_status($id) {
+        return $this->on_runtime_pg_repo->get_answer_detail(
+            $this->cookie_identity, 
+            $this->kode_mapel, 
+            ($this->first_id != null) ? $this->first_id : $id
+        ) == false ? false : true;
+    }
+
+    private function get_selection($id) {
+        return $this->on_runtime_pg_repo->get_answer_detail(
+            $this->cookie_identity, 
+            $this->kode_mapel, 
+            ($this->first_id != null) ? $this->first_id : $id
+        );
+    }
+
+    private function get_essay_current_value($id) {
+        return $this->on_runtime_essay_repo->get_answer_detail(
+            $this->cookie_identity, 
+            $this->kode_mapel, 
+            ($this->first_id != null) ? $this->first_id : $id
+        );
+    }
+
+    //
+
     public function Index(Request $request, $kode_mapel, $id = null) {
         $this->request = $request;
         $this->seq_index_position($id);
         $this->cookie_deserialize();
 
         if ($this->validate_request($request, $kode_mapel)) {
+            $this->kode_mapel = $kode_mapel;
             if ($id == null) {
                 $data_from_soal = $this->soal_first($kode_mapel);
             } else {
@@ -178,8 +220,19 @@ class KerjakanController extends Controller
                 "button_control" => [
                     "next" => $this->seq_next($kode_mapel),
                     "before" => $this->seq_before($kode_mapel)
+                ],
+                "js_data" => [
+                    "kode_mapel" => $kode_mapel,
+                    "nomor_ujian" => $this->cookie_identity,
+                    "id_soal" => ($this->first_id != null) ? $this->first_id : $id
+                ],
+                "preload_data" => [
+                    "current_selection" => $this->get_selection($id),
+                    "current_value_essay" => $this->get_essay_current_value($id)
                 ]
             ];
+
+            // dd($data2view);
 
             return view("views/kerjakan", $data2view);
         } else {
