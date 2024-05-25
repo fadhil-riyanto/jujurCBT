@@ -10,7 +10,7 @@ class onRunTimePilihanGandaModel extends Model
     use HasFactory;
     protected $table = "on_runtime_pilihan_ganda";
     protected $fillable = [
-        "nomor_ujian", "mata_pelajaran", "pilihan_text", "index_jawaban", "state"
+        "nomor_ujian", "mata_pelajaran", "index_jawaban", "is_fixed", "is_correct", "id_soal"
     ];
 
     protected $primaryKey = "id";
