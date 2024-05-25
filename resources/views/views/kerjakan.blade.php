@@ -16,25 +16,44 @@
 @endsection
 
 @section("content")
+
+<style>
+img {
+  width: 100%;
+  height: auto;
+}
+</style>
 <div class="main-layout">
     <div class="canvas-num">
         <span class="canvas-num-inc">soal nomor {{ $base["seq"] }}</span>
     </div>
     <div class="canvas-questions">
         {{ $base["soal"] }}
+
+        @if ($base["image"] != null)
+        <img src="{{ asset('/images/' . $base['image']) }}" alt="">
+        @endif
     </div>
     <div class="canvas-answer">
         <div class="form-wrap">
             @if ($base["type"] == "pilihan_ganda")
                 @foreach ($base["option"] as $option_s) 
                 <label class="form-wrap-class">
+
+                    @if ($option_s['id'] == $preload_data["current_selection"])
+                    <input type="radio" class="answer_select" name="input_radio" data-option="{{ $option_s['id'] }}" checked>
+                    <span class="checkmark"></span>
+                    {{ $option_s['pilihan_text'] }}
+                    @else
                     <input type="radio" class="answer_select" name="input_radio" data-option="{{ $option_s['id'] }}">
                     <span class="checkmark"></span>
                     {{ $option_s['pilihan_text'] }}
+                    @endif
                 </label>
                 @endforeach
             @else
-                <textarea name="essay_value" id="essay_value" rows="10"></textarea>
+                
+                <textarea name="essay_value" id="essay_value" rows="10">{{ $preload_data['current_value_essay'] }}</textarea>
                 <button href="{{ $button_control['next'] }}"  class="btn-secondary" id="save_answer">simpan</button>
             @endif
         </div>
@@ -55,7 +74,11 @@
     <div class="canvas-numlist">
         <div class="nulist-container">
             @foreach ($selector as $selector_s)
-            <a class="numlist-num" id="numlist-num-1" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                @if ($selector_s["status"] == true) 
+                <a class="numlist-num" id="numlist-num-1" style="background-color: green;" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                @else 
+                <a class="numlist-num" id="numlist-num-1" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                @endif
             @endforeach
             
         </div>
@@ -67,26 +90,63 @@
 @section('script')
 <script>
 
+    let global_kode_mapel = "{{ $js_data['kode_mapel'] }}"
+    let global_nomor_ujian = "{{ $js_data['nomor_ujian'] }}"
+    let global_id_soal = "{{ $js_data['id_soal'] }}"
+
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
     }, 1000)
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+        }
+    })
 
     $(document).ready(function() {
         // listen for callback
 
         $(".answer_select").click(function() {
             console.log("sel " + $(this).data("option"))
-            swal("jawaban disimpan!", {
-                buttons: false,
-                timer: 500,
-            });
+            $.ajax({
+                url: "/api/kerjakan/store_pg",
+                method: "POST",
+                data: {
+                    kode_mapel: global_kode_mapel,
+                    nomor_ujian: global_nomor_ujian,
+                    id_soal: global_id_soal,
+                    id_jawaban: $(this).data("option")
+                },
+                success: function() {
+                    swal("jawaban disimpan!", {
+                        buttons: false,
+                        timer: 500,
+                    });
+                }
+            })
+
+            
         })
 
         $("#save_answer").click(function() {
-            swal("essay disimpan!", {
-                buttons: false,
-                timer: 500,
-            });
+            $.ajax({
+                url: "/api/kerjakan/store_essay",
+                method: "POST",
+                data: {
+                    kode_mapel: global_kode_mapel,
+                    nomor_ujian: global_nomor_ujian,
+                    id_soal: global_id_soal,
+                    jawaban_txt: $("#essay_value").val()
+                },
+                success: function() {
+                    swal("essay disimpan!", {
+                        buttons: false,
+                        timer: 500,
+                    });
+                }
+            })
+            
         })
     })
 
