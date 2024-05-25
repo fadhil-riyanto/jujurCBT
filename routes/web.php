@@ -18,7 +18,16 @@ Route::prefix("/api")->group(function() {
     Route::prefix("/dashboard")->group(function() {
         Route::get("/get_mata_pelajaran", [Http\Controllers\GetMataPelajaranController::class, "GetData"])
         ->middleware(Middleware\EnsureUsersOnStudent::class);
-        
+    });
+
+    // store_pilihan_ganda
+    Route::prefix("/kerjakan")->group(function() {
+        Route::post("/store_pg", [Http\Controllers\JawabanStore::class, "store_pilihan_ganda"])
+            ->middleware(Middleware\EnsureUsersOnStudent::class);
+
+            //
+        Route::post("/store_essay", [Http\Controllers\JawabanStore::class, "store_essay"])
+            ->middleware(Middleware\EnsureUsersOnStudent::class);
     });
 
     // only for admin endpoint
