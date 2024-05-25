@@ -27,6 +27,12 @@ class SoalRepository {
             ->first();
     }
 
+    public function soal_typeof($kode_mapel, $id) {
+        return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("id", "=", $id)
+            ->first()["tipe_soal"];
+    }
+
     public function get_ordered_list_id($kode_mapel) {
         return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
             ->select("id")
