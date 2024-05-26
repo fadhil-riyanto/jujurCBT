@@ -448,9 +448,15 @@
                         setJawabanFE(char_literals[data["index_kunci_jawaban"]])
                         populate_option()
                         $("#pilihan_ganda_option").show()
+                        $("#add_more_options").show()
+                        $("#dec_more_options").show()
+
                         $("#essay_option").hide()
                     } else {
                         $("#pilihan_ganda_option").hide()
+                        $("#add_more_options").hide()
+                        $("#dec_more_options").hide()
+
                         $("#essay_option").show()
                     }
                 }
@@ -465,9 +471,15 @@
             if ($(this).data("tipe-soal") == "pilihan_ganda") {
                 populate_option()
                 $("#pilihan_ganda_option").show()
+                $("#add_more_options").show()
+                $("#dec_more_options").show()
+                
                 $("#essay_option").hide()
             } else {
                 $("#pilihan_ganda_option").hide()
+                $("#add_more_options").hide()
+                $("#dec_more_options").hide()
+
                 $("#essay_option").show()
             }
         })
