@@ -47,12 +47,21 @@ class onRunTimeEssayRepository {
     }
 
     // // under testing
-    // public function get_all_answer_by_siswa($nomor_ujian, $kode_mapel) {
-    //     return $this->on_runtime_pg_repo
-    //         ->where("nomor_ujian", "=", $nomor_ujian)
-    //         ->where("mata_pelajaran", "=", $kode_mapel)
-    //         ->get();
-    // }
+    public function get_all_answer_by_siswa($nomor_ujian, $kode_mapel) {
+        return $this->on_runtime_essay
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->get();
+    }
+
+     // used as determine status on dashboatd
+     public function get_fixed_answer_by_siswa($nomor_ujian, $kode_mapel) {
+        return $this->on_runtime_essay
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("is_fixed", "=", 1) // turned to 1 when student has been submit the exam
+            ->get();
+    }
     
     // /*
     //  * when on click submit exam is occur, is fixed is changed to true, so its become confirmed

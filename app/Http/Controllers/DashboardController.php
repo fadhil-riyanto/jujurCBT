@@ -15,6 +15,7 @@ class DashboardController extends Controller
         protected Models\PenugasanModel $penugasan_db,
         protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo,
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
         protected Repositories\SoalRepository $soal_repo
     ) {}
     // only r/ here
@@ -36,11 +37,25 @@ class DashboardController extends Controller
     }
 
     private function status_dikerjakan($kode_mapel) : ?string {
-        $data = count($this->on_runtime_pg_repo->get_all_answer_by_siswa(
+        $data_pg = count($this->on_runtime_pg_repo->get_all_answer_by_siswa(
+            $this->cookie_identity, $kode_mapel
+        ));
+
+        $data_essay = count($this->on_runtime_essay->get_all_answer_by_siswa(
             $this->cookie_identity, $kode_mapel
         ));
 
         $data_total_soal = $this->soal_repo->get_total_soal($kode_mapel);
+        $data_fixed = count($this->on_runtime_pg_repo->get_fixed_answer_by_siswa(
+            $this->cookie_identity, $kode_mapel
+        )) + count($this->on_runtime_essay->get_fixed_answer_by_siswa(
+            $this->cookie_identity, $kode_mapel
+        ));
+        
+        $data = $data_pg + $data_essay;
+        
+
+        
         // dd($data_total_soal);
 
         // $fixed_exam_data = 
@@ -54,7 +69,12 @@ class DashboardController extends Controller
         if ($data == 0) {
             return "belum mengerjakan";
         } else if ($data > 0 && $data == $data_total_soal) {
-            return "telah dikerjakan";
+            if ($data_fixed == $data) {
+                return "telah dikerjakan";
+            } else {
+                return "lanjutkan";
+            }
+            
         } else if ($data > 0 && $data != $data_total_soal) {
             return "lanjutkan";
         }
