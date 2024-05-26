@@ -15,7 +15,7 @@ class AdminPenugasan extends Controller
     ){}
 
     public function store(Request $request) {
-        $this->penugasan_repo->insertPenugasanOrCreate($request);
+        $this->penugasan_repo->insertPenugasan($request);
     }
 
     public function getAll(Request $request) {

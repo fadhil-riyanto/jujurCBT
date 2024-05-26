@@ -93,6 +93,7 @@ img {
     let global_kode_mapel = "{{ $js_data['kode_mapel'] }}"
     let global_nomor_ujian = "{{ $js_data['nomor_ujian'] }}"
     let global_id_soal = "{{ $js_data['id_soal'] }}"
+    let global_penugasan_id = "{{ $js_data['penugasan_id'] }}"
 
     setInterval(function() {
         setHtml("nav-time-js", getTimeStr())
@@ -116,7 +117,8 @@ img {
                     kode_mapel: global_kode_mapel,
                     nomor_ujian: global_nomor_ujian,
                     id_soal: global_id_soal,
-                    id_jawaban: $(this).data("option")
+                    id_jawaban: $(this).data("option"),
+                    penugasan_id: global_penugasan_id
                 },
                 success: function() {
                     swal("jawaban disimpan!", {
@@ -137,7 +139,8 @@ img {
                     kode_mapel: global_kode_mapel,
                     nomor_ujian: global_nomor_ujian,
                     id_soal: global_id_soal,
-                    jawaban_txt: $("#essay_value").val()
+                    jawaban_txt: $("#essay_value").val(),
+                    penugasan_id: global_penugasan_id
                 },
                 success: function() {
                     swal("essay disimpan!", {

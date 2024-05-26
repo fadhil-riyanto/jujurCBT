@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
     private function get_matched_penugasan_by_kelas($kelas) {
         $data = $this->penugasan_db->where("kelas_id", "=", $kelas)->get();
-
+        // dd($data);
         return $data;
     }
 
@@ -36,13 +36,13 @@ class DashboardController extends Controller
        return $this->daftar_mapel_repo->get_mapel_info($kode_mapel)["nama_mata_pelajaran"];
     }
 
-    private function status_dikerjakan($kode_mapel) : ?string {
-        $data_pg = count($this->on_runtime_pg_repo->get_all_answer_by_siswa(
-            $this->cookie_identity, $kode_mapel
+    private function status_dikerjakan($kode_mapel, $penugasan_id) : ?string {
+        $data_pg = count($this->on_runtime_pg_repo->get_all_answer_by_siswa_and_penugasan(
+            $this->cookie_identity, $kode_mapel, $penugasan_id
         ));
 
-        $data_essay = count($this->on_runtime_essay->get_all_answer_by_siswa(
-            $this->cookie_identity, $kode_mapel
+        $data_essay = count($this->on_runtime_essay->get_all_answer_by_siswa_and_penugasan(
+            $this->cookie_identity, $kode_mapel, $penugasan_id
         ));
 
         $data_total_soal = $this->soal_repo->get_total_soal($kode_mapel);
@@ -123,7 +123,8 @@ class DashboardController extends Controller
                 if (time() > $true_exam[$i]["unix"]) {
                     $mapel_struct->nama_mapel = $this->get_real_mapel_name($true_exam[$i]["kode_mapel"]);
                     $mapel_struct->kode_mapel = $true_exam[$i]["kode_mapel"];
-                    $mapel_struct->status_dikerjakan = $this->status_dikerjakan($true_exam[$i]["kode_mapel"]);
+                    $mapel_struct->penugasan_id = $true_exam[$i]["id"];
+                    $mapel_struct->status_dikerjakan = $this->status_dikerjakan($true_exam[$i]["kode_mapel"], $true_exam[$i]["id"]);
                     [$mapel_struct->start, $mapel_struct->end] = $this->get_start_end($true_exam[$i]["unix"], $true_exam[$i]["duration_time"]);
                     $mapel_struct->kerjakan_link = $true_exam[$i]["kode_mapel"];
                     array_push($pack, (array)$mapel_struct);
@@ -162,8 +163,11 @@ class DashboardController extends Controller
         // dd();
         $this->cookie_deserialize();
 
+        $packed = $this->generate_packed_data();
+        // dd($packed);
+
         return view("views/dashboard", [
-            "mapels_data" => $this->generate_packed_data()
+            "mapels_data" => $packed
         ]);
     }
 }

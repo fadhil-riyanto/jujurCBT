@@ -33,11 +33,13 @@ class onRunTimePilihanGandaRepository {
      * return number of selected jawaban if answered
      */
 
-    public function get_answer_detail($nomor_ujian, $kode_mapel, $id_soal)  {
+    public function get_answer_detail($nomor_ujian, $kode_mapel, $id_soal, $penugasan_id)  {
         $query = $this->on_runtime_pg_repo
             ->where("nomor_ujian", "=", $nomor_ujian)
             ->where("mata_pelajaran", "=", $kode_mapel)
             ->where("id_soal", "=", $id_soal)
+            ->where("penugasan_id", "=", $penugasan_id)
+            
             ->first();
         if ($query != null) {
             return $query["index_jawaban"];
@@ -51,6 +53,15 @@ class onRunTimePilihanGandaRepository {
         return $this->on_runtime_pg_repo
             ->where("nomor_ujian", "=", $nomor_ujian)
             ->where("mata_pelajaran", "=", $kode_mapel)
+            ->get();
+    }
+
+    // by penugasan id
+    public function get_all_answer_by_siswa_and_penugasan($nomor_ujian, $kode_mapel, $penugasan_id) {
+        return $this->on_runtime_pg_repo
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("penugasan_id", "=", $penugasan_id)
             ->get();
     }
 
@@ -86,12 +97,13 @@ class onRunTimePilihanGandaRepository {
             ->get();
     }
 
-    public function insert_siswa_selection($mata_pelajaran, $nomor_ujian, $id_soal, $id_jawaban) {
+    public function insert_siswa_selection($mata_pelajaran, $nomor_ujian, $id_soal, $id_jawaban, $penugasan_id) {
         $this->on_runtime_pg_repo->updateOrInsert(
             [
                 "mata_pelajaran" => $mata_pelajaran,
                 "nomor_ujian" => $nomor_ujian,
-                "id_soal" => $id_soal
+                "id_soal" => $id_soal,
+                "penugasan_id" => $penugasan_id
             ],
             [
                 "index_jawaban" => $id_jawaban

@@ -19,14 +19,16 @@ class JawabanStore extends Controller
             "kode_mapel" => "required",           // mata_pelajaran
             "nomor_ujian" => "required",          // nomor_ujian
             "id_soal" => "required",              // id_soal
-            "id_jawaban" => "required"            // index_jawaban
+            "id_jawaban" => "required",            // index_jawaban
+            "penugasan_id" => "required"
         ]);
 
         $this->on_runtime_pg_repo->insert_siswa_selection(
             $request->kode_mapel, 
             $request->nomor_ujian,
             $request->id_soal,
-            $request->id_jawaban
+            $request->id_jawaban,
+            $request->penugasan_id
         );
     }
 
@@ -40,14 +42,16 @@ class JawabanStore extends Controller
             "kode_mapel" => "required",           // mata_pelajaran
             "nomor_ujian" => "required",          // nomor_ujian
             "id_soal" => "required",              // id_soal
-            "jawaban_txt" => "required"            // index_jawaban
+            "jawaban_txt" => "required",            // index_jawaban
+            "penugasan_id" => "required"
         ]);
 
         $this->on_runtime_essay_repo->insert_siswa_essay(
             $request->kode_mapel, 
             $request->nomor_ujian,
             $request->id_soal,
-            $request->jawaban_txt
+            $request->jawaban_txt,
+            $request->penugasan_id
         );
     }
 

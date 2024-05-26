@@ -13,6 +13,7 @@ class KerjakanController extends Controller
     protected $sequence_array_index;
     protected $first_id = null;
     protected $kode_mapel = null;
+    protected $penugasan_id = null;
 
     public function __construct(
         protected Repositories\PenugasanRepository $penugasan_repo,
@@ -32,7 +33,9 @@ class KerjakanController extends Controller
          * by penugasan db
          */
 
-        if ($this->penugasan_repo->is_exist_penugasan_by_kelas_and_mapel($this->cookie_kelas, $kode_mapel)) {
+        if ($this->penugasan_repo->is_exist_penugasan_by_kelas_and_mapel_and_id(
+            $this->cookie_kelas, $kode_mapel, $this->penugasan_id
+        )) {
             return true;
         }
     }
@@ -54,10 +57,10 @@ class KerjakanController extends Controller
 
             $total[$i]["status"] = match ($this->soal_repo->soal_typeof($kode_mapel, $total[$i]["id"])) {
                 "pilihan_ganda" =>  $this->on_runtime_pg_repo->get_answer_detail(
-                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"]) 
+                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"], $this->penugasan_id) 
                                     == false ? false : true,
                 "essay" =>  $this->on_runtime_essay_repo->get_answer_detail(
-                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"]) 
+                                        $this->cookie_identity, $kode_mapel, $total[$i]["id"], $this->penugasan_id) 
                                     == false ? false : true,
                 default => false
             };
@@ -177,7 +180,8 @@ class KerjakanController extends Controller
         return $this->on_runtime_pg_repo->get_answer_detail(
             $this->cookie_identity, 
             $this->kode_mapel, 
-            ($this->first_id != null) ? $this->first_id : $id
+            ($this->first_id != null) ? $this->first_id : $id,
+            $this->penugasan_id
         ) == false ? false : true;
     }
 
@@ -185,7 +189,8 @@ class KerjakanController extends Controller
         return $this->on_runtime_pg_repo->get_answer_detail(
             $this->cookie_identity, 
             $this->kode_mapel, 
-            ($this->first_id != null) ? $this->first_id : $id
+            ($this->first_id != null) ? $this->first_id : $id,
+            $this->penugasan_id
         );
     }
 
@@ -193,13 +198,19 @@ class KerjakanController extends Controller
         return $this->on_runtime_essay_repo->get_answer_detail(
             $this->cookie_identity, 
             $this->kode_mapel, 
-            ($this->first_id != null) ? $this->first_id : $id
+            ($this->first_id != null) ? $this->first_id : $id,
+            $this->penugasan_id
         );
     }
 
     //
 
-    public function Index(Request $request, $kode_mapel, $id = null) {
+    public function Index(Request $request, $kode_mapel_n_penugasan_id, $id = null) {
+
+        $exp_internal = explode('-', $kode_mapel_n_penugasan_id);
+        $kode_mapel = $exp_internal[0];
+        $this->penugasan_id = $exp_internal[1];
+        
         $this->request = $request;
         $this->seq_index_position($id);
         $this->cookie_deserialize();
@@ -224,7 +235,8 @@ class KerjakanController extends Controller
                 "js_data" => [
                     "kode_mapel" => $kode_mapel,
                     "nomor_ujian" => $this->cookie_identity,
-                    "id_soal" => ($this->first_id != null) ? $this->first_id : $id
+                    "id_soal" => ($this->first_id != null) ? $this->first_id : $id,
+                    "penugasan_id" => $this->penugasan_id
                 ],
                 "preload_data" => [
                     "current_selection" => $this->get_selection($id),

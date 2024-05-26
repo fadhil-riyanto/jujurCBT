@@ -33,11 +33,13 @@ class onRunTimeEssayRepository {
     //  * return number of selected jawaban if answered
     //  */
 
-    public function get_answer_detail($nomor_ujian, $kode_mapel, $id_soal)  {
+    public function get_answer_detail($nomor_ujian, $kode_mapel, $id_soal, $penugasan_id)  {
         $query = $this->on_runtime_essay
             ->where("nomor_ujian", "=", $nomor_ujian)
             ->where("mata_pelajaran", "=", $kode_mapel)
             ->where("id_soal", "=", $id_soal)
+            ->where("penugasan_id", "=", $penugasan_id)
+
             ->first();
         if ($query != null) {
             return $query["jawaban_txt"];
@@ -60,6 +62,15 @@ class onRunTimeEssayRepository {
             ->where("nomor_ujian", "=", $nomor_ujian)
             ->where("mata_pelajaran", "=", $kode_mapel)
             ->where("is_fixed", "=", 1) // turned to 1 when student has been submit the exam
+            ->get();
+    }
+
+    // get by penugasan id
+    public function get_all_answer_by_siswa_and_penugasan($nomor_ujian, $kode_mapel, $penugasan_id) {
+        return $this->on_runtime_essay
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("penugasan_id", "=", $penugasan_id)
             ->get();
     }
     
@@ -99,12 +110,13 @@ class onRunTimeEssayRepository {
     //     );
     // }
 
-    public function insert_siswa_essay($mata_pelajaran, $nomor_ujian, $id_soal, $jawaban_txt) {
+    public function insert_siswa_essay($mata_pelajaran, $nomor_ujian, $id_soal, $jawaban_txt, $penugasan_id) {
         $this->on_runtime_essay->updateOrInsert(
             [
                 "mata_pelajaran" => $mata_pelajaran,
                 "nomor_ujian" => $nomor_ujian,
-                "id_soal" => $id_soal
+                "id_soal" => $id_soal,
+                "penugasan_id" => $penugasan_id
             ],
             [
                 "jawaban_txt" => $jawaban_txt
