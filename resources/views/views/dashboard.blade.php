@@ -35,7 +35,9 @@
         </div>
     
         <div class="exam-list-go">
+            @if ($mapel_data["status_dikerjakan"] != "telah dikerjakan")
             <a href="/kerjakan/{{ $mapel_data['kerjakan_link'] }}/" class="exam-list-go-confirmation">lihat soal</a>
+            @endif
         </div>
     </div>
     @endforeach
