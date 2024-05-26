@@ -112,4 +112,14 @@ class onRunTimeEssayRepository {
         );
     }
 
+    public function change2fixed($mata_pelajaran, $nomor_ujian) {
+        $this->on_runtime_essay
+            ->where("mata_pelajaran", "=", $mata_pelajaran)
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->update([
+                "is_fixed" => 1
+            ]);
+
+    }
+
 }

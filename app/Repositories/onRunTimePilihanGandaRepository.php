@@ -99,17 +99,14 @@ class onRunTimePilihanGandaRepository {
         );
     }
 
-    public function insert_siswa_essay($mata_pelajaran, $nomor_ujian, $id_soal, $jawaban_txt) {
-        $this->on_runtime_pg_repo->updateOrInsert(
-            [
-                "mata_pelajaran" => $mata_pelajaran,
-                "nomor_ujian" => $nomor_ujian,
-                "id_soal" => $id_soal
-            ],
-            [
-                "jawaban_txt" => $jawaban_txt
-            ]
-        );
+    public function change2fixed($mata_pelajaran, $nomor_ujian) {
+        $this->on_runtime_pg_repo
+            ->where("mata_pelajaran", "=", $mata_pelajaran)
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->update([
+                "is_fixed" => 1
+            ]);
+
     }
 
 }

@@ -28,6 +28,10 @@ Route::prefix("/api")->group(function() {
             //
         Route::post("/store_essay", [Http\Controllers\JawabanStore::class, "store_essay"])
             ->middleware(Middleware\EnsureUsersOnStudent::class);
+
+        // 
+        Route::post("/confirm_exam", [Http\Controllers\JawabanStore::class, "confirm_exam"])
+            ->middleware(Middleware\EnsureUsersOnStudent::class);
     });
 
     // only for admin endpoint
@@ -179,6 +183,11 @@ Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
     ->middleware(Middleware\EnsureUsersOnStudent::class);
 
 Route::get('/kerjakan/{kode_mapel}/{id?}', [Http\Controllers\KerjakanController::class, "Index"]);
+
+Route::get('/confirm/{kode_mapel}/{nomor_ujian}', function($kode_mapel, $nomor_ujian) {
+    return view("views/kerjakan_confirm", ["kode_mapel" => $kode_mapel, 'nomor_ujian' => $nomor_ujian]);
+});
+
 // function () {
 //     return view("views/kerjakan");
 // });

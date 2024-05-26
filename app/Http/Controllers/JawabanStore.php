@@ -51,6 +51,16 @@ class JawabanStore extends Controller
         );
     }
 
+    public function confirm_exam(Request $request) {
+        $validated = $request->validate([         // convention list
+            "kode_mapel" => "required",           // mata_pelajaran
+            "nomor_ujian" => "required"           // nomor_ujian
+        ]);
+
+        $this->on_runtime_pg_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
+        $this->on_runtime_essay_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
+    }
+
     // hapus state column
     // rename index_jawaban ke id_soal
     // ubah jawaban _txt ke text()

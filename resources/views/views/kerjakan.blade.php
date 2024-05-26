@@ -25,7 +25,7 @@ img {
 </style>
 <div class="main-layout">
     <div class="canvas-num">
-        <span class="canvas-num-inc">soal nomor {{ $base["seq"] }}</span>
+        <span class="canvas-num-inc">soal nomor {{ $base["seq"] }} </span>
     </div>
     <div class="canvas-questions">
         {{ $base["soal"] }}
@@ -63,7 +63,7 @@ img {
         <a href="{{ $button_control['before'] }}" class="btn-secondary" id="btn-primary-previous">sebelumnya</a>
 
             @if ($button_control["next"] == null)
-            <a href="{{ $button_control['next'] }}" class="btn-secondary" style="background-color: yellow; color: black;" id="btn-primary-next">kirim</a>
+            <a href="/confirm/{{ $js_data['kode_mapel'] }}/{{ $js_data['nomor_ujian'] }}" class="btn-secondary" style="background-color: yellow; color: black;" id="btn-primary-next">kirim</a>
             @endif
         @endif
         
