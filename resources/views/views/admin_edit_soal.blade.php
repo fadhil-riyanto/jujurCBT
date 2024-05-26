@@ -264,6 +264,9 @@
         $("#preview_picture img").prop("src", "")
         $("#preview_picture").hide()
         $("#upload_file").val("")
+        
+        $("#add_more_options").show()
+        $("#dec_more_options").show()
 
     }
 
