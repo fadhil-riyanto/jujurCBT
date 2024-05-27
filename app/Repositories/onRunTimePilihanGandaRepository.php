@@ -48,7 +48,7 @@ class onRunTimePilihanGandaRepository {
         }
     }
 
-    // under testing
+    // under testing (deprecated warn)
     public function get_all_answer_by_siswa($nomor_ujian, $kode_mapel) {
         return $this->on_runtime_pg_repo
             ->where("nomor_ujian", "=", $nomor_ujian)
