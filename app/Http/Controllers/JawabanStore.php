@@ -9,9 +9,8 @@ class JawabanStore extends Controller
 {
     public function __construct(
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
-        protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo
-        
-        // 
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo,
+        protected Repositories\PenyelesaianRepository $penyelesaian_repo
     ){}
 
     public function store_pilihan_ganda(Request $request) {
@@ -56,13 +55,18 @@ class JawabanStore extends Controller
     }
 
     public function confirm_exam(Request $request) {
-        $validated = $request->validate([         // convention list
+        $request->validate([         // convention list
             "kode_mapel" => "required",           // mata_pelajaran
-            "nomor_ujian" => "required"           // nomor_ujian
+            "nomor_ujian" => "required",           // nomor_ujian
+            "penugasan_id" => "required"
         ]);
 
-        $this->on_runtime_pg_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
-        $this->on_runtime_essay_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
+        // deprecated
+        // $this->on_runtime_pg_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
+        // $this->on_runtime_essay_repo->change2fixed($request->kode_mapel, $request->nomor_ujian);
+        $this->penyelesaian_repo->set(
+            $request->kode_mapel, $request->nomor_ujian, $request->penugasan_id
+        )->setFixed();
     }
 
     // hapus state column

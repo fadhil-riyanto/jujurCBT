@@ -16,7 +16,8 @@ class DashboardController extends Controller
         protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo,
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
         protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
-        protected Repositories\SoalRepository $soal_repo
+        protected Repositories\SoalRepository $soal_repo,
+        protected Repositories\PenyelesaianRepository $penyelesaian_repo
     ) {}
     // only r/ here
 
@@ -66,18 +67,30 @@ class DashboardController extends Controller
         //     default => null
         // };
         // dd($fixed_data);
+        $true_fixed = $this->penyelesaian_repo->set(
+            $kode_mapel, $this->cookie_identity, $penugasan_id
+        )->isFixed();
+
         if ($data == 0) {
             return "belum mengerjakan";
-        } else if ($data > 0 && $data == $data_total_soal) {
-            if ($data_fixed == $data) {
+        } else if ($data > 0) {
+            if ($true_fixed == true) {
                 return "telah dikerjakan";
             } else {
                 return "lanjutkan";
             }
             
-        } else if ($data > 0 && $data != $data_total_soal) {
-            return "lanjutkan";
         }
+        //  else if ($data > 0 && $data == $data_total_soal) {
+        //     if ($data_fixed == $data) {
+        //         return "telah dikerjakan";
+        //     } else {
+        //         return "lanjutkan";
+        //     }
+            
+        // } else if ($data > 0 && $data != $data_total_soal) {
+        //     return "lanjutkan";
+        // }
         // else if ($data == $fixed_data) {
         //     return "selesai";
         // } else if ($data > 0) {

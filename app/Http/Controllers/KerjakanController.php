@@ -20,7 +20,8 @@ class KerjakanController extends Controller
         protected Repositories\SoalRepository $soal_repo,
         protected Repositories\PgRepo $pg_repo,
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
-        protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo,
+        protected Repositories\PenyelesaianRepository $penyelesaian_repo
     ) {}
 
     private function validate_request(Request $request, $kode_mapel) {
@@ -36,7 +37,16 @@ class KerjakanController extends Controller
         if ($this->penugasan_repo->is_exist_penugasan_by_kelas_and_mapel_and_id(
             $this->cookie_kelas, $kode_mapel, $this->penugasan_id
         )) {
-            return true;
+            if ($this->penyelesaian_repo->set(
+                $kode_mapel, $this->cookie_identity, $this->penugasan_id
+            )->isFixed()) {
+                throw new Exceptions\AccessDenied();
+            } else {
+                return true;
+            }
+            
+        } else {
+            throw new \App\Exceptions\InvalidRequest(); 
         }
     }
 
@@ -215,42 +225,41 @@ class KerjakanController extends Controller
         $this->seq_index_position($id);
         $this->cookie_deserialize();
 
-        if ($this->validate_request($request, $kode_mapel)) {
-            $this->kode_mapel = $kode_mapel;
-            if ($id == null) {
-                $data_from_soal = $this->soal_first($kode_mapel);
-            } else {
-                $data_from_soal = $this->soal($kode_mapel, $id);
-            }
-
-            // validate time and etc
-
-            $data2view = [
-                "base" => $data_from_soal,
-                "selector" => $this->get_soal_selector_status($kode_mapel),
-                "button_control" => [
-                    "next" => $this->seq_next($kode_mapel),
-                    "before" => $this->seq_before($kode_mapel)
-                ],
-                "js_data" => [
-                    "kode_mapel" => $kode_mapel,
-                    "nomor_ujian" => $this->cookie_identity,
-                    "id_soal" => ($this->first_id != null) ? $this->first_id : $id,
-                    "penugasan_id" => $this->penugasan_id
-                ],
-                "preload_data" => [
-                    "current_selection" => $this->get_selection($id),
-                    "current_value_essay" => $this->get_essay_current_value($id)
-                ]
-            ];
-
-            // dd($data2view);
-
-            return view("views/kerjakan", $data2view);
+        // if () {
+        // try {
+        $this->validate_request($request, $kode_mapel);
+        $this->kode_mapel = $kode_mapel;
+        if ($id == null) {
+            $data_from_soal = $this->soal_first($kode_mapel);
         } else {
-            // throw new Exceptions\InvalidRequest();
-            throw new \App\Exceptions\InvalidRequest();
+            $data_from_soal = $this->soal($kode_mapel, $id);
         }
+
+        // validate time and etc
+
+        $data2view = [
+            "base" => $data_from_soal,
+            "selector" => $this->get_soal_selector_status($kode_mapel),
+            "button_control" => [
+                "next" => $this->seq_next($kode_mapel),
+                "before" => $this->seq_before($kode_mapel)
+            ],
+            "js_data" => [
+                "kode_mapel" => $kode_mapel,
+                "nomor_ujian" => $this->cookie_identity,
+                "id_soal" => ($this->first_id != null) ? $this->first_id : $id,
+                "penugasan_id" => $this->penugasan_id
+            ],
+            "preload_data" => [
+                "current_selection" => $this->get_selection($id),
+                "current_value_essay" => $this->get_essay_current_value($id)
+            ]
+        ];
+
+        // dd($data2view);
+
+        return view("views/kerjakan", $data2view);
+        
         
     }
 }
