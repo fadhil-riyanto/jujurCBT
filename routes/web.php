@@ -184,9 +184,7 @@ Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
 
 Route::get('/kerjakan/{kode_mapel}/{id?}', [Http\Controllers\KerjakanController::class, "Index"]);
 
-Route::get('/confirm/{kode_mapel}/{nomor_ujian}', function($kode_mapel, $nomor_ujian) {
-    return view("views/kerjakan_confirm", ["kode_mapel" => $kode_mapel, 'nomor_ujian' => $nomor_ujian]);
-});
+Route::get('/confirm/{kode_mapel_n_penugasan_id}/{nomor_ujian}', [Http\Controllers\KerjakanConfirm::class, "Index"]);
 
 // function () {
 //     return view("views/kerjakan");
