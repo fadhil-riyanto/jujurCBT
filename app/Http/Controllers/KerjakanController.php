@@ -6,6 +6,7 @@ use App\Traits;
 use Illuminate\Http\Request;
 use App\Repositories;
 use App\Exceptions;
+use App\Helper;
 
 class KerjakanController extends Controller
 {
@@ -23,6 +24,20 @@ class KerjakanController extends Controller
         protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo,
         protected Repositories\PenyelesaianRepository $penyelesaian_repo
     ) {}
+
+    private function validate_time($db_time, $min) {
+        $added_time = add_unix_mins($db_time, $min);
+        
+        if (time() > $db_time) { // now > db time 
+            if (time() < $added_time) { // time now must be less than added time (end)
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
     private function validate_request(Request $request, $kode_mapel) {
         /**
@@ -42,7 +57,12 @@ class KerjakanController extends Controller
             )->isFixed()) {
                 throw new Exceptions\AccessDenied();
             } else {
-                return true;
+                $data = $this->penugasan_repo->get_penugasan_detail_by_penugasan_id($this->penugasan_id);
+                if ($this->validate_time($data["unix"], $data['duration_time'])) {
+                    return true;
+                } else {
+                    throw new Exceptions\AccessDenied();
+                }
             }
             
         } else {
@@ -226,7 +246,7 @@ class KerjakanController extends Controller
         $this->cookie_deserialize();
 
         // if () {
-        // try {
+        // try {ar
         $this->validate_request($request, $kode_mapel);
         $this->kode_mapel = $kode_mapel;
         if ($id == null) {

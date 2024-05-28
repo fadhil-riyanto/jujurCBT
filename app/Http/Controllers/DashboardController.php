@@ -133,7 +133,7 @@ class DashboardController extends Controller
         $true_exam = $this->get_matched_penugasan_by_kelas($this->get_current_class());
         for($i = 0; $i < count($true_exam); $i++) {
             if ($this->daftar_mapel_repo->mapel_exist($true_exam[$i]["kode_mapel"])) {
-                if (time() > $true_exam[$i]["unix"]) {
+                if (time() > $true_exam[$i]["unix"] && time() < add_unix_mins($true_exam[$i]["unix"], $true_exam[$i]["duration_time"])) {
                     $mapel_struct->nama_mapel = $this->get_real_mapel_name($true_exam[$i]["kode_mapel"]);
                     $mapel_struct->kode_mapel = $true_exam[$i]["kode_mapel"];
                     $mapel_struct->penugasan_id = $true_exam[$i]["id"];
