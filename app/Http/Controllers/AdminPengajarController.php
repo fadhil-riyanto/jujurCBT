@@ -6,7 +6,7 @@ use App\Repositories;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class PengajarController extends Controller
+class AdminPengajarController extends Controller
 {
     public function __construct(
         protected Repositories\PengajarRepository $pengajar_repo
