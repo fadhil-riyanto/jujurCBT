@@ -30,6 +30,10 @@ class PenugasanRepository {
         return $this->penugasan_model->where("kelas_id", "=", $kelas_id)->get();
     }
 
+    public function get_penugasan_detail_by_penugasan_id($penugasan_id) {
+        return $this->penugasan_model->where("id", "=", $penugasan_id)->first();
+    }
+
     public function is_exist_penugasan_by_kelas_and_mapel($kelas_id, $kode_mapel) {
         return $this->penugasan_model->select(DB::raw("count(1) AS result"))
             ->where("kelas_id", "=", $kelas_id)
