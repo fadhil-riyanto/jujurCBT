@@ -175,7 +175,7 @@ Route::prefix("/admin")->group(function() {
 
 
 Route::get('/pengajar', function () {
-    return view("views/pengajar");
+    return view("views/pengajar_welcome");
 });
 // ->middleware(Middleware\EnsureUsersOnPengajar::class)
 
@@ -200,4 +200,7 @@ Route::get('/', [Http\Controllers\IndexController::class, "IndexController"]);
 Route::get('/blokir', function () {
     return view("errors/blokir");
 });
+
+
+Route::get('/logout', [App\Http\Controllers\LogoutController::class, "Index"]);
 
