@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\SiswaAccountModel;
-use App\Models\AdminAccountModel;
+use App\Models\PengajarModel;
 use App\Models\SuperadminModel;
 
 use Illuminate\Support\Facades\Cookie;
@@ -41,8 +41,10 @@ class checkAuth {
         ) : null;
     }
 
-    private function getDataFromModelsAsAdmin($username): credential_return|null {
-        $ret = AdminAccountModel::where('username', $username)->first();
+
+    // deprecated warn
+    private function getDataFromModelsAsPengajar($username): credential_return|null {
+        $ret = PengajarModel::where('username', $username)->first();
         return ($ret != null) ? new credential_return(
             $ret->username,
             $ret->password
@@ -86,7 +88,8 @@ class checkAuth {
                 return $this->getDataFromModelsAsSuperAdmin($this->request->get("identity"));
             } else if ($this->request->get("role") == "pengajar") {
                 $this->login_as = "pengajar";
-                return $this->getDataFromModelsAsAdmin($this->request->get("identity"));
+                // dd();
+                return $this->getDataFromModelsAsPengajar($this->request->get("identity"));
             } else {
                 $this->message = "role tidak ditemukan!";
                 throw new RoleNotFoundException();
