@@ -20,6 +20,11 @@ Route::prefix("/api")->group(function() {
         ->middleware(Middleware\EnsureUsersOnStudent::class);
     });
 
+    // Route::prefix("/pengajar")->group(function() {
+    //     Route::get("/get_nilai_by_penugasan", [Http\Controllers\PengajarNilaiCheck::class, "Api"])
+    //     ->middleware(Middleware\EnsureUsersOnPengajar::class);
+    // });
+
     // store_pilihan_ganda
     Route::prefix("/kerjakan")->group(function() {
         Route::post("/store_pg", [Http\Controllers\JawabanStore::class, "store_pilihan_ganda"])
@@ -63,7 +68,7 @@ Route::prefix("/api")->group(function() {
         Route::post("/remove_kelas", [Http\Controllers\AdminRemoveKelasController::class, "Remove"])
         ->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
-        Route::resource("pengajar", Http\Controllers\PengajarController::class)->only([
+        Route::resource("pengajar", Http\Controllers\AdminPengajarController::class)->only([
             'create', 'index', 'store', 'update', 'destroy', 'edit'
         ])->middleware(Middleware\EnsureUsersOnSuperAdmin::class);
 
@@ -174,9 +179,10 @@ Route::prefix("/admin")->group(function() {
 });
 
 
-Route::get('/pengajar', function () {
-    return view("views/pengajar_welcome");
-});
+Route::get('/pengajar', fn() => view("views/pengajar_welcome") );
+Route::get('/pengajar/nilai', [Http\Controllers\PengajarNilaiController::class, "Index"]);
+Route::get('/pengajar/nilai/check', [Http\Controllers\PengajarNilaiCheck::class, "Index"]);
+// [Http\Controllers\PengajarNilaiCheck::class, "Datatable"]
 // ->middleware(Middleware\EnsureUsersOnPengajar::class)
 
 Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
