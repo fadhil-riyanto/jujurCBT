@@ -10,7 +10,7 @@
               <h5 class="card-title">{{ $data_s["nama_mapel"] }} (ujian tanggal {{ $data_s["start_date"] }})</h5>
               <p class="card-text">mulai: {{ $data_s["start_time"] }}</p>
               <p class="card-text">berakhir: {{ add_unix_mins_return_format($data_s["unix"], $data_s["duration_time"], "H:i") }}</p>
-              <a href="/pengajar/nilai/check?kelas={{ $data_s['kelas_id'] }}&penugasan_id={{ $data_s['id'] }}" class="btn btn-primary">Lihat nilai</a>
+              <a href="/pengajar/nilai/check?kelas={{ $data_s['kelas_id'] }}&penugasan_id={{ $data_s['id'] }}&kode_mapel={{ $data_s['kode_mapel'] }}" class="btn btn-primary">Lihat nilai</a>
             </div>
           </div>
     </div>
