@@ -3,11 +3,13 @@
 namespace App\Repositories;
 
 use App\Models;
+use Illuminate\Support\Facades\DB;
 
 class onRunTimePilihanGandaRepository {
     public function __construct(
         protected Models\onRunTimePilihanGandaModel $on_runtime_pg_repo
     ){}
+
 
     /**
      * 0 for unanswered
@@ -26,6 +28,15 @@ class onRunTimePilihanGandaRepository {
         } else {
             return false;
         }
+    }
+
+    // get total answered of student
+    public function get_total_answer($nomor_ujian, $penugasan_id) {
+        return $this->on_runtime_pg_repo
+            ->select(DB::raw("count(*) AS total"))
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("penugasan_id", "=", $penugasan_id)
+            ->first();
     }
 
     /**

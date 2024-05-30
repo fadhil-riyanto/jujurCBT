@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models;
+use Illuminate\Support\Facades\DB;
 
 class onRunTimeEssayRepository {
     public function __construct(
@@ -46,6 +47,15 @@ class onRunTimeEssayRepository {
         } else {
             return false;
         }
+    }
+
+    // get total answered of student
+    public function get_total_answer($nomor_ujian, $penugasan_id) {
+        return $this->on_runtime_essay
+            ->select(DB::raw("count(*) AS total"))
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("penugasan_id", "=", $penugasan_id)
+            ->first()["total"];
     }
 
     // // under testing
