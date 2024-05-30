@@ -79,6 +79,80 @@ class calculate_nilai {
 	}
 }
 
+class build_table {
+    protected $nomor_ujian;
+
+    public function __construct(
+        protected Repositories\SoalRepository $soal_repo,
+
+        protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pilgan,
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
+
+        protected Repositories\PgRepo $pg_repo,
+        
+        protected string $kode_mapel,
+        protected int $penugasan_id,
+        
+    ) {}
+
+    // public function return_
+
+    public function return_total_soal_both() {
+        return [
+            $this->soal_repo->get_total_soal_pilgan($this->kode_mapel),
+            $this->soal_repo->get_total_soal_essay($this->kode_mapel)
+        ];
+    }
+
+    // return array of answered exam, but not compare
+    public function return_id_soal_filled_both() {
+        // dd($this->penugasan_id);
+        return [
+            $this->on_runtime_pilgan->get_all_answer_by_siswa_and_penugasan(
+                $this->nomor_ujian, $this->kode_mapel, $this->penugasan_id
+            ),
+            $this->on_runtime_essay->get_all_answer_by_siswa_and_penugasan(
+                $this->nomor_ujian, $this->kode_mapel, $this->penugasan_id
+            )
+        ];
+    }
+
+    private function pg_return_indexof_id($id_soal_obj) { // return true or false only
+        $pilihan_option = $this->pg_repo->get_option_ordered($this->kode_mapel, $id_soal_obj["id_soal"]);
+        for($i = 0; $i < count($pilihan_option); $i++) {
+            if ($id_soal_obj["index_jawaban"] == $pilihan_option[$i]["id"]) {
+                return $i;
+            }
+        }
+    }
+    private function pg_compare_answer($id_soal_obj) {
+        $selected_id = $this->pg_return_indexof_id($id_soal_obj);
+        // dd($selected_id);
+        return $selected_id;
+    }
+
+    private function gen_pilgan_table($nomor_ujian) : Iterable {
+        $this->nomor_ujian = $nomor_ujian;
+
+        if (($pilgan_total = $this->return_total_soal_both()[0]) > 0) {
+            $pre_recv_soal = $this->return_id_soal_filled_both()[0];
+
+            for($i = 0; $i < $pilgan_total; $i++) {
+                if (isset($pre_recv_soal[$i])) {
+                    // $this->pg_repo->get_option_ordered($this->kode_mapel, $pre_recv_soal[$i]["id_soal"])
+                    yield $this->pg_compare_answer($pre_recv_soal[$i]);
+                } else {
+                    yield "belum";
+                }
+            }
+        }
+    }
+
+    public function return_pilgan_table($nomor_ujian) : array|false {
+        return iterator_to_array($this->gen_pilgan_table($nomor_ujian));
+    }
+}
+
 class PengajarNilaiCheck extends Controller
 {
     use Traits\CurrentSessionTrait;
@@ -88,7 +162,12 @@ class PengajarNilaiCheck extends Controller
     public function __construct(
         protected Repositories\PenyelesaianRepository $penyelesaian_repo,
         protected Repositories\SiswaAccountRepository $siswa_repo,
-        protected Repositories\SoalRepository $soal_repo
+        protected Repositories\SoalRepository $soal_repo,
+        protected Repositories\PgRepo $pg_repo,
+
+        protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pilgan,
+        protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
+        
         
         // 
     ) {}
@@ -98,23 +177,56 @@ class PengajarNilaiCheck extends Controller
         // dd($list_of_all_student);
     }
 
+    // deprecated warn
+    private function get_total_soal_by_kode_mapel() {
+        // dd($this->penugasan_id);
+        $total_pilgan = $this->soal_repo->get_total_soal_pilgan($this->kode_mapel);
+        $total_essay = $this->soal_repo->get_total_soal_essay($this->kode_mapel);
+
+        return [
+            $total_pilgan, $total_essay
+        ];
+    }
+
     private function pack_data() {
+        // dd($this->return_siswa_by_spesific_class());
+        // this is const, same as runtime
+        $answers_table = new build_table(
+            $this->soal_repo,
+            $this->on_runtime_pilgan,
+            $this->on_runtime_essay,
+            $this->pg_repo,
+            $this->kode_mapel,
+            $this->penugasan_id
+        );
+
+        
+
+        
         foreach($this->return_siswa_by_spesific_class() as $data_s) {
-            yield [
-                "nama" => $data_s["nama"]
-            ];
+            yield $answers_table->return_pilgan_table($data_s["nomor_ujian"]);
+            // dd($data_s["nomor_ujian"]);
+            // [$jml_pilgan, $jml_essay] = $this->get_total_soal_dikerjakan_by_nomor_ujian($data_s["nomor_ujian"]);
+            
+            // yield [
+            //     "nama" => $data_s["nama"],
+            //     "nilai_pilgan" => 1
+            // ];
         }
     }
 
     public function Index(Request $request) {
         $validated = $request->validate([         // convention list
             "kelas" => "required",
+            "kode_mapel" => "required",
             "penugasan_id" => "required"
         ]);
 
         $this->kelas = $request->kelas;
         $this->penugasan_id = $request->penugasan_id;
+        $this->kode_mapel = $request->kode_mapel;
 
+        dd(iterator_to_array($this->pack_data()));
         return view("views/pengajar_nilai_check", [
             "data" => iterator_to_array($this->pack_data())
         ]);
