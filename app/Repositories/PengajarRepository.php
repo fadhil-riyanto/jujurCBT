@@ -35,4 +35,8 @@ class PengajarRepository {
         $found = $this->modelname::find($id);
         $found->forceDelete();
     }
+
+    public function get_pengajar_info_by_identity($username) {
+        return $this->modelname->where("username", "=", $username)->first();
+    }
 } 

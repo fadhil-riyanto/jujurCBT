@@ -21,6 +21,21 @@ class SoalRepository {
             ->first()["total_soal"];
     }
 
+    public function get_total_soal_pilgan($kode_mapel) : int {
+        return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
+        ->where("tipe_soal", "=", "pilihan_ganda")
+        ->select(DB::raw("COUNT(*) as total_soal"))
+        ->first()["total_soal"];
+    }
+
+    public function get_total_soal_essay($kode_mapel) : int {
+        return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("tipe_soal", "=", "essay")
+            ->select(DB::raw("COUNT(*) as total_soal"))
+            ->first()["total_soal"];
+    }
+    
+
     public function get_soal($kode_mapel, $id) {
         return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
             ->where("id", "=", $id)
@@ -36,6 +51,12 @@ class SoalRepository {
     public function get_ordered_list_id($kode_mapel) {
         return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
             ->select("id")
+            ->get();
+    }
+
+    public function hasEssay($kode_mapel) : int {
+        return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
+            ->select("tipe_soal")
             ->get();
     }
 }

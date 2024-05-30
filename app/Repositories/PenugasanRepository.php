@@ -30,6 +30,10 @@ class PenugasanRepository {
         return $this->penugasan_model->where("kelas_id", "=", $kelas_id)->get();
     }
 
+    public function get_penugasan_by_kode_mapel($kode_mapel) {
+        return $this->penugasan_model->where("kode_mapel", "=", $kode_mapel)->get();
+    }
+
     public function get_penugasan_detail_by_penugasan_id($penugasan_id) {
         return $this->penugasan_model->where("id", "=", $penugasan_id)->first();
     }
