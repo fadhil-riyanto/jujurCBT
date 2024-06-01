@@ -1,9 +1,12 @@
 @extends("layout._layout_admin")
 
 @section("custom_import")
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/js/bootstrap-datepicker.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.10.0/dist/css/bootstrap-datepicker3.min.css">
-<script src="https://cdn.jsdelivr.net/gh/datejs/Datejs@master/build/date-id-ID.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/datejs/Datejs@master/build/date-id-ID.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/jquery-ui@1.13.3/dist/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-ui@1.13.3/themes/base/theme.min.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.3/themes/base/jquery-ui.css">
 @endsection
 
 @section("content") 
@@ -57,7 +60,7 @@
                 <div class="form-group row mb-1">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Pilih tanggal mulai : </label>
                     <div class="col-sm-9">
-                        <input data-provide="datepicker" id="date_mulai">
+                        <input type="text" id="date_mulai">
                     </div>
                 </div>
 
@@ -173,6 +176,8 @@
         })
     }
 
+   
+
     function validate() {
         // struct_data2sent = {
         //     kelas: null,
@@ -207,13 +212,23 @@
             swal("perhatian", errstr)
             return 0;
         }
-        
-        
+    }
 
+    function date_time2timestamp(date, time) {
+        datearr = date.split("/");
+
+        let formatteddate = datearr[2] + "-" + datearr[0] + "-" + datearr[1]
+        let formattedtime = "T" + time + ":" + "00.000";
+        let unix = Date.parse(formatteddate + formattedtime)
+        return unix.toString().slice(0, -3);
     }
 
     $(function () { 
-        $('.datepicker').datepicker();
+        // $('.datepicker').datepicker({
+        //     format: 'yyyy-mm-dd'
+        // });
+        $( "#date_mulai" ).datepicker();
+
         fill_all()
         watcher()
 
@@ -253,7 +268,8 @@
             struct_data2sent.start_time = $("#time_mulai").val()
 
             if (validate()) {
-                struct_data2sent.unix = Date.parse(struct_data2sent.start_date + " " + struct_data2sent.start_time).getTime()/1000
+                struct_data2sent.unix = date_time2timestamp(struct_data2sent.start_date, struct_data2sent.start_time)
+                // struct_data2sent.unix = Date.parse(struct_data2sent.start_date + " " + struct_data2sent.start_time).getTime()/1000
                 $.ajax({
                     url: "/api/admin/penugasan/store",
                     data: struct_data2sent,
