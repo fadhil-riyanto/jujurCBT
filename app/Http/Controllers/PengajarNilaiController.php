@@ -58,13 +58,25 @@ class PengajarNilaiController extends Controller
         // return $pack;
     }
 
-    public function Index(Request $request) {
+    public function IndexNilai(Request $request) {
         $this->request = $request;
         $this->cookie_deserialize();
 
         $data2ret = iterator_to_array($this->get_penugasan_by_kode_mapel_pengampu());
         // dd($data2ret);
         return view('views/pengajar_nilai', [
+            "data" => $data2ret
+        ]);
+
+    }
+
+    public function IndexKoreksiEssay(Request $request) {
+        $this->request = $request;
+        $this->cookie_deserialize();
+
+        $data2ret = iterator_to_array($this->get_penugasan_by_kode_mapel_pengampu());
+        // dd($data2ret);
+        return view('views/pengajar_koreksi_essay', [
             "data" => $data2ret
         ]);
 
