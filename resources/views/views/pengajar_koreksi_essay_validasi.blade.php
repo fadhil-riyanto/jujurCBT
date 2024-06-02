@@ -23,7 +23,7 @@
             <th>{{ $data_s["status"] }}</th> 
             <th>{{ $data_s["terkoreksi"] }}</th> 
             @if ($data_s["aksi"] == "ya")
-                <th><a type="button" class="btn btn-secondary">koreksi lagi</a></th> 
+                <th><a type="button" class="btn btn-secondary" href="/pengajar/koreksi_essay/validasi/check?kelas={{ $preload_data['kelas'] }}&penugasan_id={{ $preload_data['penugasan_id'] }}&kode_mapel={{ $preload_data['kode_mapel'] }}&nomor_ujian={{ $data_s['nomor_ujian'] }}">koreksi lagi</a></th> 
             @elseif ($data_s["aksi"] == "belum") 
             <th><a type="button" class="btn btn-secondary" href="/pengajar/koreksi_essay/validasi/check?kelas={{ $preload_data['kelas'] }}&penugasan_id={{ $preload_data['penugasan_id'] }}&kode_mapel={{ $preload_data['kode_mapel'] }}&nomor_ujian={{ $data_s['nomor_ujian'] }}">koreksi sekarang</a></th> 
             @elseif ($data_s["aksi"] == "-") 
