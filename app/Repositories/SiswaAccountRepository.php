@@ -93,6 +93,13 @@ class SiswaAccountRepository implements Interfaces\IAccount {
             ->blokir;
     }
 
+
+    public function siswaDetails($nomor_ujian) {
+        return $this->modelname
+            ->where('nomor_ujian', $nomor_ujian)
+            ->first();
+    }
+
     public function changePassword($nomor_ujian, $new_hashed_password) {
         return $this->modelname::where('nomor_ujian', $nomor_ujian)
             ->update(["password" => $new_hashed_password]);
