@@ -7,8 +7,8 @@
             <th>Nama</th>
             <th>Nilai pilgan</th>
             <th>Nilai essay</th>
-            <th>Nilai total</th>
-            <th>status</th>
+            <th>Nilai akhir</th>
+            <th>Nilai akhir</th>
             
         </tr>
     </thead>
@@ -16,10 +16,10 @@
         @foreach ($data as $data_s)
         <tr>
             <th>{{ $data_s["nama"] }}</th>
-            <th>{{ $data_s["nama"] }}</th> 
-            <th>{{ $data_s["nama"] }}</th> 
-            <th>{{ $data_s["nama"] }}</th> 
-            <th>{{ $data_s["nama"] }}</th>  
+            <th>{{ $data_s["nilai_pilgan"] }}</th> 
+            <th>{{ $data_s["nilai_essay"] }}</th> 
+            <th>{{ $data_s["nilai_pilgan"] + $data_s["nilai_essay"]  }}</th> 
+            <th>{{ $data_s["status"]  }}</th> 
         </tr>
         @endforeach
     </tbody>
