@@ -49,6 +49,21 @@ class onRunTimeEssayRepository {
         }
     }
 
+    public function get_answer_very_detail($nomor_ujian, $kode_mapel, $id_soal, $penugasan_id)  {
+        $query = $this->on_runtime_essay
+            ->where("nomor_ujian", "=", $nomor_ujian)
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("id_soal", "=", $id_soal)
+            ->where("penugasan_id", "=", $penugasan_id)
+
+            ->first();
+        if ($query != null) {
+            return $query;
+        } else {
+            return false;
+        }
+    }
+
     // get total answered of student
     public function get_total_answer($nomor_ujian, $penugasan_id) {
         return $this->on_runtime_essay
