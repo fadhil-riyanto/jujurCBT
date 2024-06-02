@@ -63,7 +63,12 @@ class calculate_nilai {
 	}
 
 	public function essay_input($penilaian_rate) {
-		$this->session_current_essay_nilai = $this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate - 1]);
+        if ($penilaian_rate == 0) {
+            $this->session_current_essay_nilai = $this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate]);
+        } else {
+            $this->session_current_essay_nilai = $this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate - 1]);
+        }
+		
 	}
 
 	public function pilgan_input($penilaian_cond) {
@@ -155,6 +160,22 @@ class build_table {
         }
     }
 
+    private function get_essay_points_table($nomor_ujian) : Iterable {
+        $this->nomor_ujian = $nomor_ujian;
+        foreach($this->on_runtime_essay->get_all_answer_by_siswa_and_penugasan($nomor_ujian, $this->kode_mapel, $this->penugasan_id) as $data_s) {
+            if ($data_s["points"] == null) {
+                yield 0;
+            } else {
+                yield $data_s["points"];
+            }
+        }
+
+    }
+
+    public function return_essay_table($nomor_ujian) : array|false {
+        return iterator_to_array($this->get_essay_points_table($nomor_ujian));
+    }
+
     public function return_pilgan_table($nomor_ujian) : array|false {
         return iterator_to_array($this->gen_pilgan_table($nomor_ujian));
     }
@@ -191,29 +212,37 @@ class PengajarNilaiCheck extends Controller
         // dd($list_of_all_student);
     }
 
-    private function calculate_nilai($pg_table) {
-        
+    private function generate_nilai_each_points() {
         [$total_soal_pilgan, $total_soal_essay] = $this->build_table->return_total_soal_both();
-        
-        // semua points didefinisikan disini
+
         $calc = new calculate_proporsi();
         $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_table_essay(); //  dipake buat generate range selection nilai essay
         $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_pilgan_static_point();  // point pilgan ketika betul
         
-        // memulai penginputan nilai
+        return [$essay_table_points, $pilgan_points];
+    }
+
+    private function calculate_nilai_pg($pg_table) {
+        [$essay_table_points, $pilgan_points] = $this->generate_nilai_each_points();
+
         // pg dihitung poin jika ia benar
         $nilai = new calculate_nilai($essay_table_points, $pilgan_points);
         foreach ($pg_table as $pg_table_s) {
             $nilai->pilgan_input($pg_table_s);
         }
 
-        foreach ($pg_table as $pg_table_s) {
-            $nilai->pilgan_input($pg_table_s);
+        return $nilai->get_nilai_pilgan();
+    }
+
+    private function calculate_nilai_essay($essay_points_table) {
+        [$essay_table_points, $pilgan_points] = $this->generate_nilai_each_points();
+        // pg dihitung poin jika ia benar
+        $nilai = new calculate_nilai($essay_table_points, $pilgan_points);
+        foreach ($essay_points_table as $essay_points_table_s) {
+            $nilai->essay_input($essay_points_table_s);
         }
 
         return $nilai->get_nilai_essay();
-        
-        // $pilgan_points = $calc->set_parameter($total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab)->result_pilgan_static_point();  // point pilgan ketika betul
     }
 
     private function pack_data() {
@@ -232,16 +261,19 @@ class PengajarNilaiCheck extends Controller
 
         
         foreach($this->return_siswa_by_spesific_class() as $data_s) {
-            yield [
-                "nilai_pg" => $this->calculate_nilai($this->build_table->return_pilgan_table($data_s["nomor_ujian"]))
-            ];
+            // yield [
+            //     "nilai_pg" => $this->calculate_nilai($this->build_table->return_pilgan_table($data_s["nomor_ujian"]))
+            // ];
             // dd($data_s["nomor_ujian"]);
             // [$jml_pilgan, $jml_essay] = $this->get_total_soal_dikerjakan_by_nomor_ujian($data_s["nomor_ujian"]);
             
-            // yield [
-            //     "nama" => $data_s["nama"],
-            //     "nilai_pilgan" => 1
-            // ];
+            // dd($this->build_table->return_pilgan_table(1237312));
+            yield [
+                "nama" => $data_s["nama"],
+                "nilai_pilgan" => $this->calculate_nilai_pg($this->build_table->return_pilgan_table($data_s["nomor_ujian"])),
+                "nilai_essay" => $this->calculate_nilai_essay($this->build_table->return_essay_table($data_s["nomor_ujian"])),
+                "status" => $this->penyelesaian_repo->set($this->kode_mapel, $data_s["nomor_ujian"], $this->penugasan_id)->isFixed() == true ? "selesai" : "belum selesai"
+            ];
         }
     }
 
@@ -257,7 +289,7 @@ class PengajarNilaiCheck extends Controller
         $this->kode_mapel = $request->kode_mapel;
 
         // return response(json_encode(iterator_to_array($this->pack_data()), JSON_PRETTY_PRINT));
-        dd(iterator_to_array($this->pack_data()));
+        // dd(iterator_to_array($this->pack_data()));
         return view("views/pengajar_nilai_check", [
             "data" => iterator_to_array($this->pack_data())
         ]);
