@@ -58,7 +58,7 @@ class onRunTimeEssayRepository {
             ->first()["total"];
     }
 
-    // // under testing
+    // // under testing (probably deprecated)
     public function get_all_answer_by_siswa($nomor_ujian, $kode_mapel) {
         return $this->on_runtime_essay
             ->where("nomor_ujian", "=", $nomor_ujian)
