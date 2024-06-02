@@ -42,6 +42,7 @@ class AdminPenugasan extends Controller
         return DataTables::of($pack)->make();
     }
 
+    // delete penugasan == delete all data that has relation with it
     public function delete($id) {
         $this->penugasan_repo->remove($id);
     }
