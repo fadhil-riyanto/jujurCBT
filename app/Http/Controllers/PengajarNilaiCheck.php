@@ -7,9 +7,14 @@ use App\Traits;
 use App\Repositories;
 use Yajra\DataTables\Facades\DataTables;
 
+define("pilihan_bobot_soal_essay_dlm_persen", 50); // 1/2
+define("length_pemoin", env("ESSAY_MAX_POINTS_RANGE"));
+
 class calculate_proporsi {
 	protected $total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab;
-	public function set_parameter($total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab) {
+
+    // deprecation warning parameter, essay_dijawab, pilgan_dijawab unused
+	public function set_parameter($total_essay, $total_pilgan, $essay_dijawab = null, $pilgan_dijawab = null) {
 		$this->total_essay = $total_essay;
 		$this->total_pilgan = $total_pilgan;
 		$this->essay_dijawab = $essay_dijawab;
@@ -63,18 +68,18 @@ class calculate_nilai {
 
 	public function pilgan_input($penilaian_cond) {
 		if ($penilaian_cond == 1) {
-			echo $this->static_pilgan_value . PHP_EOL; 
+			// echo $this->static_pilgan_value . PHP_EOL; 
 			$this->session_current_pilgan_nilai = $this->session_current_pilgan_nilai + ($this->static_pilgan_value);
 		} 
 		// $this->session_current_pilgan_nilai + ($this->essay_nilai_table[$penilaian_rate - 1]);
 	}
 
-	public function get_essay_nilai_essay() {
+	public function get_nilai_essay() {
 		return $this->session_current_essay_nilai;
 	}
 
 
-	public function get_essay_nilai_pilgan() {
+	public function get_nilai_pilgan() {
 		return $this->session_current_pilgan_nilai;
 	}
 }
@@ -127,8 +132,10 @@ class build_table {
     }
     private function pg_compare_answer($id_soal_obj) {
         $selected_id = $this->pg_return_indexof_id($id_soal_obj);
+        $actual_answer = $this->soal_repo->get_soal($this->kode_mapel, $id_soal_obj["id_soal"]);
         // dd($selected_id);
-        return $selected_id;
+        // return "selected " . $selected_id . " ans " . $actual_answer["index_kunci_jawaban"];
+        return ($selected_id == $actual_answer["index_kunci_jawaban"]) ? true : false;
     }
 
     private function gen_pilgan_table($nomor_ujian) : Iterable {
@@ -142,7 +149,7 @@ class build_table {
                     // $this->pg_repo->get_option_ordered($this->kode_mapel, $pre_recv_soal[$i]["id_soal"])
                     yield $this->pg_compare_answer($pre_recv_soal[$i]);
                 } else {
-                    yield "belum";
+                    yield false;
                 }
             }
         }
@@ -151,6 +158,12 @@ class build_table {
     public function return_pilgan_table($nomor_ujian) : array|false {
         return iterator_to_array($this->gen_pilgan_table($nomor_ujian));
     }
+
+    /**
+     * essay section
+     */
+
+    
 }
 
 class PengajarNilaiCheck extends Controller
@@ -158,6 +171,7 @@ class PengajarNilaiCheck extends Controller
     use Traits\CurrentSessionTrait;
     
     protected $kelas, $penugasan_id;
+    protected build_table $build_table;
 
     public function __construct(
         protected Repositories\PenyelesaianRepository $penyelesaian_repo,
@@ -177,21 +191,35 @@ class PengajarNilaiCheck extends Controller
         // dd($list_of_all_student);
     }
 
-    // deprecated warn
-    private function get_total_soal_by_kode_mapel() {
-        // dd($this->penugasan_id);
-        $total_pilgan = $this->soal_repo->get_total_soal_pilgan($this->kode_mapel);
-        $total_essay = $this->soal_repo->get_total_soal_essay($this->kode_mapel);
+    private function calculate_nilai($pg_table) {
+        
+        [$total_soal_pilgan, $total_soal_essay] = $this->build_table->return_total_soal_both();
+        
+        // semua points didefinisikan disini
+        $calc = new calculate_proporsi();
+        $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_table_essay(); //  dipake buat generate range selection nilai essay
+        $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_pilgan_static_point();  // point pilgan ketika betul
+        
+        // memulai penginputan nilai
+        // pg dihitung poin jika ia benar
+        $nilai = new calculate_nilai($essay_table_points, $pilgan_points);
+        foreach ($pg_table as $pg_table_s) {
+            $nilai->pilgan_input($pg_table_s);
+        }
 
-        return [
-            $total_pilgan, $total_essay
-        ];
+        foreach ($pg_table as $pg_table_s) {
+            $nilai->pilgan_input($pg_table_s);
+        }
+
+        return $nilai->get_nilai_essay();
+        
+        // $pilgan_points = $calc->set_parameter($total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab)->result_pilgan_static_point();  // point pilgan ketika betul
     }
 
     private function pack_data() {
         // dd($this->return_siswa_by_spesific_class());
         // this is const, same as runtime
-        $answers_table = new build_table(
+        $this->build_table = new build_table(
             $this->soal_repo,
             $this->on_runtime_pilgan,
             $this->on_runtime_essay,
@@ -204,7 +232,9 @@ class PengajarNilaiCheck extends Controller
 
         
         foreach($this->return_siswa_by_spesific_class() as $data_s) {
-            yield $answers_table->return_pilgan_table($data_s["nomor_ujian"]);
+            yield [
+                "nilai_pg" => $this->calculate_nilai($this->build_table->return_pilgan_table($data_s["nomor_ujian"]))
+            ];
             // dd($data_s["nomor_ujian"]);
             // [$jml_pilgan, $jml_essay] = $this->get_total_soal_dikerjakan_by_nomor_ujian($data_s["nomor_ujian"]);
             
@@ -226,6 +256,7 @@ class PengajarNilaiCheck extends Controller
         $this->penugasan_id = $request->penugasan_id;
         $this->kode_mapel = $request->kode_mapel;
 
+        // return response(json_encode(iterator_to_array($this->pack_data()), JSON_PRETTY_PRINT));
         dd(iterator_to_array($this->pack_data()));
         return view("views/pengajar_nilai_check", [
             "data" => iterator_to_array($this->pack_data())
