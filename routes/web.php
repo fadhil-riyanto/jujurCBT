@@ -20,10 +20,10 @@ Route::prefix("/api")->group(function() {
         ->middleware(Middleware\EnsureUsersOnStudent::class);
     });
 
-    // Route::prefix("/pengajar")->group(function() {
-    //     Route::get("/get_nilai_by_penugasan", [Http\Controllers\PengajarNilaiCheck::class, "Api"])
-    //     ->middleware(Middleware\EnsureUsersOnPengajar::class);
-    // });
+    Route::prefix("/pengajar")->group(function() {
+        Route::post("/set_points", [Http\Controllers\PengajarKoreksiSavePoints::class, "Index"])
+        ->middleware(Middleware\EnsureUsersOnPengajar::class);
+    });
 
     // store_pilihan_ganda
     Route::prefix("/kerjakan")->group(function() {
