@@ -40,8 +40,14 @@
                 <label for="customRange3" class="form-label label_poin">poin 0</label>
                 <input type="range" class="form-range range_poin" min="0" max="5" step="1" value=0 disabled>
                 @elseif ($data_s["jawab"] != false)
-                <label id="range_for_id_{{ $data_s['id_soal'] }}" class="form-label label_poin">point {{ $data_s["points"]["points"] }}</label>
-                <input type="range" class="form-range range_poin" min="0" max="5" step="1" data-id-soal="{{ $data_s['id_soal'] }}" value="{{ $data_s['points']['points'] }}">
+                  @if ($data_s["points"]["points"] == null)
+                  <label id="range_for_id_{{ $data_s['id_soal'] }}" class="form-label label_poin">point 0</label>
+                <input type="range" class="form-range range_poin" min="0" max="5" step="1" data-id-soal="{{ $data_s['id_soal'] }}" value=0>
+                  @elseif ($data_s["points"]["points"] != null)
+                  <label id="range_for_id_{{ $data_s['id_soal'] }}" class="form-label label_poin">point {{ $data_s["points"]["points"] }}</label>
+                  <input type="range" class="form-range range_poin" min="0" max="5" step="1" data-id-soal="{{ $data_s['id_soal'] }}" value="{{ $data_s['points']['points'] }}">
+                  @endif
+                
                 @endif
               
             </div>
