@@ -14,7 +14,9 @@ class PengajarNilaiController extends Controller
     public function __construct(
         protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo,
         protected Repositories\PengajarRepository $pengajar_repo,
-        protected Repositories\PenugasanRepository $penugasan_repo
+        protected Repositories\PenugasanRepository $penugasan_repo,
+        protected Repositories\SoalRepository $soal_repo,
+        
     ) {}
     
     private function list_mapel_by_pengampu() : \iterator {
@@ -50,6 +52,7 @@ class PengajarNilaiController extends Controller
 
                     // additional
                     "nama_mapel" => $this->daftar_mapel_repo->get_mapel_info($pengampu_mapel["kode_mapel"])["nama_mata_pelajaran"],
+                    "has_essay" => $this->soal_repo->hasEssay($pengampu_mapel["kode_mapel"])
                     
                 ];
             }

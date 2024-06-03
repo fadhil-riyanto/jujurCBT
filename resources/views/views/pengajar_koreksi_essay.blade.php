@@ -10,7 +10,15 @@
                 <h5 class="card-title">{{ $data_s["nama_mapel"] }} (ujian tanggal {{ $data_s["start_date"] }})</h5>
                 <p class="card-text">mulai: {{ $data_s["start_time"] }}</p>
                 <p class="card-text">berakhir: {{ add_unix_mins_return_format($data_s["unix"], $data_s["duration_time"], "H:i") }}</p>
+
+                @if ($data_s["has_essay"] == true)
                 <a href="/pengajar/koreksi_essay/validasi?kelas={{ $data_s['kelas_id'] }}&penugasan_id={{ $data_s['id'] }}&kode_mapel={{ $data_s['kode_mapel'] }}" class="btn btn-primary">Lihat nilai</a>
+                @else
+                
+                <button class="btn btn-primary" disabled>Lihat nilai</button>
+                <i>mapel ini tidak ada soal essay nya</i>
+                @endif
+            
             </div>
           </div>
     </div>
