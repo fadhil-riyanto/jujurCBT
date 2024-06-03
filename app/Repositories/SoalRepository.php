@@ -68,9 +68,19 @@ class SoalRepository {
             ->get();
     }
 
-    public function hasEssay($kode_mapel) : int {
-        return $this->soal_db->where("mata_pelajaran", "=", $kode_mapel)
-            ->select("tipe_soal")
-            ->get();
+    public function hasEssay($kode_mapel) {
+        return $this->soal_db
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("tipe_soal", "=", "essay")
+            ->select(DB::raw("COUNT(*) as total_soal"))
+            ->first()["total_soal"] == 0 ? false : true;
+    }
+
+    public function hasPilgan($kode_mapel) {
+        return $this->soal_db
+            ->where("mata_pelajaran", "=", $kode_mapel)
+            ->where("tipe_soal", "=", "pilihan_ganda")
+            ->select(DB::raw("COUNT(*) as total_soal"))
+            ->first()["total_soal"] == 0 ? false : true;
     }
 }
