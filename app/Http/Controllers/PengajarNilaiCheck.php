@@ -71,10 +71,12 @@ class calculate_nilai {
 	public function __construct($essay_nilai_table, $static_pilgan_value) {
 		$this->essay_nilai_table = $essay_nilai_table;
 		$this->static_pilgan_value = $static_pilgan_value;
+        // dd($essay_nilai_table);
 	}
 
 	public function essay_input($penilaian_rate) {
         if ($penilaian_rate == 0) {
+            // dd($this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate]));
             $this->session_current_essay_nilai = $this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate]);
         } else {
             $this->session_current_essay_nilai = $this->session_current_essay_nilai + ($this->essay_nilai_table[$penilaian_rate - 1]);
@@ -239,6 +241,7 @@ class PengajarNilaiCheck extends Controller
         } elseif ($this->soal_repo->hasEssay($this->kode_mapel)) {
 
             $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_table_essay_without_pilgan(); //  dipake buat generate range selection nilai essay
+            // dd($essay_table_points);
             $pilgan_points = null;
         }
         
@@ -262,10 +265,11 @@ class PengajarNilaiCheck extends Controller
         [$essay_table_points, $pilgan_points] = $this->generate_nilai_each_points();
         // pg dihitung poin jika ia benar
         $nilai = new calculate_nilai($essay_table_points, $pilgan_points);
+        // dd($nilai);
         foreach ($essay_points_table as $essay_points_table_s) {
             $nilai->essay_input($essay_points_table_s);
         }
-
+        // dd($nilai->get_nilai_essay());
         return $nilai->get_nilai_essay();
     }
 
