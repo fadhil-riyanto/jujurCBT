@@ -12,10 +12,10 @@
                 <p class="card-text">berakhir: {{ add_unix_mins_return_format($data_s["unix"], $data_s["duration_time"], "H:i") }}</p>
 
                 @if ($data_s["has_essay"] == true)
-                <a href="/pengajar/koreksi_essay/validasi?kelas={{ $data_s['kelas_id'] }}&penugasan_id={{ $data_s['id'] }}&kode_mapel={{ $data_s['kode_mapel'] }}" class="btn btn-primary">Lihat nilai</a>
+                <a href="/pengajar/koreksi_essay/validasi?kelas={{ $data_s['kelas_id'] }}&penugasan_id={{ $data_s['id'] }}&kode_mapel={{ $data_s['kode_mapel'] }}" class="btn btn-primary">Lihat essay</a>
                 @else
                 
-                <button class="btn btn-primary" disabled>Lihat nilai</button>
+                <button class="btn btn-primary" disabled>Lihat essay</button>
                 <i>mapel ini tidak ada soal essay nya</i>
                 @endif
             
