@@ -2,7 +2,10 @@
 
 @section("content") 
 
-halaman nilai
+<div class="alert alert-primary mt-1" role="alert">
+    Nilai hanya bisa dilihat oleh pengajar yang bersangkutan
+  </div>
+  
 
 @endsection
 
