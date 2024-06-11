@@ -16,6 +16,7 @@ class GetMeController extends Controller
     public function __construct(
         protected Repositories\SiswaAccountRepository $siswa_account_db, 
         protected Repositories\SuperAdminCredentialRepository $superadmin_credential_db,  // warning, deprecated
+        protected Repositories\PengajarRepository $pengajar_credential_db,  // warning, deprecated
         
     ) {}
 
@@ -28,6 +29,9 @@ class GetMeController extends Controller
             } else if ($this->cookie_role == Enum\RoleSessionEnum::SuperAdmin) {
                 return $this->superadmin_credential_db->getByTable("username", $this->cookie_identity)
                     ->getFirst()->username;
+            } else if ($this->cookie_role == Enum\RoleSessionEnum::Pengajar) {
+                return $this->pengajar_credential_db->get_pengajar_info_by_identity($this->cookie_identity)
+                    ->username;
             }
             // $cb = match($this->cookie_role) {
             //     Enum\RoleSessionEnum::Student => 
