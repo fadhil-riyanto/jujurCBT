@@ -7,18 +7,20 @@ use App\Traits;
 use App\Repositories;
 use Yajra\DataTables\Facades\DataTables;
 
-define("pilihan_bobot_soal_essay_dlm_persen", 50); // 1/2
+// define("$bobot_nilai_essay", 50); // 1/2
+$bobot_nilai_essay = null;
 define("length_pemoin", env("ESSAY_MAX_POINTS_RANGE"));
 
 class calculate_proporsi {
-	protected $total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab, $has_pilgan = true;
+	protected $total_essay, $total_pilgan, $essay_dijawab, $pilgan_dijawab, $has_pilgan = true, $bobot_nilai_essay;
 
     // deprecation warning parameter, essay_dijawab, pilgan_dijawab unused
-	public function set_parameter($total_essay, $total_pilgan, $essay_dijawab = null, $pilgan_dijawab = null) {
+	public function set_parameter($total_essay, $total_pilgan, $bobot_nilai_essay, $essay_dijawab = null, $pilgan_dijawab = null) {
 		$this->total_essay = $total_essay;
 		$this->total_pilgan = $total_pilgan;
 		$this->essay_dijawab = $essay_dijawab;
 		$this->pilgan_dijawab = $pilgan_dijawab;
+        $this->bobot_nilai_essay = $bobot_nilai_essay;
 		return $this;
 	}
 
@@ -26,7 +28,7 @@ class calculate_proporsi {
 
 	private function calculate_epoints() { 
         if ($this->has_pilgan) {
-            return pilihan_bobot_soal_essay_dlm_persen / $this->total_essay; 
+            return $this->bobot_nilai_essay / $this->total_essay; 
         } else {
             return 100 / $this->total_essay; 
         }
@@ -57,7 +59,7 @@ class calculate_proporsi {
 
 	// pilgan
 	public function result_pilgan_static_point() { 
-		return (100 - pilihan_bobot_soal_essay_dlm_persen) / $this->total_pilgan; 
+		return (100 - $this->bobot_nilai_essay) / $this->total_pilgan; 
 	}
 
 	public function result_pilgan_static_point_without_essay() { 
@@ -204,7 +206,7 @@ class PengajarNilaiCheck extends Controller
 {
     use Traits\CurrentSessionTrait;
     
-    protected $kelas, $penugasan_id;
+    protected $kelas, $penugasan_id, $bobot_nilai_essay;
     protected build_table $build_table;
 
     public function __construct(
@@ -215,7 +217,7 @@ class PengajarNilaiCheck extends Controller
 
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pilgan,
         protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
-        
+        protected Repositories\PenugasanRepository $penugasan_repo
         
         // 
     ) {}
@@ -232,15 +234,15 @@ class PengajarNilaiCheck extends Controller
 
         if ($this->soal_repo->hasEssay($this->kode_mapel) && $this->soal_repo->hasPilgan($this->kode_mapel)) {
 
-            $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_table_essay(); //  dipake buat generate range selection nilai essay
-            $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_pilgan_static_point();  // point pilgan ketika betul
+            $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan, $this->bobot_nilai_essay)->result_table_essay(); //  dipake buat generate range selection nilai essay
+            $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan, $this->bobot_nilai_essay)->result_pilgan_static_point();  // point pilgan ketika betul
         } elseif ($this->soal_repo->hasPilgan($this->kode_mapel)) {
 
             $essay_table_points = null;
-            $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_pilgan_static_point_without_essay();  // point pilgan ketika betul
+            $pilgan_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan, $this->bobot_nilai_essay)->result_pilgan_static_point_without_essay();  // point pilgan ketika betul
         } elseif ($this->soal_repo->hasEssay($this->kode_mapel)) {
 
-            $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan)->result_table_essay_without_pilgan(); //  dipake buat generate range selection nilai essay
+            $essay_table_points = $calc->set_parameter($total_soal_essay, $total_soal_pilgan, $this->bobot_nilai_essay)->result_table_essay_without_pilgan(); //  dipake buat generate range selection nilai essay
             // dd($essay_table_points);
             $pilgan_points = null;
         }
@@ -315,6 +317,14 @@ class PengajarNilaiCheck extends Controller
         $this->kelas = $request->kelas;
         $this->penugasan_id = $request->penugasan_id;
         $this->kode_mapel = $request->kode_mapel;
+
+        $bobot_nilai_essay_tmp = $this->penugasan_repo->get_bobot_nilai_essay($this->penugasan_id);
+        if ($bobot_nilai_essay_tmp == null) {
+            $this->bobot_nilai_essay = 25;
+        } else {
+            $this->bobot_nilai_essay = $bobot_nilai_essay_tmp;
+        }
+        
 
         // dd();
 
