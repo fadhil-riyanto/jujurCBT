@@ -200,9 +200,11 @@ Route::prefix("/pengajar")->group(function() {
 Route::get('/dashboard', [Http\Controllers\DashboardController::class, "index"])
     ->middleware(Middleware\EnsureUsersOnStudent::class);
 
-Route::get('/kerjakan/{kode_mapel}/{id?}', [Http\Controllers\KerjakanController::class, "Index"]);
+Route::get('/kerjakan/{kode_mapel}/{id?}', [Http\Controllers\KerjakanController::class, "Index"])
+    ->middleware(Middleware\EnsureUsersOnStudent::class);
 
-Route::get('/confirm/{kode_mapel_n_penugasan_id}/{nomor_ujian}', [Http\Controllers\KerjakanConfirm::class, "Index"]);
+Route::get('/confirm/{kode_mapel_n_penugasan_id}/{nomor_ujian}', [Http\Controllers\KerjakanConfirm::class, "Index"])
+    ->middleware(Middleware\EnsureUsersOnStudent::class);
 
 // function () {
 //     return view("views/kerjakan");
