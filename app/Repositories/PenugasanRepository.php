@@ -26,6 +26,12 @@ class PenugasanRepository {
         ]);
     }
 
+    public function set_bobot_nilai_essay($penugasan_id, $bobot) {
+        return $this->penugasan_model
+            ->where("id", "=", $penugasan_id)
+            ->update(["bobot_essay" => $bobot]);
+    }
+
     public function get_penugasan_by_kelas($kelas_id) {
         return $this->penugasan_model->where("kelas_id", "=", $kelas_id)->get();
     }
