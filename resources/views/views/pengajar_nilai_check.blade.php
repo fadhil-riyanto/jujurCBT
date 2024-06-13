@@ -29,8 +29,9 @@
 
 @section("script")
 <script>
-
-
 new DataTable('#nilai_siswa');
+$(document).ready(function() {
+    sidebar_change_state("#sidebar-pengajar-nilai")
+})
 </script>
 @endsection
