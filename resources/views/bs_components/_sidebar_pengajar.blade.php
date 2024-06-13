@@ -13,6 +13,6 @@
         <a href="/pengajar/koreksi_essay" class="nav-link" id="sidebar-pengajar-koreksi-essay">Koreksi essay</a>
     </li>
     <li class="nav-item">
-        <a href="/pengajar/pengaturan_nilai" class="nav-link" id="sidebar-pengajar-koreksi-essay">Pengaturan nilai</a>
+        <a href="/pengajar/pengaturan_nilai" class="nav-link" id="sidebar-pengajar-pengaturan-nilai">Pengaturan nilai</a>
     </li>
 </ul>

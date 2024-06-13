@@ -65,7 +65,7 @@
 <script>
     let selected = null
     let selected_bobot = null
-    sidebar_change_state("#sidebar-pengajar-koreksi-essay")
+    sidebar_change_state("#sidebar-pengajar-pengaturan-nilai")
 
     $(document).ready(function() {
         $(".modal-btn-hook").click(function(obj) {
