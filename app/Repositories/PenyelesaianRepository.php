@@ -47,4 +47,9 @@ class PenyelesaianRepository {
             //     "is_end" => 1
             // ]);
     }
+
+    public function deleteAllByPenugasanID($penugasan_id) {
+        $this->penyelesaian_db->where("penugasan_id", "=", $penugasan_id)
+            ->delete();
+    }
 }

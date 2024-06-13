@@ -11,7 +11,8 @@ class AdminPenugasan extends Controller
     //
     public function __construct(
         protected Repositories\PenugasanRepository $penugasan_repo,
-        protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo
+        protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo,
+        protected Repositories\PenyelesaianRepository $penyelesaian_repo
     ){}
 
     public function store(Request $request) {
@@ -45,5 +46,6 @@ class AdminPenugasan extends Controller
     // delete penugasan == delete all data that has relation with it
     public function delete($id) {
         $this->penugasan_repo->remove($id);
+        $this->penyelesaian_repo->deleteAllByPenugasanID($id);
     }
 }
