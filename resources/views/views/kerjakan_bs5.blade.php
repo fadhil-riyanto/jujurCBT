@@ -1,7 +1,26 @@
 @extends("layout._layout_bs5")
 
 @section("content")
-<div class="row mt-4 ">
+
+@if ($mapel_config["allow_copy"] == 0)
+    <style>
+        .rows-neeed-body {
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+        }
+    </style>
+@endif
+
+@if ($mapel_config["enable_right_click"] == 0)
+    <div class="row mt-4 rows-neeed-body" oncontextmenu="return false">
+@else
+    <div class="row mt-4 rows-neeed-body" >
+@endif
+
     <div class="col-lg-9 d-flex flex-column flex-grow-1">
         <div class="p-2 m-1 bg-white pe-auto" style="box-shadow: 0 0 10px gray;">
             <b>soal nomor {{ $base["seq"] }} </b>
@@ -30,8 +49,12 @@
                 </label>
                 @endforeach
             @else
-                
-                <textarea name="essay_value" id="essay_value" rows="10">{{ $preload_data['current_value_essay'] }}</textarea>
+                @if ($mapel_config["allow_copy"] == 0)
+                        <textarea name="essay_value" id="essay_value" rows="10" oncopy="return false" onpaste="return false" oncut="return false">{{ $preload_data['current_value_essay'] }}</textarea>
+                    
+                @else
+                    <textarea name="essay_value" id="essay_value" rows="10">{{ $preload_data['current_value_essay'] }}</textarea>
+                @endif
                 <button href="{{ $button_control['next'] }}"  class="btn-secondary" id="save_answer">simpan</button>
             @endif
         </div>

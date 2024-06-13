@@ -22,7 +22,8 @@ class KerjakanController extends Controller
         protected Repositories\PgRepo $pg_repo,
         protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pg_repo,
         protected Repositories\onRunTimeEssayRepository $on_runtime_essay_repo,
-        protected Repositories\PenyelesaianRepository $penyelesaian_repo
+        protected Repositories\PenyelesaianRepository $penyelesaian_repo,
+        protected Repositories\DaftarMataPelajaranRepository $daftar_mapel_repo
     ) {}
 
     private function validate_time($db_time, $min) {
@@ -257,6 +258,8 @@ class KerjakanController extends Controller
 
         // validate time and etc
 
+        $mapelconf = $this->daftar_mapel_repo->get_mapel_info($kode_mapel);
+
         $data2view = [
             "base" => $data_from_soal,
             "selector" => $this->get_soal_selector_status($kode_mapel),
@@ -273,6 +276,10 @@ class KerjakanController extends Controller
             "preload_data" => [
                 "current_selection" => $this->get_selection($id),
                 "current_value_essay" => $this->get_essay_current_value($id)
+            ],
+            "mapel_config" => [
+                "allow_copy" => $mapelconf["allow_copy"],
+                "enable_right_click" => $mapelconf["enable_right_click"],
             ]
         ];
 
