@@ -23,6 +23,11 @@ Route::prefix("/api")->group(function() {
     Route::prefix("/pengajar")->group(function() {
         Route::post("/set_points", [Http\Controllers\PengajarKoreksiSavePoints::class, "Index"])
         ->middleware(Middleware\EnsureUsersOnPengajar::class);
+
+        Route::post("/set_bobot_essay", [Http\Controllers\PengajarSetBobotNilai::class, "Index"])
+        ->middleware(Middleware\EnsureUsersOnPengajar::class);
+
+        // 
     });
 
     // store_pilihan_ganda
@@ -182,8 +187,9 @@ Route::prefix("/admin")->group(function() {
 Route::prefix("/pengajar")->group(function() {
     Route::get('', fn() => view("views/pengajar_welcome") );
     Route::get('/nilai', [Http\Controllers\PengajarNilaiController::class, "IndexNilai"]);
-    Route::get('/nilai/check', [Http\Controllers\PengajarNilaiCheck::class, "Index"]);
+    Route::get('/pengaturan_nilai', [Http\Controllers\PengajarNilaiController::class, "IndexPengaturanNilai"]);
     Route::get('/koreksi_essay', [Http\Controllers\PengajarNilaiController::class, "IndexKoreksiEssay"]);
+    Route::get('/nilai/check', [Http\Controllers\PengajarNilaiCheck::class, "Index"]);
     Route::get('/koreksi_essay/validasi', [Http\Controllers\PengajarKoreksiEssayValidasi::class, "Index"]);
     Route::get('/koreksi_essay/validasi/check', [Http\Controllers\PengajarKoreksiEssayValidasiCheck::class, "Index"]);
 });
