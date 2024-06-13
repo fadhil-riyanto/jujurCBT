@@ -10,7 +10,7 @@ class PenugasanModel extends Model
     use HasFactory;
     protected $table = "penugasan";
     protected $fillable = ["kelas_id", "kode_mapel", "start_date", "start_time",
-             "duration_time", "unix" ];
+             "duration_time", "unix", "bobot_essay"];
 
     protected $primaryKey = 'id';
 }
