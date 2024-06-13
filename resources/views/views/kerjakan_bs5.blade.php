@@ -1,44 +1,22 @@
-@extends("layout._layout_all")
-
-@section("include-opt")
-    @vite("resources/css/components/_container.css")
-    @vite("resources/css/components/_navbar.css")
-    @vite("resources/css/components/_modal.css")
-    @vite("resources/css/components/_buttons.css")
-    @vite("resources/css/components/_alert.css")
-    @vite("resources/css/dashboard.css")
-    @vite("resources/css/dashboard_css/index.css")
-    @vite("resources/css/dashboard_css/soal_interface.css")
-    @vite("resources/css/dashboard_css/util.css")
-
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    <script src="/js/utils.js"></script>
-@endsection
+@extends("layout._layout_bs5")
 
 @section("content")
+<div class="row mt-4 ">
+    <div class="col-lg-9 d-flex flex-column flex-grow-1">
+        <div class="p-2 m-1 bg-white pe-auto" style="box-shadow: 0 0 10px gray;">
+            <b>soal nomor {{ $base["seq"] }} </b>
+        </div>
+        <div class="p-2 m-1 bg-white pe-auto" style="box-shadow: 0 0 10px gray;">
+            {{ $base["soal"] }}
 
-<style>
-img {
-  width: 100%;
-  height: auto;
-}
-</style>
-<div class="main-layout">
-    <div class="canvas-num">
-        <span class="canvas-num-inc">soal nomor {{ $base["seq"] }} </span>
-    </div>
-    <div class="canvas-questions">
-        {{ $base["soal"] }}
-
-        @if ($base["image"] != null)
-        <img src="{{ asset('/images/' . $base['image']) }}" alt="">
-        @endif
-    </div>
-    <div class="canvas-answer">
-        <div class="form-wrap">
+            @if ($base["image"] != null)
+            <img src="{{ asset('/images/' . $base['image']) }}" class="img-fluid">
+            @endif
+        </div>
+        <div class="p-2 m-1 bg-white pe-auto d-flex flex-column" style="box-shadow: 0 0 10px gray;">
             @if ($base["type"] == "pilihan_ganda")
                 @foreach ($base["option"] as $option_s) 
-                <label class="form-wrap-class">
+                <label class="my-2">
 
                     @if ($option_s['id'] == $preload_data["current_selection"])
                     <input type="radio" class="answer_select" name="input_radio" data-option="{{ $option_s['id'] }}" checked>
@@ -57,30 +35,32 @@ img {
                 <button href="{{ $button_control['next'] }}"  class="btn-secondary" id="save_answer">simpan</button>
             @endif
         </div>
-    </div>
-    <div class="canvas-button">
-        @if ($button_control["before"] != null)
-        <a href="{{ $button_control['before'] }}" class="btn-secondary" id="btn-primary-previous">sebelumnya</a>
+        <div class="p-2 m-1 bg-white pe-auto d-flex" style="box-shadow: 0 0 10px gray;">
+            @if ($button_control["before"] != null)
+            <a href="{{ $button_control['before'] }}" class="btn btn-secondary" id="btn-primary-previous">sebelumnya</a>
 
-            @if ($button_control["next"] == null)
-            <a href="/confirm/{{ $js_data['kode_mapel'] }}-{{ $js_data['penugasan_id'] }}/{{ $js_data['nomor_ujian'] }}" class="btn-secondary" style="background-color: yellow; color: black;" id="btn-primary-next">kirim</a>
-            @endif
-        @endif
-        
-        @if ($button_control["next"] != null)
-        <a href="{{ $button_control['next'] }}" class="btn-secondary" id="btn-primary-next">selanjutnya</a>
-        @endif
-    </div>
-    <div class="canvas-numlist">
-        <div class="nulist-container">
-            @foreach ($selector as $selector_s)
-                @if ($selector_s["status"] == true) 
-                <a class="numlist-num" id="numlist-num-1" style="background-color: green;" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
-                @else 
-                <a class="numlist-num" id="numlist-num-1" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                @if ($button_control["next"] == null)
+                <a href="/confirm/{{ $js_data['kode_mapel'] }}-{{ $js_data['penugasan_id'] }}/{{ $js_data['nomor_ujian'] }}" class="btn btn-secondary" style="background-color: yellow; color: black;" id="btn-primary-next">kirim</a>
                 @endif
-            @endforeach
+            @endif
             
+            @if ($button_control["next"] != null)
+            <a href="{{ $button_control['next'] }}" class="btn btn-secondary ms-auto" id="btn-primary-next">selanjutnya</a>
+            @endif
+        </div>
+        
+    </div>
+    <div class="col-lg-3">
+        <div class="row">
+            <!-- <div class=""> -->
+                @foreach ($selector as $selector_s)
+                    @if ($selector_s["status"] == true) 
+                    <a class="col-2 btn btn-secondary m-2" id="numlist-num-1" style="background-color: green;" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                    @else 
+                    <a class="col-2 btn btn-primary m-2" id="numlist-num-1" href="{{ $selector_s['actual_id'] }}">{{ $selector_s['id_view'] }}</a>
+                    @endif
+                @endforeach
+            <!-- </div> -->
         </div>
     </div>
 </div>

@@ -278,7 +278,8 @@ class KerjakanController extends Controller
 
         // dd($data2view);
 
-        return view("views/kerjakan", $data2view);
+        // return view("views/kerjakan", $data2view);
+        return view("views/kerjakan_bs5", $data2view);
         
         
     }
