@@ -12,7 +12,7 @@ class PengajarKoreksiEssayValidasi extends Controller
 
         // protected Repositories\PenyelesaianRepository $penyelesaian_repo,
         // protected Repositories\SoalRepository $soal_repo,
-        // protected Repositories\PgRepo $pg_repo,
+        protected Repositories\PenugasanRepository $penugasan_repo,
 
         // protected Repositories\onRunTimePilihanGandaRepository $on_runtime_pilgan,
         protected Repositories\onRunTimeEssayRepository $on_runtime_essay,
@@ -23,6 +23,12 @@ class PengajarKoreksiEssayValidasi extends Controller
     ) {}
 
     private function is_done($nomor_ujian) {
+        $ctx = $this->penugasan_repo->get_penugasan_detail_by_penugasan_id($this->penugasan_id);
+
+        if (time() > add_unix_mins($ctx["unix"], $ctx["duration_time"])) {
+            return true;
+        }
+
         return $this->penyelesaian_repo->set($this->kode_mapel, $nomor_ujian, $this->penugasan_id)
             ->isFixed();
     }
